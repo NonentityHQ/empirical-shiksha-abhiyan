@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { AREAS, AreaIcon, Eyebrow, SectionHead, SunArc, Swoosh, type Page } from "../shared";
 import { MEDIA, INSTAGRAM_REELS, YOUTUBE_VIDEOS, YT_CHANNEL, IG_PROFILE, IG_HANDLE } from "../data";
 import { AboutHills, Books, CardWave, CellDoodle, CloudDoodle, Diya, HeartShape, HeroHills, Leaf, LeafBranch, Pin, RayDashes, Skyline, SoftClouds, Sprout } from "../decor";
+import BlurOutUp from "../components/smoothui/blur-out-up";
+import BottomUpLetters from "../components/smoothui/bottom-up-letters";
+import KineticCenterBuild from "../components/smoothui/kinetic-center-build";
+import KineticTypeScroll from "../components/smoothui/kinetic-type-scroll";
+import MagneticField from "../components/smoothui/magnetic-field";
+import ScrollImageReveal from "../components/smoothui/scroll-image-reveal";
+import HoverExpand from "../components/unlumen-ui/hover-expand";
 
 export function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   const [v, setV] = useState(0);
@@ -22,7 +29,31 @@ export function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
     io.observe(el);
     return () => io.disconnect();
   }, [to]);
-  return <span ref={ref}>{v.toLocaleString("en-IN")}{suffix}</span>;
+  return <span ref={ref} className="notranslate" translate="no">{v.toLocaleString("en-IN")}{suffix}</span>;
+}
+
+/** Fixed circular frames with a gentle crossfade between real project photos. */
+function SwapPhoto({ images, alt, className = "" }: { images: string[]; alt: string; className?: string }) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (images.length < 2) return;
+    const timer = window.setInterval(() => setActive((current) => (current + 1) % images.length), 3200);
+    return () => window.clearInterval(timer);
+  }, [images.length]);
+  return (
+    <div className={`relative h-full w-full overflow-hidden ${className}`}>
+      {images.map((src, index) => (
+        <img
+          key={src}
+          src={src}
+          alt={index === active ? alt : ""}
+          aria-hidden={index !== active}
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out"
+          style={{ opacity: index === active ? 1 : 0 }}
+        />
+      ))}
+    </div>
+  );
 }
 
 export const STATS = [
@@ -41,14 +72,22 @@ const AREA_COPY: Record<string, string> = {
 
 
 const HERO_AREAS = [
-  { hi: "शिक्षा", en: "Education", bg: "#e8f0fe", bd: "#c9dafb", fg: "#1f5fd1",
-    icon: <><path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1Z" fill="#1f5fd1" fillOpacity=".15" stroke="#1f5fd1" strokeWidth="1.8" strokeLinejoin="round" /><path d="M12 6.5V20" stroke="#1f5fd1" strokeWidth="1.8" /></> },
-  { hi: "स्वच्छता", en: "Cleanliness", bg: "#e7f6ea", bd: "#bfe5c7", fg: "#2f9a46",
-    icon: <><path d="M20 3 12 11.5" stroke="#7a5a2b" strokeWidth="2" strokeLinecap="round" /><path d="M11.5 11 4.5 15l2.8 5.8 6.4-4.6Z" fill="#2f9a46" /><path d="M7 17.5l3.5-2.3M8.5 19.5l3.3-2.4" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" /></> },
-  { hi: "पर्यावरण", en: "Environment", bg: "#fff0e3", bd: "#fbd3b0", fg: "#f2611c",
-    icon: <><path d="M4.5 19.5C4.5 10.5 10 5 20 4c0 10-5.5 15.5-15.5 15.5Z" fill="#2f9a46" /><path d="M5 19 14.5 9.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" /></> },
-  { hi: "मानसिक स्वास्थ्य", en: "Mental Health & Well-being", bg: "#f1ebfd", bd: "#d9c9f7", fg: "#7b4fd6",
-    icon: <><path d="M12 20.5C5 16 2.5 12.2 3.5 8.6 4.4 5.4 8.6 4.3 12 7.6c3.4-3.3 7.6-2.2 8.5 1 1 3.6-1.5 7.4-8.5 11.9Z" fill="#7b4fd6" /><path d="M5 12h3.5l1.5-2.5 2 5 1.5-2.5H19" stroke="#fff" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></> },
+  {
+    hi: "शिक्षा", en: "Education", bg: "#e8f0fe", bd: "#c9dafb", fg: "#1f5fd1",
+    icon: <><path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1V19c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1Z" fill="#1f5fd1" fillOpacity=".15" stroke="#1f5fd1" strokeWidth="1.8" strokeLinejoin="round" /><path d="M12 6.5V20" stroke="#1f5fd1" strokeWidth="1.8" /></>
+  },
+  {
+    hi: "स्वच्छता", en: "Cleanliness", bg: "#e7f6ea", bd: "#bfe5c7", fg: "#2f9a46",
+    icon: <><path d="M20 3 12 11.5" stroke="#7a5a2b" strokeWidth="2" strokeLinecap="round" /><path d="M11.5 11 4.5 15l2.8 5.8 6.4-4.6Z" fill="#2f9a46" /><path d="M7 17.5l3.5-2.3M8.5 19.5l3.3-2.4" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" /></>
+  },
+  {
+    hi: "पर्यावरण", en: "Environment", bg: "#fff0e3", bd: "#fbd3b0", fg: "#f2611c",
+    icon: <><path d="M4.5 19.5C4.5 10.5 10 5 20 4c0 10-5.5 15.5-15.5 15.5Z" fill="#2f9a46" /><path d="M5 19 14.5 9.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" /></>
+  },
+  {
+    hi: "मानसिक स्वास्थ्य", en: "Mental Health & Well-being", bg: "#f1ebfd", bd: "#d9c9f7", fg: "#7b4fd6",
+    icon: <><path d="M12 20.5C5 16 2.5 12.2 3.5 8.6 4.4 5.4 8.6 4.3 12 7.6c3.4-3.3 7.6-2.2 8.5 1 1 3.6-1.5 7.4-8.5 11.9Z" fill="#7b4fd6" /><path d="M5 12h3.5l1.5-2.5 2 5 1.5-2.5H19" stroke="#fff" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" /></>
+  },
 ];
 
 function PhotoStrip({ go }: { go: (p: Page) => void }) {
@@ -428,7 +467,7 @@ function SocialImpact() {
   );
 }
 
-export default function Home({ go }: { go: (p: Page) => void }) {
+export default function Home({ go, onPick }: { go: (p: Page) => void; onPick?: (key: string) => void }) {
   return (
     <>
       {/* HERO — clean light design matching reference */}
@@ -450,109 +489,104 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             ))}
             <span className="float-a absolute right-[16%] top-[10%] text-[#1f5fd1]/70 text-xl">✦</span>
           </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-5 pt-8 lg:pt-10 pb-10 sm:pb-12 grid grid-cols-1 min-[640px]:grid-cols-2 lg:grid-cols-12 gap-7 min-[640px]:gap-4 lg:gap-8 items-start">
-          <div className="lg:col-span-6 rise">
-            <div className="notranslate text-[15px] font-semibold text-navy/80" translate="no">शिक्षा • स्वच्छता • पर्यावरण • मानसिक स्वास्थ्य</div>
-            <h1 className="relative mt-2 font-extrabold tracking-tight">
-              <span
-                className="relative inline-block text-[54px] min-[640px]:text-[clamp(2rem,5.1vw,3.875rem)] lg:text-[62px] xl:text-[80px] leading-[0.95] text-navy notranslate rise"
-                translate="no"
-                style={{ animationDelay: "0.15s" }}
-              >
-                Empirical
-              </span>
-              <span className="inline-flex items-end gap-1 notranslate" translate="no">
-                <span className="text-[48px] min-[640px]:text-[clamp(1.8rem,4.5vw,3.5rem)] lg:text-[64px] xl:text-[72px] leading-[1.2] text-[#f2611c]">शिक्षा अभियान</span>
-                <svg viewBox="0 0 48 48" className="w-10 min-[640px]:w-9 lg:w-12 xl:w-14 mb-3 lg:mb-4 shrink-0" aria-hidden>
-                  <path d="M6 42 C 18 38, 30 28, 38 12" fill="none" stroke="#f2611c" strokeWidth="5" strokeLinecap="round" />
-                  <path d="M27 13 L39 9 L41 22" fill="none" stroke="#f2611c" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-              <svg viewBox="0 0 120 70" className="hidden min-[420px]:block absolute right-0 lg:right-4 top-1 w-14 min-[640px]:w-20 lg:w-28 xl:w-32" aria-hidden>
-                <path d="M6 62 C 22 66, 30 46, 18 44 C 8 43, 12 58, 30 56 C 50 54, 62 40, 78 30" fill="none" stroke="#1f5fd1" strokeWidth="2" strokeDasharray="4 5" strokeLinecap="round" opacity=".7" />
-                <path d="M82 28 L114 6 L98 40 L92 30 Z" fill="#fff" stroke="#12307a" strokeWidth="2.5" strokeLinejoin="round" />
-                <path d="M92 30 L114 6" stroke="#12307a" strokeWidth="2" />
-              </svg>
-            </h1>
-            <p className="mt-4 text-[17px] sm:text-lg leading-relaxed text-navy/80 max-w-xl">
-              Our aim is to build a better society for every child, every family and every community in Khandwa — through education, cleanliness, environment and health awareness.
-            </p>
-            <div className="mt-6 grid grid-cols-2 gap-3 max-w-xl">
-              {HERO_AREAS.map((h) => (
-                <button key={h.hi} onClick={() => go("initiatives")}
-                  className="press group relative flex items-center gap-2.5 sm:gap-3 h-14 px-3 sm:px-4 rounded-xl ring-1 overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md"
-                  style={{ background: h.bg, ["--tw-ring-color" as string]: h.bd }}>
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 shrink-0" aria-hidden>{h.icon}</svg>
-                  <span className="flex-1 text-left leading-tight min-w-0">
-                    <span className="block font-display font-bold text-[16px] sm:text-[17px] text-navy notranslate" translate="no">{h.hi}</span>
-                    <span className="block text-[11px] text-slate-500 truncate">{h.en}</span>
-                  </span>
-                  <span className="font-bold transition group-hover:translate-x-0.5" style={{ color: h.fg }}>→</span>
-                  <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/4 bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 group-hover:opacity-100" style={{ animation: "sheen 1.1s ease-out" }} />
-                </button>
-              ))}
-            </div>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <button onClick={() => go("initiatives")} className="press group relative overflow-hidden h-12 px-6 inline-flex items-center gap-2 rounded-full bg-navy text-white font-bold shadow-lg shadow-blue-900/20 hover:bg-azure transition">
-                Explore Our Work <span className="transition group-hover:translate-x-1">→</span>
-                <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent" style={{ animation: "sheen 4.5s ease-in-out 0.8s infinite" }} />
-              </button>
-              <button onClick={() => go("impact")} className="press group inline-flex items-center gap-3 font-bold text-navy">
-                <span className="w-12 h-12 rounded-full bg-white ring-2 ring-navy grid place-items-center text-navy group-hover:bg-navy group-hover:text-white transition">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 transition group-hover:scale-125"><path d="M7 4.5v15l12-7.5z" /></svg>
+          <div className="relative z-10 max-w-7xl mx-auto px-5 pt-8 lg:pt-10 pb-10 sm:pb-12 grid grid-cols-1 min-[640px]:grid-cols-2 lg:grid-cols-12 gap-7 min-[640px]:gap-4 lg:gap-8 items-start">
+            <div className="lg:col-span-6 rise">
+              <div className="notranslate text-[15px] font-semibold text-navy/80" translate="no">शिक्षा • स्वच्छता • पर्यावरण • मानसिक स्वास्थ्य</div>
+              <h1 className="relative mt-2 font-extrabold tracking-tight">
+                <span
+                  className="relative inline-block text-[54px] min-[640px]:text-[clamp(2rem,5.1vw,3.875rem)] lg:text-[62px] xl:text-[80px] leading-[0.95] text-navy notranslate rise"
+                  translate="no"
+                  style={{ animationDelay: "0.15s" }}
+                >
+                  <BottomUpLetters delay={90} stagger={34}>Empirical</BottomUpLetters>
                 </span>
-                See Our Impact
-              </button>
+                <span className="inline-flex items-end gap-1 notranslate" translate="no">
+                  <span className="text-[48px] min-[640px]:text-[clamp(1.8rem,4.5vw,3.5rem)] lg:text-[64px] xl:text-[72px] leading-[1.2] text-[#f2611c]">शिक्षा अभियान</span>
+                  <svg viewBox="0 0 48 48" className="w-10 min-[640px]:w-9 lg:w-12 xl:w-14 mb-3 lg:mb-4 shrink-0" aria-hidden>
+                    <path d="M6 42 C 18 38, 30 28, 38 12" fill="none" stroke="#f2611c" strokeWidth="5" strokeLinecap="round" />
+                    <path d="M27 13 L39 9 L41 22" fill="none" stroke="#f2611c" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <svg viewBox="0 0 120 70" className="hidden min-[420px]:block absolute right-0 lg:right-4 top-1 w-14 min-[640px]:w-20 lg:w-28 xl:w-32" aria-hidden>
+                  <path d="M6 62 C 22 66, 30 46, 18 44 C 8 43, 12 58, 30 56 C 50 54, 62 40, 78 30" fill="none" stroke="#1f5fd1" strokeWidth="2" strokeDasharray="4 5" strokeLinecap="round" opacity=".7" />
+                  <path d="M82 28 L114 6 L98 40 L92 30 Z" fill="#fff" stroke="#12307a" strokeWidth="2.5" strokeLinejoin="round" />
+                  <path d="M92 30 L114 6" stroke="#12307a" strokeWidth="2" />
+                </svg>
+              </h1>
+              <p className="mt-4 text-[17px] sm:text-lg leading-relaxed text-navy/80 max-w-xl">
+                <BlurOutUp triggerOnView delay={100} stagger={16}>Our aim is to build a better society for every child, every family and every community in Khandwa — through education, cleanliness, environment and health awareness.</BlurOutUp>
+              </p>
+              <div className="mt-6 grid grid-cols-2 gap-3 max-w-xl">
+                {HERO_AREAS.map((h) => (
+                  <button key={h.hi} onClick={() => go("initiatives")}
+                    className="press group relative flex items-center gap-2.5 sm:gap-3 h-14 px-3 sm:px-4 rounded-xl ring-1 overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md"
+                    style={{ background: h.bg, ["--tw-ring-color" as string]: h.bd }}>
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 shrink-0" aria-hidden>{h.icon}</svg>
+                    <span className="flex-1 text-left leading-tight min-w-0">
+                      <span className="block font-display font-bold text-[16px] sm:text-[17px] text-navy notranslate" translate="no">{h.hi}</span>
+                      <span className="block text-[11px] text-slate-500 truncate">{h.en}</span>
+                    </span>
+                    <span className="font-bold transition group-hover:translate-x-0.5" style={{ color: h.fg }}>→</span>
+                    <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/4 bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 group-hover:opacity-100" style={{ animation: "sheen 1.1s ease-out" }} />
+                  </button>
+                ))}
+              </div>
+              <MagneticField className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4" radius={150} strength={0.24}>
+                <button data-magnetic onClick={() => go("initiatives")} className="press group relative overflow-hidden h-12 px-6 inline-flex items-center gap-2 rounded-full bg-navy text-white font-bold shadow-lg shadow-blue-900/20 hover:bg-azure transition">
+                  Explore Our Work <span className="transition group-hover:translate-x-1">→</span>
+                  <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent" style={{ animation: "sheen 4.5s ease-in-out 0.8s infinite" }} />
+                </button>
+                <button data-magnetic onClick={() => go("impact")} className="press group inline-flex items-center gap-3 font-bold text-navy">
+                  <span className="w-12 h-12 rounded-full bg-white ring-2 ring-navy grid place-items-center text-navy group-hover:bg-navy group-hover:text-white transition">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 transition group-hover:scale-125"><path d="M7 4.5v15l12-7.5z" /></svg>
+                  </span>
+                  See Our Impact
+                </button>
+              </MagneticField>
+              <div className="mt-4 max-w-xl text-left font-display text-[13px] font-bold tracking-wide text-[#1f5fd1]/80 sm:text-sm">
+                <KineticCenterBuild className="justify-start" phrases={["Learning with purpose", "Serving with compassion", "Growing as a community"]} interval={4600} />
+              </div>
             </div>
-          </div>
 
-          {/* Collage: large circle with orange arc + cluster of overlapping circles */}
-          <div className="lg:col-span-6 w-full">
-            <div className="relative mx-auto w-full max-w-[600px] aspect-[58/52]">
-              <RayDashes className="absolute left-[2%] -top-[1%] w-[11%]" />
-              {/* orange arc hugging the big circle */}
-              <svg viewBox="0 0 100 100" className="absolute aspect-square" style={{ left: "-3%", top: 0, width: "76%" }} aria-hidden>
-                <defs>
-                  <linearGradient id="heroArc" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor="#ff9a2e" />
-                    <stop offset="1" stopColor="#f2541a" />
-                  </linearGradient>
-                </defs>
-                <path className="arc-run" d="M95 50 A45 45 0 1 0 31 90.8" fill="none" stroke="url(#heroArc)" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-              {/* big round photo */}
-              <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_18px_36px_-14px_rgba(18,48,122,.45)]"
-                style={{ left: 0, top: "4%", width: "70%", zIndex: 1 }}>
-                <img src="images/shiksha.jpg" alt="Eklavya Batch students studying" className="w-full h-full object-cover" />
-              </div>
-              {/* overlapping circle cluster on the right */}
-              <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
-                style={{ left: "64%", top: 0, width: "16%", zIndex: 4 }}>
-                <div className="float-a h-full w-full">
-                <img src="images/swasthya.jpg" alt="Well-being awareness session" className="w-full h-full object-cover" />
-              </div>
-              </div>
-              <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
-                style={{ left: "74%", top: "6%", width: "25%", zIndex: 3 }}>
-                <div className="float-b h-full w-full">
-                <img src="images/volunteers.jpg" alt="Volunteers of Empirical Shiksha Abhiyan" className="w-full h-full object-cover" />
-              </div>
-              </div>
-              <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
-                style={{ left: "62%", top: "34%", width: "24%", zIndex: 5 }}>
-                <div className="float-a h-full w-full">
-                <img src="images/swachhata.jpg" alt="Cleanliness drive at a kund" className="w-full h-full object-cover" />
-              </div>
-              </div>
-              <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
-                style={{ left: "74%", top: "57%", width: "25%", zIndex: 4 }}>
-                <div className="float-b h-full w-full">
-                <img src="images/paryavaran.jpg" alt="Planting saplings in Khandwa" className="w-full h-full object-cover" />
-              </div>
+            {/* Collage: large circle with orange arc + cluster of overlapping circles */}
+            <div className="lg:col-span-6 w-full">
+              <div className="relative mx-auto w-full max-w-[600px] aspect-[58/52]">
+                <RayDashes className="absolute left-[2%] -top-[1%] w-[11%]" />
+                {/* orange arc hugging the big circle */}
+                <svg viewBox="0 0 100 100" className="absolute aspect-square" style={{ left: "-3%", top: 0, width: "76%" }} aria-hidden>
+                  <defs>
+                    <linearGradient id="heroArc" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor="#ff9a2e" />
+                      <stop offset="1" stopColor="#f2541a" />
+                    </linearGradient>
+                  </defs>
+                  <path className="arc-run" d="M95 50 A45 45 0 1 0 31 90.8" fill="none" stroke="url(#heroArc)" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+                {/* big round photo */}
+                <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_18px_36px_-14px_rgba(18,48,122,.45)]"
+                  style={{ left: 0, top: "4%", width: "70%", zIndex: 1 }}>
+                  <SwapPhoto images={["images/group-banner.png", "images/clean-group-2.png", "images/real-group.jpg"]} alt="Students learning together" />
+                </div>
+                {/* overlapping circle cluster on the right */}
+                <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
+                  style={{ left: "64%", top: 0, width: "16%", zIndex: 4 }}>
+                  <SwapPhoto images={["images/rally-march.png", "images/init-rally.png", "images/real-rally.jpg"]} alt="Well-being awareness session" />
+                </div>
+                <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
+                  style={{ left: "74%", top: "6%", width: "25%", zIndex: 3 }}>
+                  <SwapPhoto images={["images/team-gloves.png", "images/clean-group-1.png", "images/real-group.jpg"]} alt="Volunteers of Empirical Shiksha Abhiyan" />
+                </div>
+                <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
+                  style={{ left: "62%", top: "34%", width: "24%", zIndex: 5 }}>
+                  <SwapPhoto images={["images/clean-group-1.png", "images/real-kund.jpg", "images/real-kund-2.jpg"]} alt="Cleanliness drive at a kund" />
+                </div>
+                <div className="absolute aspect-square rounded-full overflow-hidden border-[5px] sm:border-[7px] border-white bg-white shadow-[0_16px_32px_-14px_rgba(18,48,122,.45)]"
+                  style={{ left: "74%", top: "57%", width: "25%", zIndex: 4 }}>
+                  <SwapPhoto images={["images/plant-real.png", "images/real-plant.jpg", "images/paryavaran.jpg"]} alt="Planting saplings in Khandwa" />
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
 
         {/* Photo strip */}
@@ -602,8 +636,17 @@ export default function Home({ go }: { go: (p: Page) => void }) {
               Learning today, for a <span className="text-flame">stronger tomorrow.</span>
             </h2>
             <Swoosh className="h-2.5 w-28 mt-2.5" />
+            <KineticTypeScroll
+              words={["Education", "builds", "confidence.", "Service", "builds", "community."]}
+              align="start"
+              className="mt-6 max-w-xl font-display text-[21px] font-extrabold leading-tight text-[#1f5fd1] sm:text-[25px] md:text-[29px]"
+              dimRange={[0.62, 1]}
+              scaleRange={[0.97, 1.07]}
+              liftRange={[0, -7]}
+              stagger={0.15}
+            />
             <p className="mt-4 text-[17px] leading-relaxed text-slate-600 max-w-xl">
-              We are a community-driven initiative in Khandwa working where education, cleanliness, environment and health meet. Founded by Rahul Geete and Jayram Malakar and powered by 60+ volunteers, we learn together and serve together.
+              We are a community-driven initiative in Khandwa working where education, cleanliness, environment and health meet. Founded by Rahul Geete and Jayram Malakar and powered by <span className="notranslate" translate="no"><Counter to={60} suffix="+" /></span> volunteers, we learn together and serve together.
             </p>
             <div className="relative mt-7 inline-block">
               <button onClick={() => go("about")} className="press inline-flex items-center gap-2 h-12 px-6 rounded-full bg-royal text-white font-bold hover:bg-flame transition">
@@ -614,12 +657,18 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             <div className="relative mt-8 grid gap-4 border-t border-orange-200/70 pt-6">
               <CloudDoodle className="pointer-events-none absolute right-4 -top-7 w-14" />
               {[
-                { t: "Our Vision", d: "An educated, healthy and clean Khandwa.", c: "#3f9a3a", tint: "#e9f5e6",
-                  ic: <><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /></> },
-                { t: "Our Mission", d: "Empower students, care for our environment, serve the community.", c: "#f2611c", tint: "#fdeee3",
-                  ic: <path d="M2 12h4l2.5-6 3.5 12 2.5-6H22" stroke="currentColor" strokeWidth="1.9" fill="none" strokeLinecap="round" strokeLinejoin="round" /> },
-                { t: "Our Values", d: "Education. Service. Community. Integrity.", c: "#1f5fd1", tint: "#e8edfb",
-                  ic: <><circle cx="9" cy="9" r="3.2" stroke="currentColor" strokeWidth="1.8" /><circle cx="17" cy="10.5" r="2.4" stroke="currentColor" strokeWidth="1.8" /><path d="M3.5 19c.6-3 2.7-4.6 5.5-4.6S14 16 14.6 19M15 15c2.4 0 4 1.4 4.5 4" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" /></> },
+                {
+                  t: "Our Vision", d: "An educated, healthy and clean Khandwa.", c: "#3f9a3a", tint: "#e9f5e6",
+                  ic: <><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /></>
+                },
+                {
+                  t: "Our Mission", d: "Empower students, care for our environment, serve the community.", c: "#f2611c", tint: "#fdeee3",
+                  ic: <path d="M2 12h4l2.5-6 3.5 12 2.5-6H22" stroke="currentColor" strokeWidth="1.9" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                },
+                {
+                  t: "Our Values", d: "Education. Service. Community. Integrity.", c: "#1f5fd1", tint: "#e8edfb",
+                  ic: <><circle cx="9" cy="9" r="3.2" stroke="currentColor" strokeWidth="1.8" /><circle cx="17" cy="10.5" r="2.4" stroke="currentColor" strokeWidth="1.8" /><path d="M3.5 19c.6-3 2.7-4.6 5.5-4.6S14 16 14.6 19M15 15c2.4 0 4 1.4 4.5 4" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" /></>
+                },
               ].map((v) => (
                 <div key={v.t} className="flex items-start gap-3">
                   <div className="w-10 h-10 shrink-0 rounded-full grid place-items-center mt-0.5" style={{ background: v.tint, color: v.c }}>
@@ -648,15 +697,15 @@ export default function Home({ go }: { go: (p: Page) => void }) {
               </div>
               {/* big round photo */}
               <div className="absolute left-0 bottom-0 w-[68%] aspect-square rounded-full bg-white p-[7px] shadow-xl ring-1 ring-orange-200/80 z-0">
-                <img src="images/paryavaran.jpg" alt="Volunteers planting saplings in Khandwa" className="w-full h-full object-cover rounded-full" />
+                <SwapPhoto images={["images/plant-real.png", "images/real-plant.jpg", "images/paryavaran.jpg"]} alt="Volunteers planting saplings in Khandwa" className="rounded-full" />
               </div>
               {/* top-right photo, overlapping the circle */}
               <div className="float-a absolute right-0 top-0 w-[46%] aspect-[4/3] rotate-[4deg] rounded-[18px] overflow-hidden ring-[6px] ring-white shadow-xl z-10">
-                <img src="images/shiksha.jpg" alt="Eklavya Batch class" className="w-full h-full object-cover" />
+                <img src="images/group-banner.png" alt="Eklavya Batch class" className="w-full h-full object-cover" />
               </div>
               {/* bottom-right photo, overlapping the circle */}
               <div className="float-b absolute right-0 bottom-[2%] w-[43%] aspect-[4/3] -rotate-[3deg] rounded-[18px] overflow-hidden ring-[6px] ring-white shadow-xl z-20">
-                <img src="images/swachhata.jpg" alt="Cleanliness drive" className="w-full h-full object-cover" />
+                <img src="images/clean-group-1.png" alt="Cleanliness drive" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
@@ -669,19 +718,25 @@ export default function Home({ go }: { go: (p: Page) => void }) {
           <SectionHead eyebrow="Our Four Pillars" title={<>Four areas. <span className="text-flame">One community.</span></>} sub="Every activity we run belongs to one of four areas — each one grows out of the same idea: education that turns into service." />
           <button onClick={() => go("initiatives")} className="text-royal font-bold hover:text-flame shrink-0">All initiatives →</button>
         </div>
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {AREAS.map((a) => (
-            <button key={a.key} onClick={() => go("initiatives")}
-              className="card-pop group text-left rounded-[24px] p-6 relative overflow-hidden flex flex-col ring-1 ring-black/[.04] transition"
-              style={{ background: a.tint }}>
-              <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full border-[14px] opacity-15" style={{ borderColor: a.color }} />
-              <div className="w-16 h-16 rounded-t-full rounded-b-2xl bg-white grid place-items-center shadow-sm"><AreaIcon k={a.key} size={40} /></div>
-              <div className="mt-5 font-display text-[28px] leading-none font-extrabold" style={{ color: a.color }}>{a.hi}</div>
-              <div className="mt-1.5 font-bold text-ink">{a.name} · {a.en}</div>
-              <p className="mt-2.5 text-slate-600 text-[15px] leading-relaxed flex-1">{AREA_COPY[a.key]}</p>
-              <div className="mt-5 font-bold text-sm" style={{ color: a.color }}>Learn more <span className="inline-block transition group-hover:translate-x-1">→</span></div>
-            </button>
-          ))}
+        <div className="mt-10 mx-auto max-w-5xl">
+          <HoverExpand
+            collapsedHeight={74}
+            expandedHeight={224}
+            items={AREAS.map((area) => ({
+              label: `${area.hi} · ${area.en}`,
+              sublabel: area.name,
+              description: AREA_COPY[area.key],
+              image: area.img,
+              imageAlt: `${area.en} programme in Khandwa`,
+              accent: area.color,
+              tint: area.tint,
+              href: area.key,
+            }))}
+            onNavigate={(key) => (onPick ? onPick(key) : go("initiatives"))}
+          />
+          <div className="mt-5 text-center text-[12px] font-semibold tracking-wide text-slate-500">
+            Hover or tap a pillar to explore its work
+          </div>
         </div>
       </section>
 
@@ -744,7 +799,9 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                 <div key={m.y} className="flex flex-col items-center text-center">
                   {/* Date + label above the node */}
                   <div className="mb-4">
-                    <div className="font-display font-extrabold text-[26px] md:text-[28px] leading-none text-ink">{m.y}</div>
+                    <div className="font-display font-extrabold text-[26px] md:text-[28px] leading-none text-ink notranslate" translate="no">
+                      {m.y === "2021" ? <Counter to={2021} /> : m.y === "2 Oct 2024" ? <><Counter to={2} /> Oct <Counter to={2024} /></> : <><Counter to={13} /> Jul <Counter to={2026} /></>}
+                    </div>
                     <div className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: m.c }}>{m.d}</div>
                   </div>
 
@@ -863,10 +920,14 @@ export default function Home({ go }: { go: (p: Page) => void }) {
               onClick={() => go("gallery")}
               className="group relative w-full aspect-[4/3] sm:aspect-[5/3.5] rounded-[20px] md:rounded-[28px] overflow-hidden shadow-lg ring-1 ring-black/5"
             >
-              <img
-                src="images/swachhata.jpg"
-                alt="Cleaning drive at Rameshwar Kund"
-                className="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              <ScrollImageReveal
+                src="images/clean-group-1.png"
+                alt="Volunteers leading a cleaning drive at Rameshwar Kund"
+                mask="scale"
+                once
+                parallax={22}
+                rounded="rounded-[20px] md:rounded-[28px]"
+                className="absolute inset-0 h-full w-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 md:bottom-5 md:left-5">
@@ -883,7 +944,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             <div className="grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 place-items-center">
               {[
                 {
-                  img: "images/shiksha.jpg",
+                  img: "images/group-banner.png",
                   label: "Education",
                   color: "#3f9a3a",
                   bg: "#e9f5e6",
@@ -894,7 +955,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   ),
                 },
                 {
-                  img: "images/paryavaran.jpg",
+                  img: "images/plant-real.png",
                   label: "Environment",
                   color: "#3f9a3a",
                   bg: "#e9f5e6",
@@ -905,7 +966,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   ),
                 },
                 {
-                  img: "images/swasthya.jpg",
+                  img: "images/rally-march.png",
                   label: "Awareness",
                   color: "#7b4fd6",
                   bg: "#f3eefc",
@@ -916,7 +977,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   ),
                 },
                 {
-                  img: "images/clogrun.jpg",
+                  img: "images/clean-group-2.png",
                   label: "Clog Run",
                   color: "#1e88e5",
                   bg: "#e3f2fd",
@@ -933,10 +994,9 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   className="group flex flex-col items-center text-center w-full max-w-[160px] sm:max-w-[180px] md:max-w-[200px]"
                 >
                   <div className="relative w-full aspect-square rounded-full overflow-hidden shadow-md ring-[3px] sm:ring-4 ring-white transition duration-300 group-hover:shadow-lg group-hover:scale-[1.03]">
-                    <img
-                      src={item.img}
+                    <SwapPhoto
+                      images={[item.img, "images/real-group.jpg", "images/clean-group-2.png", "images/real-rally.jpg"]}
                       alt={item.label}
-                      className="absolute inset-0 w-full h-full object-cover"
                     />
                   </div>
                   <div
@@ -959,7 +1019,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
       {/* CLOSING BAND — redesigned to match provided design */}
       <section
         className="relative overflow-hidden py-12 md:py-20"
-        style={{ backgroundImage: "url(/images/join-hands-bg.webp)", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#f4f7fd" }}
+        style={{ backgroundImage: "url(/images/group-banner.png)", backgroundSize: "cover", backgroundPosition: "center", backgroundColor: "#f4f7fd" }}
       >
 
         <div className="relative max-w-3xl mx-auto px-4 sm:px-5">
@@ -967,7 +1027,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             {/* JOIN HANDS pill */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#c45a12] text-white text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.12em] shadow-sm">
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" aria-hidden>
-                <path d="M11 8.5c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5V11h1.5c.8 0 1.5.7 1.5 1.5S16.3 14 15.5 14H14v1.5c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V14H9.5c-.8 0-1.5-.7-1.5-1.5S8.7 11 9.5 11H11V8.5z" opacity=".3"/>
+                <path d="M11 8.5c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5V11h1.5c.8 0 1.5.7 1.5 1.5S16.3 14 15.5 14H14v1.5c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V14H9.5c-.8 0-1.5-.7-1.5-1.5S8.7 11 9.5 11H11V8.5z" opacity=".3" />
                 <path d="M7.5 11.5c-1.1 0-2 .9-2 2v1c0 1.1.9 2 2 2h.5v.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5V15h1c1.1 0 2-.9 2-2v-1c0-1.1-.9-2-2-2h-1.5V9.5c0-1.4-1.1-2.5-2.5-2.5S9.5 8.1 9.5 9.5v2H7.5zm9 0c-1.1 0-2 .9-2 2v1c0 1.1.9 2 2 2h.5v.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5V15h1c1.1 0 2-.9 2-2v-1c0-1.1-.9-2-2-2h-1.5V9.5c0-1.4-1.1-2.5-2.5-2.5S14.5 8.1 14.5 9.5v2H16.5z" />
               </svg>
               Join Hands
@@ -987,7 +1047,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full border-2 border-[#e07a2f] text-[#c45a12] font-bold text-sm hover:bg-[#fff4eb] transition"
               >
                 <svg viewBox="0 0 24 24" className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                  <path d="M9 18h6M10 21h4M12 3a5 5 0 0 1 3.5 8.5c-.7.7-1.1 1.5-1.3 2.5h-4.4c-.2-1-.6-1.8-1.3-2.5A5 5 0 0 1 12 3z" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 18h6M10 21h4M12 3a5 5 0 0 1 3.5 8.5c-.7.7-1.1 1.5-1.3 2.5h-4.4c-.2-1-.6-1.8-1.3-2.5A5 5 0 0 1 12 3z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 Share an Idea
               </button>
@@ -996,11 +1056,11 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full bg-[#c45a12] text-white font-bold text-sm hover:bg-[#a84a0e] transition shadow-sm"
               >
                 <svg viewBox="0 0 24 24" className="w-4.5 h-4.5" fill="currentColor" aria-hidden>
-                  <circle cx="9" cy="8" r="2.4"/>
-                  <circle cx="15" cy="8.5" r="2"/>
-                  <path d="M3.5 18c.5-2.6 2.4-4 5.5-4s5 1.4 5.5 4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
-                  <path d="M14 14.5c1.8 0 3.2 1 3.8 3" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
-                  <path d="M17.2 5.5c1.2-.3 2.2.4 2 1.4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                  <circle cx="9" cy="8" r="2.4" />
+                  <circle cx="15" cy="8.5" r="2" />
+                  <path d="M3.5 18c.5-2.6 2.4-4 5.5-4s5 1.4 5.5 4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                  <path d="M14 14.5c1.8 0 3.2 1 3.8 3" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                  <path d="M17.2 5.5c1.2-.3 2.2.4 2 1.4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                 </svg>
                 Volunteer With Us
               </button>
@@ -1009,18 +1069,26 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             {/* Area pills */}
             <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2">
               {[
-                { label: "Education", color: "#1f5fd1", bg: "#e8f0fe", icon: (
-                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.1C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1z"/></svg>
-                )},
-                { label: "Cleanliness", color: "#e07a2f", bg: "#fff0e3", icon: (
-                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M15.5 4.5 12 16l-1.5 4.5-1.5-4.5L5.5 4.5 12 7z"/><path d="M8 17h8l-1 3H9z"/></svg>
-                )},
-                { label: "Environment", color: "#3f9a3a", bg: "#e9f5e6", icon: (
-                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.4l1.89.7.6-1.4c.4.1.8.1 1.2.1 1.5 0 2.9-.4 4-1.1 1.7 1.1 3.9 1.5 6.1 1.1 1.1-.2 2.1-.6 3-1.2.3.4.6.7 1 1l1.5-1.3c-1.1-1.3-1.9-2.9-2.2-4.6-.4-2.1.1-4.2 1.2-5.9-1.1-1.1-2.4-1.9-3.9-2.4z"/></svg>
-                )},
-                { label: "Mental Health", color: "#7b4fd6", bg: "#f3eefc", icon: (
-                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3c1.8-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7zm-1 16h2v1h-2v-1zm0-2h2v1h-2v-1z"/></svg>
-                )},
+                {
+                  label: "Education", color: "#1f5fd1", bg: "#e8f0fe", icon: (
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.1C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1z" /></svg>
+                  )
+                },
+                {
+                  label: "Cleanliness", color: "#e07a2f", bg: "#fff0e3", icon: (
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M15.5 4.5 12 16l-1.5 4.5-1.5-4.5L5.5 4.5 12 7z" /><path d="M8 17h8l-1 3H9z" /></svg>
+                  )
+                },
+                {
+                  label: "Environment", color: "#3f9a3a", bg: "#e9f5e6", icon: (
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.4l1.89.7.6-1.4c.4.1.8.1 1.2.1 1.5 0 2.9-.4 4-1.1 1.7 1.1 3.9 1.5 6.1 1.1 1.1-.2 2.1-.6 3-1.2.3.4.6.7 1 1l1.5-1.3c-1.1-1.3-1.9-2.9-2.2-4.6-.4-2.1.1-4.2 1.2-5.9-1.1-1.1-2.4-1.9-3.9-2.4z" /></svg>
+                  )
+                },
+                {
+                  label: "Mental Health", color: "#7b4fd6", bg: "#f3eefc", icon: (
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3c1.8-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7zm-1 16h2v1h-2v-1zm0-2h2v1h-2v-1z" /></svg>
+                  )
+                },
               ].map((a) => (
                 <span
                   key={a.label}

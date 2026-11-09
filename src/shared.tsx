@@ -1,13 +1,14 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { LeafBranch, RayDashes } from "./decor";
 
-export type Page = "home" | "about" | "initiatives" | "impact" | "gallery" | "contact";
+export type Page = "home" | "about" | "initiatives" | "initiative-detail" | "impact" | "gallery" | "contact"; //| "success" 
 export const NAV: { id: Page; label: string }[] = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "initiatives", label: "Initiatives" },
   { id: "impact", label: "Impact" },
   { id: "gallery", label: "Gallery" },
+  // { id: "success", label: "Success Stories" },
   { id: "contact", label: "Contact Us" },
 ];
 
@@ -15,10 +16,10 @@ export const PHONE = "7400845669";
 export const EMAIL = "empiricalshikshaabhiyan@gmail.com";
 
 export const AREAS = [
-  { key: "shiksha", hi: "शिक्षा", name: "Shiksha", en: "Education", color: "#1f5fd1", tint: "#e8f0fe", img: "images/shiksha.jpg" },
-  { key: "swachhata", hi: "स्वच्छता", name: "Swachhata", en: "Cleanliness", color: "#f2611c", tint: "#fff0e3", img: "images/swachhata.jpg" },
-  { key: "paryavaran", hi: "पर्यावरण", name: "Paryavaran", en: "Environment", color: "#3f9a3a", tint: "#e9f5e6", img: "images/paryavaran.jpg" },
-  { key: "swasthya", hi: "मानसिक स्वास्थ्य", name: "Mansik Swasthya", en: "Mental Health", color: "#d62828", tint: "#fbe7e7", img: "images/swasthya.jpg" },
+  { key: "shiksha", hi: "शिक्षा", name: "Shiksha", en: "Education", color: "#1f5fd1", tint: "#e8f0fe", img: "images/group-banner.png" },
+  { key: "swachhata", hi: "स्वच्छता", name: "Swachhata", en: "Cleanliness", color: "#f2611c", tint: "#fff0e3", img: "images/clean-group-1.png" },
+  { key: "paryavaran", hi: "पर्यावरण", name: "Paryavaran", en: "Environment", color: "#3f9a3a", tint: "#e9f5e6", img: "images/plant-real.png" },
+  { key: "swasthya", hi: "मानसिक स्वास्थ्य", name: "Mansik Swasthya", en: "Mental Health", color: "#087fb5", tint: "#e8f6fc", img: "images/rally-march.png" },
 ] as const;
 
 /* -------- Logo: uses official file at /logo.png, falls back to a stand-in emblem -------- */
@@ -217,7 +218,7 @@ function loadGoogleTranslate() {
   document.body.appendChild(sc);
 }
 
-export function Navbar({ page, go, scrolled = true }: { page: Page; go: (p: Page) => void; scrolled?: boolean }) {
+export function Navbar({ page, go, scrolled = true, visible = true }: { page: Page; go: (p: Page) => void; scrolled?: boolean; visible?: boolean }) {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState(false);
   const [lang, setLang] = useState<string>(() => (typeof document !== "undefined" ? currentLang() : "en"));
@@ -231,10 +232,10 @@ export function Navbar({ page, go, scrolled = true }: { page: Page; go: (p: Page
   const active = LANGS.find((l) => l.code === lang) ?? LANGS[0];
   const links = NAV.filter((n) => n.id !== "contact");
   return (
-    <header className={`sticky top-0 z-50 px-3 sm:px-5 pt-3 pb-2 transition-colors duration-300 ${scrolled ? `backdrop-blur-md ${page === "home" ? "bg-[#f6f1ec]/70" : "bg-paper/85"}` : "bg-transparent"}`}>
+    <header aria-hidden={!visible} className={`fixed inset-x-0 top-0 z-[70] px-3 sm:px-5 pt-2 pb-0 bg-transparent backdrop-blur-none transition-all duration-300 ease-out ${visible ? "translate-y-0 opacity-100" : "-translate-y-[115%] opacity-0 pointer-events-none"}`}>
       <div className="max-w-7xl mx-auto bg-white rounded-[22px] shadow-[0_10px_30px_-14px_rgba(18,48,122,.35)] ring-1 ring-[#e3ebf7] pl-3 sm:pl-4 pr-2 h-[68px] flex items-center justify-between gap-3">
         <button onClick={() => go("home")} className="shrink-0"><Logo size={52} /></button>
-        <nav className="hidden xl:flex items-center gap-1.5">
+        <nav className="hidden lg:flex items-center gap-1.5">
           {links.map((n) => (
             <button key={n.id} onClick={() => go(n.id)}
               className={`press px-4 h-10 rounded-full text-[14px] font-semibold whitespace-nowrap transition ${page === n.id ? "bg-azure text-white shadow-md shadow-blue-200" : "bg-[#f3f6fb] text-navy ring-1 ring-[#e3ebf7] hover:bg-white hover:text-azure hover:ring-azure/40"}`}>
@@ -273,11 +274,11 @@ export function Navbar({ page, go, scrolled = true }: { page: Page; go: (p: Page
             </span>
             Contact Us
           </button>
-          <button className="press xl:hidden w-10 h-10 grid place-items-center rounded-full bg-[#f3f6fb] ring-1 ring-[#e3ebf7] text-navy" onClick={() => setMenu(!menu)} aria-label="Menu">☰</button>
+          <button className="press lg:hidden w-10 h-10 grid place-items-center rounded-full bg-[#f3f6fb] ring-1 ring-[#e3ebf7] text-navy" onClick={() => setMenu(!menu)} aria-label="Menu">☰</button>
         </div>
       </div>
       {menu && (
-        <div className="xl:hidden max-w-7xl mx-auto mt-2 bg-white rounded-[22px] shadow-lg ring-1 ring-[#e3ebf7] p-3 grid sm:grid-cols-2 gap-1.5">
+        <div className="lg:hidden max-w-7xl mx-auto mt-2 bg-white rounded-[22px] shadow-lg ring-1 ring-[#e3ebf7] p-3 grid sm:grid-cols-2 gap-1.5">
           {NAV.map((n) => (
             <button key={n.id} onClick={() => { go(n.id); setMenu(false); }}
               className={`text-left px-4 h-11 rounded-full font-semibold ${page === n.id ? "bg-azure text-white" : n.id === "contact" ? "bg-orange-50 text-flame" : "bg-[#f3f6fb] text-navy"}`}>
@@ -416,12 +417,30 @@ export function Footer({ go }: { go: (p: Page) => void }) {
   );
 }
 
+const HERO_BG_SLIDES = [
+  "images/clean-group-1.png",
+  "images/group-banner.png",
+  "images/plant-real.png",
+  "images/rally-march.png",
+  "images/team-gloves.png",
+  "images/clean-group-2.png",
+];
+
+const HERO_BOX_SLIDES = [
+  { src: "images/clean-group-1.png", label: "Kund Cleanup Drive" },
+  { src: "images/plant-real.png", label: "Harit Khandwa Drive" },
+  { src: "images/group-banner.png", label: "Team & Volunteers" },
+  { src: "images/rally-march.png", label: "Cleanliness Rally" },
+  { src: "images/team-gloves.png", label: "Together for Change" },
+  { src: "images/clean-group-2.png", label: "Community Cleaning" },
+];
+
 export function PageHero({
   eyebrow,
   title,
   sub,
   img,
-  bg = "images/hero-landscape.png",
+  bg = "images/group-banner.png",
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -429,14 +448,42 @@ export function PageHero({
   img?: string;
   bg?: string;
 }) {
+  const [bgIdx, setBgIdx] = useState(0);
+  const [boxIdx, setBoxIdx] = useState(0);
+
+  // Background swaps every 2.5s (like Initiatives)
+  useEffect(() => {
+    const t = setInterval(() => setBgIdx((i) => (i + 1) % HERO_BG_SLIDES.length), 2500);
+    return () => clearInterval(t);
+  }, []);
+
+  // Box images swap every 2.5s (like About)
+  useEffect(() => {
+    const t = setInterval(() => setBoxIdx((i) => (i + 1) % HERO_BOX_SLIDES.length), 2500);
+    return () => clearInterval(t);
+  }, []);
+
+  const boxSlides = img
+    ? [{ src: img, label: "" }, ...HERO_BOX_SLIDES.filter((s) => s.src !== img)]
+    : HERO_BOX_SLIDES;
+
   return (
     <section className="relative overflow-hidden min-h-[320px] sm:min-h-[380px] md:min-h-[420px]">
-      {/* Full-bleed hero background */}
+      {/* Full-bleed auto-swapping hero background */}
       <div className="absolute inset-0" aria-hidden>
-        <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/30 via-transparent to-transparent" />
+        {HERO_BG_SLIDES.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700"
+            style={{ opacity: i === bgIdx ? 1 : 0 }}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/70 via-white/35 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/15 via-transparent to-transparent" />
       </div>
+
       <div className="relative max-w-7xl mx-auto px-5 pt-12 pb-14 md:pt-16 md:pb-20 grid md:grid-cols-2 gap-8 items-center">
         <div className="rise">
           <p className="text-flame font-bold text-base">{eyebrow}</p>
@@ -444,18 +491,46 @@ export function PageHero({
           <Swoosh className="h-3 w-40 mt-3" />
           <p className="mt-6 text-[16px] sm:text-lg text-slate-700 max-w-lg leading-relaxed">{sub}</p>
         </div>
-        {img ? (
-          <div className="relative mx-auto w-full max-w-[340px] md:max-w-[420px] hidden md:block">
-            <div className="absolute inset-[6%] rounded-full bg-white/40" aria-hidden />
-            <RayDashes className="absolute -top-10 left-2 w-28 h-24 opacity-80" color="#ff9a2e" />
-            <LeafBranch className="absolute -top-8 -right-2 w-32 opacity-90" />
-            <div className="relative aspect-square bg-white/90 p-2.5 shadow-2xl rounded-full overflow-hidden ring-4 ring-white/80">
-              <img src={img} alt="" className="w-full h-full object-cover rounded-full" />
-            </div>
+
+        {/* About-style rounded box with auto-swapping photos */}
+        <div className="relative mx-auto w-full max-w-[420px] aspect-[5/4] hidden md:block">
+          <div className="absolute inset-0 rounded-[40%] bg-gradient-to-br from-[#c9dafb]/50 to-[#fbd3b0]/30 blur-2xl" />
+          <div className="absolute inset-0 rounded-[28px] overflow-hidden shadow-xl ring-4 ring-white bg-slate-100">
+            {boxSlides.map((s, i) => (
+              <div
+                key={s.src + i}
+                className="absolute inset-0 transition-all duration-700 ease-in-out"
+                style={{
+                  opacity: i === boxIdx % boxSlides.length ? 1 : 0,
+                  transform: i === boxIdx % boxSlides.length ? "scale(1)" : "scale(1.06)",
+                  zIndex: i === boxIdx % boxSlides.length ? 2 : 1,
+                }}
+              >
+                <img src={s.src} alt={s.label || ""} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                {s.label ? (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white/95 text-[12px] font-bold text-ink shadow whitespace-nowrap">
+                    {s.label}
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
-        ) : (
-          <div className="hidden md:block" />
-        )}
+          {/* dots */}
+          <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+            {boxSlides.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setBoxIdx(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === boxIdx % boxSlides.length ? "w-6 bg-[#f2611c]" : "w-2 bg-slate-300 hover:bg-slate-400"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

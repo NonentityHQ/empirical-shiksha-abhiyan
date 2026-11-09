@@ -1,98 +1,201 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type Page } from "../shared";
+import BlurOutUp from "../components/smoothui/blur-out-up";
+import MotionAccordion from "../components/unlumen-ui/motion-faqs-accordion";
 
-const FAQ = [
+const FAQ_CATEGORIES = [
   {
-    q: "Who runs Empirical Shiksha Abhiyan Samiti?",
-    a: "The organisation was founded by Rahul Geete and Jayram Malakar and is supported by a team of 60+ volunteers in Khandwa.",
+    id: "general",
+    name: "General",
+    faqs: [
+      {
+        question: "Who runs Empirical Shiksha Abhiyan Samiti?",
+        answer: "The organisation was founded by Rahul Geete and Jayram Malakar and is supported by a team of 60+ volunteers in Khandwa.",
+        icon: "Users",
+      },
+      {
+        question: "When was the organisation registered?",
+        answer: "Empirical Shiksha Abhiyan Samiti was registered on 13 July 2026 in Khandwa, Madhya Pradesh.",
+        icon: "CalendarDays",
+      },
+    ],
   },
   {
-    q: "Do you accept donations?",
-    a: "No. We are fully self-funded by our founders. We do not ask for or accept public donations.",
+    id: "programmes",
+    name: "Programmes",
+    faqs: [
+      {
+        question: "What is the Eklavya Batch?",
+        answer: "A free regular academic support programme for students from middle-class and economically disadvantaged families in Khandwa.",
+        icon: "BookOpen",
+      },
+    ],
   },
   {
-    q: "What is the Eklavya Batch?",
-    a: "A free regular academic support programme for students from middle-class and economically disadvantaged families in Khandwa.",
-  },
-  {
-    q: "How can I volunteer?",
-    a: "Reach us on WhatsApp or the Contact page. We welcome students, teachers and neighbours who can give time every week.",
-  },
-  {
-    q: "When was the organisation registered?",
-    a: "Empirical Shiksha Abhiyan Samiti was registered on 13 July 2026 in Khandwa, Madhya Pradesh.",
+    id: "community",
+    name: "Community",
+    faqs: [
+      {
+        question: "Do you accept donations?",
+        answer: "No. We are fully self-funded by our founders. We do not ask for or accept public donations.",
+        icon: "HandHeart",
+      },
+      {
+        question: "How can I volunteer?",
+        answer: "Reach us on WhatsApp or the Contact page. We welcome students, teachers and neighbours who can give time every week.",
+        icon: "MessageCircle",
+      },
+    ],
   },
 ];
 
+const FAQ_ITEMS = FAQ_CATEGORIES.flatMap((category) =>
+  category.faqs.map((faq) => ({
+    question: (
+      <span className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+        <span className="rounded-full bg-[#fff0e5] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#d95a18]">
+          {category.name}
+        </span>
+        <span>{faq.question}</span>
+      </span>
+    ),
+    answer: faq.answer,
+  })),
+);
+
 export default function About({ go }: { go: (p: Page) => void }) {
-  const [open, setOpen] = useState(0);
+  const [activeFounder, setActiveFounder] = useState(0);
+  const founders = [
+    { name: "Rahul Geete", role: "Co-Founder", image: "/images/about-rahul.png", accent: "#1f5fd1" },
+    { name: "Jayram Malakar", role: "Co-Founder", image: "/images/about-jayram.png", accent: "#f2611c" },
+  ];
+
+  // Rotate one founder at a time; image and name transition as a single unit.
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveFounder((current) => (current + 1) % founders.length);
+    }, 4800);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  // Reveal sections/cards as they enter the viewport; respects reduced-motion in CSS.
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (!("IntersectionObserver" in window)) {
+      nodes.forEach((node) => node.classList.add("is-visible"));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -35px 0px" });
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
-      {/* ===== HERO — matches design: text left, founders right ===== */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0" aria-hidden>
-          <img src="images/hero-landscape.png" alt="" className="absolute inset-0 w-full h-full object-cover object-center opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent" />
-        </div>
+      {/* ===== HERO — founder-led story ===== */}
+      <section className="about-hero relative isolate overflow-hidden min-h-[560px] lg:min-h-[590px]">
+        <div
+          className="absolute inset-0 -z-20 bg-cover bg-center"
+          style={{ backgroundImage: "url('/images/about-khandwa-bg.webp')", backgroundSize: "100% 100%", backgroundPosition: "center bottom" }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-white/95 via-white/78 to-white/12" aria-hidden="true" />
+        {/* The supplied landscape already contains the blue-orange wave; do not overlay another wave. */}
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-5 pt-10 md:pt-14 pb-12 md:pb-16 grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-6">
-            <div className="flex items-center gap-2 text-[#f2611c] text-[13px] font-bold">
-              <span className="w-6 h-[3px] rounded-full bg-[#f2611c]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-5 pt-7 sm:pt-8 lg:pt-9 pb-16 lg:pb-20 grid lg:grid-cols-12 gap-6 lg:gap-2 items-center min-h-[560px] lg:min-h-[590px]">
+          <div className="lg:col-span-5 relative z-10 max-w-[590px]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#f2611c]/50 bg-white/90 px-3 py-1 text-[12px] font-bold text-[#f2611c] shadow-sm hero-enter">
+              <span className="w-2 h-2 rounded-full bg-[#f2611c] animate-pulse" />
               About Us
-            </div>
-            <h1 className="mt-3 font-display font-extrabold text-[34px] sm:text-[44px] md:text-[52px] leading-[1.08] tracking-tight text-ink">
-              Education that{" "}
-              <span className="relative inline-block text-[#f2611c]">
-                Turns into Service
-                <span className="absolute left-0 -bottom-1 w-full h-2 rounded-full bg-[#f2611c]/20" />
-              </span>
+            </span>
+            <h1 className="mt-5 font-display font-extrabold text-[38px] sm:text-[50px] md:text-[58px] leading-[1.02] tracking-tight text-[#12307a] hero-enter hero-delay-1">
+              Education that
+              <span className="block mt-1">Turns into <em className="relative inline-block not-italic text-[#f2611c]">
+                Service
+                <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#f2611c]" viewBox="0 0 220 12" fill="none" aria-hidden="true"><path d="M3 9C57 1 153 1 217 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/></svg>
+              </em></span>
             </h1>
-            <p className="mt-4 text-[15px] sm:text-[16px] text-slate-600 leading-relaxed max-w-lg">
-              We are a group of students, teachers and neighbours in Khandwa who believe that learning is only complete when it gives something back to the community.
+            <p className="mt-6 max-w-md text-[15px] sm:text-[16px] leading-relaxed text-slate-700 hero-enter hero-delay-2">
+              <BlurOutUp delay={140} stagger={24}>We are a group of students, teachers and neighbours in Khandwa who believe that learning is only complete when it gives something back to the community.</BlurOutUp>
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#our-story" className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-[#1f5fd1] text-white font-bold text-[14px] shadow-md hover:bg-[#174bb0] transition">
-                Our Journey →
+            <div className="mt-7 flex flex-wrap gap-3 hero-enter hero-delay-3">
+              <a href="#our-story" className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-gradient-to-r from-[#ff8a1f] to-[#f2611c] text-white font-bold text-[14px] shadow-[0_8px_20px_-8px_rgba(242,97,28,.8)] hover:-translate-y-1 transition-transform">
+                Our Journey <span aria-hidden>→</span>
               </a>
-              <a href="#founders" className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-white ring-2 ring-[#1f5fd1] text-[#1f5fd1] font-bold text-[14px] hover:bg-[#e8f0fe] transition">
+              <a href="#founders" className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-white/95 text-[#12307a] ring-1 ring-[#f2611c]/70 font-bold text-[14px] shadow-sm hover:-translate-y-1 transition-transform">
                 Meet the Founders
               </a>
             </div>
           </div>
 
-          {/* Founders visual */}
-          <div className="lg:col-span-6 relative flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-[480px] aspect-[5/4]">
-              <div className="absolute inset-0 rounded-[40%] bg-gradient-to-br from-[#c9dafb]/50 to-[#fbd3b0]/30 blur-2xl" />
-              <div className="absolute right-0 top-0 w-[58%] rounded-[28px] overflow-hidden shadow-xl ring-4 ring-white">
-                <img src="images/volunteers.jpg" alt="Jayram Malakar" className="w-full aspect-[3/4] object-cover object-top" />
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-[11px] font-bold text-ink shadow whitespace-nowrap">
-                  Jayram Malakar · Co-Founder
+          <div className="lg:col-span-7 relative min-h-[350px] sm:min-h-[410px] lg:min-h-[450px] flex items-end justify-center lg:justify-end mt-4 lg:mt-0">
+            <div className="absolute right-[4%] bottom-[7%] w-[94%] h-[76%] rounded-[48%] bg-gradient-to-br from-[#ffbd77]/85 via-[#fff4e8]/70 to-[#dceaff]/80 blur-[1px] ring-1 ring-white/80" aria-hidden="true" />
+            <div className="absolute right-[1%] bottom-[4%] w-[98%] h-[80%] rounded-[48%] border border-white/75 bg-white/10 shadow-[0_25px_70px_-35px_rgba(18,48,122,.4)]" aria-hidden="true" />
+
+            <div className="relative z-10 w-full max-w-[620px] h-[350px] sm:h-[410px] lg:h-[450px] flex items-end justify-center">
+              <div
+                key={founders[activeFounder].name}
+                className="founder-single-slide relative h-full w-full flex items-end justify-center"
+                aria-live="polite"
+              >
+                <img
+                  src={founders[activeFounder].image}
+                  alt={`${founders[activeFounder].name}, ${founders[activeFounder].role}`}
+                  className="founder-single-portrait h-full w-auto max-w-full object-contain object-bottom"
+                  decoding="async"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[22%] z-20 min-w-[170px] sm:min-w-[205px] rounded-2xl border border-white/85 bg-white/95 px-5 py-3 text-center shadow-[0_12px_30px_-10px_rgba(18,48,122,.38)] backdrop-blur">
+                  <div className="font-display font-extrabold text-[15px] sm:text-[18px] text-[#12307a]">
+                    {founders[activeFounder].name}
+                  </div>
+                  <div className="text-[11px] sm:text-[13px] font-semibold text-slate-600">
+                    {founders[activeFounder].role}
+                  </div>
                 </div>
               </div>
-              <div className="absolute left-0 bottom-0 w-[55%] rounded-[28px] overflow-hidden shadow-xl ring-4 ring-white z-10">
-                <img src="images/clogrun.jpg" alt="Rahul Geete" className="w-full aspect-[3/4] object-cover object-top" />
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white text-[11px] font-bold text-ink shadow whitespace-nowrap">
-                  Rahul Geete · Co-Founder
-                </div>
+
+              <div className="absolute bottom-1 right-1 sm:right-4 z-30 flex items-center gap-2 rounded-full border border-white/80 bg-white/90 px-3 py-2 shadow-lg backdrop-blur">
+                {founders.map((founder, index) => (
+                  <button
+                    key={founder.name}
+                    type="button"
+                    onClick={() => setActiveFounder(index)}
+                    aria-label={`Show ${founder.name}`}
+                    aria-pressed={activeFounder === index}
+                    className={`h-2.5 rounded-full transition-all duration-500 ${
+                      activeFounder === index ? "w-7 bg-[#1f5fd1]" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                    }`}
+                  />
+                ))}
+                <span className="ml-1 text-[11px] font-bold tabular-nums text-slate-600">
+                  {activeFounder + 1}/2
+                </span>
               </div>
             </div>
+            <div className="absolute top-[12%] right-[8%] w-3 h-3 rounded-full bg-[#f2611c] twinkle" />
+            <div className="absolute top-[28%] left-[10%] w-2.5 h-2.5 rounded-full bg-[#1f5fd1] twinkle" />
           </div>
         </div>
       </section>
 
       {/* ===== OUR STORY ===== */}
-      <section id="our-story" className="max-w-7xl mx-auto px-4 sm:px-5 py-14 md:py-18">
+      <section id="our-story" data-reveal className="reveal max-w-7xl mx-auto px-4 sm:px-5 py-14 md:py-18">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-5 relative">
             <div className="relative rounded-[24px] overflow-hidden shadow-lg ring-1 ring-black/5 aspect-[4/3] -rotate-2">
-              <img src="images/shiksha.jpg" alt="Classroom" className="w-full h-full object-cover" />
+              <img src="images/group-banner.png" alt="Classroom" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-6 -right-2 sm:right-4 w-[55%] rounded-[20px] overflow-hidden shadow-xl ring-4 ring-white rotate-3">
-              <img src="images/swachhata.jpg" alt="Cleanup" className="w-full aspect-[4/3] object-cover" />
+              <img src="images/clean-group-1.png" alt="Cleanup" className="w-full aspect-[4/3] object-cover" />
             </div>
             <div className="absolute -top-3 right-6 px-3 py-1.5 rounded-full bg-white shadow-md ring-1 ring-slate-100 text-[12px] font-bold text-ink">
               📅 2021 · where it began
@@ -124,7 +227,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
       </section>
 
       {/* ===== FOUNDERS ===== */}
-      <section id="founders" className="relative py-14 md:py-20 overflow-hidden">
+      <section id="founders" data-reveal className="reveal relative py-14 md:py-20 overflow-hidden">
         {/* soft colored background band */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#eef5fd] via-[#f5f9ff] to-[#eef5fd]" aria-hidden />
         <div className="absolute -left-20 top-10 w-72 h-72 rounded-full bg-[#c9dafb]/40 blur-3xl" aria-hidden />
@@ -147,7 +250,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
               {
                 name: "Rahul Geete",
                 role: "Co-Founder",
-                img: "images/volunteers.jpg",
+                img: "/images/about-rahul.png",
                 bio: "Co-founded Empirical Shiksha Abhiyan Samiti and personally funds its work. Started teaching students after the 2021 lockdown, which grew into the Eklavya Batch.",
                 color: "#f2611c",
                 bg: "#fff0e3",
@@ -156,7 +259,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
               {
                 name: "Jayram Malakar",
                 role: "Co-Founder",
-                img: "images/clogrun.jpg",
+                img: "/images/about-jayram.png",
                 bio: "Co-founded Empirical Shiksha Abhiyan Samiti and personally funds its work. Started teaching students after the 2021 lockdown, which grew into the Eklavya Batch.",
                 color: "#1f5fd1",
                 bg: "#e8f0fe",
@@ -165,13 +268,13 @@ export default function About({ go }: { go: (p: Page) => void }) {
             ].map((f) => (
               <div
                 key={f.name}
-                className="rounded-[28px] bg-white ring-1 ring-slate-100/80 shadow-[0_12px_40px_-16px_rgba(30,60,120,0.15)] p-6 sm:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start hover:shadow-[0_16px_48px_-12px_rgba(30,60,120,0.2)] transition"
+                className="reveal-child card-pop rounded-[28px] bg-white ring-1 ring-slate-100/80 shadow-[0_12px_40px_-16px_rgba(30,60,120,0.15)] p-6 sm:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start hover:shadow-[0_16px_48px_-12px_rgba(30,60,120,0.2)] transition"
               >
                 <div
-                  className="w-full sm:w-36 md:w-40 h-44 sm:h-44 md:h-48 rounded-[22px] overflow-hidden shrink-0 ring-4 ring-white shadow-md"
+                  className="w-full sm:w-36 md:w-40 h-44 sm:h-44 md:h-48 rounded-[22px] overflow-hidden shrink-0 ring-4 ring-white shadow-md flex items-end justify-center"
                   style={{ background: f.bg }}
                 >
-                  <img src={f.img} alt={f.name} className="w-full h-full object-cover object-top" />
+                  <img src={f.img} alt={f.name} className="w-full h-full object-contain object-bottom" />
                 </div>
                 <div className="min-w-0 flex-1 pt-1">
                   <span
@@ -202,10 +305,10 @@ export default function About({ go }: { go: (p: Page) => void }) {
       </section>
 
       {/* ===== VISION + FOCUS AREAS ===== */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 py-10 md:py-14">
+      <section data-reveal className="reveal max-w-7xl mx-auto px-4 sm:px-5 py-10 md:py-14">
         <div className="grid lg:grid-cols-12 gap-5 items-stretch">
           <div className="lg:col-span-5 relative rounded-[28px] overflow-hidden min-h-[260px] shadow-lg">
-            <img src="images/hero-landscape.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <img src="images/group-banner.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f4d]/95 via-[#0b1f4d]/60 to-transparent" />
             <div className="relative p-6 sm:p-8 flex flex-col justify-end h-full min-h-[260px]">
               <div className="text-[12px] font-bold uppercase tracking-wider text-[#ffc73a]">Our Vision</div>
@@ -237,7 +340,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
       </section>
 
       {/* ===== REGISTRATION ===== */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 py-10 md:py-14">
+      <section data-reveal className="reveal max-w-7xl mx-auto px-4 sm:px-5 py-10 md:py-14">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           <div>
             <div className="flex items-center gap-2 text-[#f2611c] text-[12px] font-bold uppercase tracking-wider">
@@ -272,46 +375,21 @@ export default function About({ go }: { go: (p: Page) => void }) {
         </div>
       </section>
 
-      {/* ===== FAQ ===== */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-5 py-10 md:py-14">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3">
-            <span className="h-[2px] w-8 rounded-full bg-[#f2611c]" />
-            <span className="text-[12px] font-bold uppercase tracking-wider text-[#f2611c]">FAQ</span>
-            <span className="h-[2px] w-8 rounded-full bg-[#f2611c]" />
+      {/* ===== SmoothUI FAQ block with the organisation's real answers ===== */}
+      <section data-reveal className="max-w-5xl mx-auto px-4 sm:px-5 py-10 md:py-14">
+        <div className="mx-auto max-w-3xl">
+          <div className="mx-auto mb-8 max-w-2xl text-center">
+            <h2 className="font-display text-[28px] font-extrabold text-[#12307a] sm:text-[32px]">Questions people ask us</h2>
+            <p className="mt-2 text-[14px] leading-relaxed text-slate-600 sm:text-[15px]">Learn more about our organisation, programmes and ways to contribute your time.</p>
           </div>
-          <h2 className="mt-2 font-display font-extrabold text-[28px] sm:text-[32px] text-ink">Questions people ask us</h2>
-        </div>
-        <div className="space-y-3">
-          {FAQ.map((item, idx) => (
-            <div
-              key={item.q}
-              className={`rounded-2xl bg-white ring-1 overflow-hidden transition ${open === idx ? "ring-[#f2611c]/40 shadow-sm" : "ring-slate-150"}`}
-            >
-              <button
-                type="button"
-                onClick={() => setOpen(open === idx ? -1 : idx)}
-                className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left"
-              >
-                <span className="font-bold text-[14px] sm:text-[15px] text-ink">{item.q}</span>
-                <span className={`w-7 h-7 rounded-full grid place-items-center shrink-0 text-sm font-bold transition ${open === idx ? "bg-[#f2611c] text-white" : "bg-slate-100 text-slate-500"}`}>
-                  {open === idx ? "−" : "+"}
-                </span>
-              </button>
-              {open === idx && (
-                <div className="px-5 pb-4 text-[14px] text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
-                  {item.a}
-                </div>
-              )}
-            </div>
-          ))}
+          <MotionAccordion items={FAQ_ITEMS} gap={12} />
         </div>
       </section>
 
       {/* ===== PHOTO STRIP ===== */}
-      <section className="pb-14 pt-4">
+      <section data-reveal className="reveal pb-14 pt-4">
         <div className="max-w-5xl mx-auto px-4 flex justify-center gap-2 sm:gap-3 overflow-hidden">
-          {["images/shiksha.jpg", "images/paryavaran.jpg", "images/volunteers.jpg", "images/swasthya.jpg", "images/swachhata.jpg"].map((src, i) => (
+          {["images/group-banner.png", "images/plant-real.png", "images/team-gloves.png", "images/rally-march.png", "images/clean-group-1.png"].map((src, i) => (
             <div
               key={src}
               className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden ring-4 ring-white shadow-md shrink-0"

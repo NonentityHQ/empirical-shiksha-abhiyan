@@ -20,7 +20,7 @@ export default function Reports() {
 
   return (
     <>
-      <PageHero eyebrow="Financial Reports" title={<>Open books, <span className="text-flame">clear trust</span></>} sub="We are fully self-funded by our founders and do not ask for donations. We publish our reports because we believe every community organisation should be open about how it works." img="images/volunteers.jpg" />
+      <PageHero eyebrow="Financial Reports" title={<>Open books, <span className="text-flame">clear trust</span></>} sub="We are fully self-funded by our founders and do not ask for donations. We publish our reports because we believe every community organisation should be open about how it works." img="images/team-gloves.png" />
 
       <section className="max-w-7xl mx-auto px-5 py-14">
         <div className="grid md:grid-cols-3 gap-5">

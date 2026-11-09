@@ -150,10 +150,10 @@ const SECTIONS: {
     color: "#1f5fd1",
     tint: "#eaf1ff",
     collage: [
-      "images/shiksha.jpg",
-      "images/volunteers.jpg",
-      "images/shiksha.jpg",
-      "images/swasthya.jpg",
+      "images/group-banner.png",
+      "images/team-gloves.png",
+      "images/group-banner.png",
+      "images/rally-march.png",
     ],
   },
   {
@@ -166,10 +166,10 @@ const SECTIONS: {
     color: "#f2611c",
     tint: "#fff4eb",
     collage: [
-      "images/swachhata.jpg",
-      "images/clogrun.jpg",
-      "images/volunteers.jpg",
-      "images/swachhata.jpg",
+      "images/clean-group-1.png",
+      "images/clean-group-2.png",
+      "images/team-gloves.png",
+      "images/clean-group-1.png",
     ],
   },
   {
@@ -182,10 +182,10 @@ const SECTIONS: {
     color: "#3f9a3a",
     tint: "#eef8ec",
     collage: [
-      "images/paryavaran.jpg",
-      "images/paryavaran.jpg",
-      "images/volunteers.jpg",
-      "images/swachhata.jpg",
+      "images/plant-real.png",
+      "images/plant-real.png",
+      "images/team-gloves.png",
+      "images/clean-group-1.png",
     ],
   },
   {
@@ -198,10 +198,10 @@ const SECTIONS: {
     color: "#d62828",
     tint: "#fdf0f0",
     collage: [
-      "images/swasthya.jpg",
-      "images/shiksha.jpg",
-      "images/volunteers.jpg",
-      "images/swasthya.jpg",
+      "images/rally-march.png",
+      "images/group-banner.png",
+      "images/team-gloves.png",
+      "images/rally-march.png",
     ],
   },
 ];
@@ -210,45 +210,45 @@ const MONTHLY: Record<AreaKey, { month: string; images: { src: string; caption: 
   shiksha: [{
     month: "November 2026",
     images: [
-      { src: "images/shiksha.jpg", caption: "Eklavya Batch — evening class" },
-      { src: "images/volunteers.jpg", caption: "Doubt-clearing session" },
-      { src: "images/shiksha.jpg", caption: "Group study circle" },
-      { src: "images/swasthya.jpg", caption: "Reading hour" },
-      { src: "images/shiksha.jpg", caption: "Homework support" },
-      { src: "images/volunteers.jpg", caption: "Weekend revision" },
+      { src: "images/group-banner.png", caption: "Eklavya Batch — evening class" },
+      { src: "images/team-gloves.png", caption: "Doubt-clearing session" },
+      { src: "images/group-banner.png", caption: "Group study circle" },
+      { src: "images/rally-march.png", caption: "Reading hour" },
+      { src: "images/group-banner.png", caption: "Homework support" },
+      { src: "images/team-gloves.png", caption: "Weekend revision" },
     ],
   }],
   swachhata: [{
     month: "November 2026",
     images: [
-      { src: "images/swachhata.jpg", caption: "Rameshwar Kund cleanup" },
-      { src: "images/clogrun.jpg", caption: "Clog Run drive" },
-      { src: "images/volunteers.jpg", caption: "Volunteer team at site" },
-      { src: "images/swachhata.jpg", caption: "Weekly kund cleaning" },
-      { src: "images/clogrun.jpg", caption: "Waste segregation" },
-      { src: "images/volunteers.jpg", caption: "Community drive" },
+      { src: "images/clean-group-1.png", caption: "Rameshwar Kund cleanup" },
+      { src: "images/clean-group-2.png", caption: "Clog Run drive" },
+      { src: "images/team-gloves.png", caption: "Volunteer team at site" },
+      { src: "images/clean-group-1.png", caption: "Weekly kund cleaning" },
+      { src: "images/clean-group-2.png", caption: "Waste segregation" },
+      { src: "images/team-gloves.png", caption: "Community drive" },
     ],
   }],
   paryavaran: [{
     month: "November 2026",
     images: [
-      { src: "images/paryavaran.jpg", caption: "Sapling plantation" },
-      { src: "images/volunteers.jpg", caption: "Green space care" },
-      { src: "images/paryavaran.jpg", caption: "Tree nurturing" },
-      { src: "images/swachhata.jpg", caption: "Kund surroundings" },
-      { src: "images/paryavaran.jpg", caption: "Volunteer planting" },
-      { src: "images/volunteers.jpg", caption: "Community greening" },
+      { src: "images/plant-real.png", caption: "Sapling plantation" },
+      { src: "images/team-gloves.png", caption: "Green space care" },
+      { src: "images/plant-real.png", caption: "Tree nurturing" },
+      { src: "images/clean-group-1.png", caption: "Kund surroundings" },
+      { src: "images/plant-real.png", caption: "Volunteer planting" },
+      { src: "images/team-gloves.png", caption: "Community greening" },
     ],
   }],
   swasthya: [{
     month: "November 2026",
     images: [
-      { src: "images/swasthya.jpg", caption: "Awareness session" },
-      { src: "images/shiksha.jpg", caption: "Student circle talk" },
-      { src: "images/swasthya.jpg", caption: "Phone addiction workshop" },
-      { src: "images/volunteers.jpg", caption: "Peer support group" },
-      { src: "images/swasthya.jpg", caption: "Well-being discussion" },
-      { src: "images/shiksha.jpg", caption: "Classroom dialogue" },
+      { src: "images/rally-march.png", caption: "Awareness session" },
+      { src: "images/group-banner.png", caption: "Student circle talk" },
+      { src: "images/rally-march.png", caption: "Phone addiction workshop" },
+      { src: "images/team-gloves.png", caption: "Peer support group" },
+      { src: "images/rally-march.png", caption: "Well-being discussion" },
+      { src: "images/group-banner.png", caption: "Classroom dialogue" },
     ],
   }],
 };
@@ -335,7 +335,7 @@ export default function Gallery() {
         eyebrow="Gallery"
         title={<>Moments from <span className="text-flame">the ground</span></>}
         sub="Photographs and stories from our classes, cleanups, environment work and awareness sessions."
-        img="images/swachhata.jpg"
+        img="images/clean-group-1.png"
       />
 
       <div>

@@ -159,19 +159,19 @@ const STORIES = [
     quote: "एकलव्य बैच में आने के बाद मेरी पढ़ाई में आत्मविश्वास आया। संदेह पूछने में अब डर नहीं लगता।",
     name: "Priya S.",
     role: "Eklavya Batch Student",
-    img: "images/shiksha.jpg",
+    img: "images/group-banner.png",
   },
   {
     quote: "रमेश्वर कुंड की साप्ताहिक सफाई ने हमें सिखाया कि बदलाव छोटी-छोटी आदतों से शुरू होता है।",
     name: "Amit K.",
     role: "Volunteer · Swachhata",
-    img: "images/swachhata.jpg",
+    img: "images/clean-group-1.png",
   },
   {
     quote: "मोबाइल लत पर बातचीत के बाद मैंने स्क्रीन-टाइम कम किया। नींद और पढ़ाई दोनों सुधरी।",
     name: "Rohan M.",
     role: "Mental Health Session",
-    img: "images/swasthya.jpg",
+    img: "images/rally-march.png",
   },
 ];
 
@@ -229,8 +229,8 @@ export default function Impact() {
           </>
         }
         sub="Real numbers from real activities — no invented figures. Where stories are still being collected, we say so."
-        img="images/clogrun.jpg"
-        bg="images/hero-landscape.png"
+        img="images/clean-group-2.png"
+        bg="images/group-banner.png"
       />
 
       {/* Full-width content matching desktop design */}
@@ -303,7 +303,7 @@ export default function Impact() {
                   Know More →
                 </button>
               </div>
-              <BlobPhoto src="images/shiksha.jpg" alt="Eklavya Batch classroom" outline="#f2611c" />
+              <BlobPhoto src="images/group-banner.png" alt="Eklavya Batch classroom" outline="#f2611c" />
             </div>
           </section>
 
@@ -317,7 +317,7 @@ export default function Impact() {
           <section className="rounded-[22px] bg-[#1c4bb0] text-white overflow-hidden shadow-lg">
             <div className="grid grid-cols-1 h-full">
               <div className="relative h-36 overflow-hidden">
-                <img src="images/swasthya.jpg" alt="Mental well-being session" className="absolute inset-0 w-full h-full object-cover" />
+                <img src="images/rally-march.png" alt="Mental well-being session" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1c4bb0] via-transparent to-transparent" />
               </div>
               <div className="p-5 -mt-6 relative">
@@ -358,13 +358,13 @@ export default function Impact() {
               </button>
             </div>
             <div className="mt-4">
-              <BlobPhoto src="images/swachhata.jpg" alt="Rameshwar Kund cleanup" outline="#3f9a3a" />
+              <BlobPhoto src="images/clean-group-1.png" alt="Rameshwar Kund cleanup" outline="#3f9a3a" />
             </div>
           </section>
 
           {/* Community Action */}
           <section className="relative rounded-[22px] overflow-hidden min-h-[280px] shadow-lg">
-            <img src="images/clogrun.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <img src="images/clean-group-2.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a1a40]/95 via-[#0a1a40]/55 to-[#0a1a40]/20" />
             <div className="relative p-5 sm:p-6 flex flex-col justify-end h-full min-h-[280px]">
               <div className="flex items-center gap-1.5 text-[#7ed957] text-[12px] font-bold">
@@ -394,7 +394,7 @@ export default function Impact() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-center">
           <section className="lg:col-span-5 flex items-center gap-4 sm:gap-5">
             <div className="w-[140px] sm:w-[180px] shrink-0">
-              <BlobPhoto src="images/volunteers.jpg" alt="Volunteers group" outline="#1c4bb0" />
+              <BlobPhoto src="images/team-gloves.png" alt="Volunteers group" outline="#1c4bb0" />
             </div>
             <div>
               <div className="flex items-center gap-2 text-[#3f9a3a] mb-1">

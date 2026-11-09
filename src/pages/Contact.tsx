@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { EMAIL, PHONE } from "../shared";
+import BlurOutUp from "../components/smoothui/blur-out-up";
+import MagneticField from "../components/smoothui/magnetic-field";
 
 const inputCls =
   "w-full h-11 px-4 rounded-full bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-[#f2611c] outline-none text-[14px] text-ink placeholder:text-slate-400";
@@ -31,7 +33,7 @@ export default function Contact() {
                   </span>
                 </h1>
                 <p className="mt-4 text-[15px] text-slate-600 leading-relaxed max-w-md">
-                  Have a question, idea, or want to collaborate? We&apos;d love to hear from you.
+                  <BlurOutUp triggerOnView delay={80} stagger={18}>Have a question, idea, or want to collaborate? We would love to hear from you.</BlurOutUp>
                 </p>
               </div>
 
@@ -65,7 +67,7 @@ export default function Contact() {
                 <div className="relative w-44 h-44">
                   <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-[#ffc73a]/40 to-[#1f5fd1]/20" />
                   <div className="relative w-full h-full rounded-full overflow-hidden ring-4 ring-white shadow-xl">
-                    <img src="images/shiksha.jpg" alt="Students" className="w-full h-full object-cover" />
+                    <img src="images/group-banner.png" alt="Students" className="w-full h-full object-cover" />
                   </div>
                 </div>
               </div>
@@ -85,7 +87,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Rahul */}
           <div className="rounded-[26px] bg-white ring-1 ring-slate-100 shadow-[0_14px_34px_-18px_rgba(18,48,122,0.35)] p-5 flex gap-4 items-start">
-            <div className="w-24 h-28 sm:w-28 sm:h-32 rounded-t-[60px] rounded-b-2xl overflow-hidden bg-gradient-to-b from-[#cfe0fb] to-[#eaf2ff] shrink-0 self-end">
+            <div className="w-24 aspect-[4/5] sm:w-28 rounded-2xl overflow-hidden bg-gradient-to-b from-[#cfe0fb] to-[#eaf2ff] shrink-0">
               <img src="images/rahul.jpg" alt="Rahul Geete" className="w-full h-full object-cover object-top" />
             </div>
             <div className="min-w-0">
@@ -104,11 +106,11 @@ export default function Contact() {
 
           {/* Jay */}
           <div className="rounded-[26px] bg-white ring-1 ring-slate-100 shadow-[0_14px_34px_-18px_rgba(18,48,122,0.35)] p-5 flex gap-4 items-start">
-            <div className="w-24 h-28 sm:w-28 sm:h-32 rounded-t-[60px] rounded-b-2xl overflow-hidden bg-gradient-to-b from-[#ffe3c8] to-[#fff3e8] shrink-0 self-end">
-              <img src="images/jay.jpg" alt="Jay Sir" className="w-full h-full object-cover object-top" />
+            <div className="w-24 aspect-[4/5] sm:w-28 rounded-2xl overflow-hidden bg-gradient-to-b from-[#ffe3c8] to-[#fff3e8] shrink-0">
+              <img src="images/jay.jpg" alt="Jayram Malakar" className="w-full h-full object-cover object-top" />
             </div>
             <div className="min-w-0">
-              <div className="font-display font-extrabold text-[18px] text-ink">Jayram malakar</div>
+              <div className="font-display font-extrabold text-[18px] text-ink">Jayram Malakar</div>
               <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-[#f2611c] text-white text-[11px] font-bold">Co-Founder</span>
               <p className="mt-2 text-[12px] sm:text-[13px] text-slate-600 leading-relaxed">
                 An educator and mentor dedicated to student development, mental well-being, and social awareness through education.
@@ -197,10 +199,10 @@ export default function Contact() {
               <div className="mt-3 font-display font-extrabold text-[18px] text-ink">Empirical Shiksha Abhiyan</div>
               <div className="mt-1 text-[13px] text-slate-600 flex items-start gap-1.5">
                 <span className="text-[#f2611c]">📍</span>
-                Khandwa, Madhya Pradesh India
+                Arya Mahila Samaj Bhawan, Ramganj Ward, Khandwa, Madhya Pradesh 450001
               </div>
               <a
-                href="https://maps.app.goo.gl/NKqS8qGaMQnBrhys9"
+                href="https://www.google.com/maps?q=Empirical+Institute,+Arya+Mahila+Samaj+Bhawan,+Wamanrao+Deo+Marg,+Ramganj+Ward,+Khandwa,+Madhya+Pradesh+450001"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-full bg-[#e8f0fe] text-[#1f5fd1] font-bold text-[13px] hover:bg-[#1f5fd1] hover:text-white transition"
@@ -210,10 +212,10 @@ export default function Contact() {
             </div>
             <div className="flex-1 min-h-[200px] relative">
               <iframe
-                title="Khandwa map"
+                title="Empirical Institute, Khandwa"
                 className="absolute inset-0 w-full h-full"
                 loading="lazy"
-                src="https://maps.google.com/maps?q=Khandwa,%20Madhya%20Pradesh&z=13&output=embed"
+                src="https://maps.google.com/maps?q=Empirical+Institute,+Arya+Mahila+Samaj+Bhawan,+Khandwa,+Madhya+Pradesh+450001&z=16&output=embed"
               />
             </div>
           </div>
@@ -232,14 +234,17 @@ export default function Contact() {
               Be a part of Empirical Shiksha Abhiyan and help us create better learning, healthier minds, and cleaner communities for every child.
             </p>
           </div>
-          <a
-            href={`https://wa.me/91${PHONE}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-white text-[#0b1f4d] font-bold text-[14px] hover:bg-[#ffc73a] transition"
-          >
-            👥 Become a Volunteer →
-          </a>
+          <MagneticField className="shrink-0" radius={130} strength={0.22}>
+            <a
+              data-magnetic
+              href={`https://wa.me/91${PHONE}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-white text-[#0b1f4d] font-bold text-[14px] hover:bg-[#ffc73a] transition"
+            >
+              👥 Become a Volunteer →
+            </a>
+          </MagneticField>
         </div>
       </section>
     </>
