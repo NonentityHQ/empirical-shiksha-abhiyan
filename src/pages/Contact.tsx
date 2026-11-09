@@ -108,7 +108,7 @@ export default function Contact() {
               <img src="images/jay.jpg" alt="Jay Sir" className="w-full h-full object-cover object-top" />
             </div>
             <div className="min-w-0">
-              <div className="font-display font-extrabold text-[18px] text-ink">Jay Sir</div>
+              <div className="font-display font-extrabold text-[18px] text-ink">Jayram malakar</div>
               <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-[#f2611c] text-white text-[11px] font-bold">Co-Founder</span>
               <p className="mt-2 text-[12px] sm:text-[13px] text-slate-600 leading-relaxed">
                 An educator and mentor dedicated to student development, mental well-being, and social awareness through education.
@@ -213,7 +213,7 @@ export default function Contact() {
                 title="Khandwa map"
                 className="absolute inset-0 w-full h-full"
                 loading="lazy"
-                src="https://maps.google.com/maps?q=Khandwa,%20Madhya%20Pradesh&z=13&output=embed"
+                src="https://www.bing.com/maps/search?name=Empirical+Institute+%E0%A4%87%E0%A4%82%E0%A4%AA%E0%A5%80%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A4%B2%E0%A5%8D+%E0%A4%87%E0%A4%82%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%BF%E0%A4%9F%E0%A5%8D%E0%A4%AF%E0%A5%82%E0%A4%9F&mepi=0%7E%7EEmbedded%7ELargeMapLink&FORM=MPSRPL&style=r&ss=id.ypid%3AYND210C9502DA8E703&q=Empirical+Institute+%E0%A4%87%E0%A4%82%E0%A4%AA%E0%A5%80%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A4%B2%E0%A5%8D+%E0%A4%87%E0%A4%82%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%BF%E0%A4%9F%E0%A5%8D%E0%A4%AF%E0%A5%82%E0%A4%9F&ppois=21.829051971435547_76.3494873046875_Empirical+Institute+%E0%A4%87%E0%A4%82%E0%A4%AA%E0%A5%80%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A4%B2%E0%A5%8D+%E0%A4%87%E0%A4%82%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%BF%E0%A4%9F%E0%A5%8D%E0%A4%AF%E0%A5%82%E0%A4%9F&cp=21.829052%7E76.349487&lvl=15"
               />
             </div>
           </div>
