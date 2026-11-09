@@ -1,3 +1,4 @@
+import CountUpValue from "../components/CountUpValue";
 import { useState } from "react";
 import { PageHero } from "../shared";
 
@@ -248,7 +249,7 @@ export default function Impact() {
                 <div className="text-white/90 shrink-0">{s.icon}</div>
                 <div>
                   <div className="font-display font-extrabold text-[22px] sm:text-[26px] leading-none" style={{ color: s.color }}>
-                    {s.n}
+                    <CountUpValue value={s.n} />
                   </div>
                   <div className="mt-1 text-[11px] sm:text-[12px] leading-tight text-white/90 font-semibold">
                     {s.l1}

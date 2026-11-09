@@ -59,8 +59,8 @@ export default function App() {
       window.setTimeout(() => {
         setTransitionPhase("idle");
         transitionLock.current = false;
-      }, 680);
-    }, 230);
+      }, 480);
+    }, 170);
   }, [route]);
 
   useEffect(() => {

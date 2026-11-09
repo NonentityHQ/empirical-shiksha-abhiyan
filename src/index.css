@@ -128,19 +128,19 @@ font { background: transparent !important; box-shadow: none !important; }
   from { opacity: 0; transform: translate3d(28px,18px,0) rotate(2deg); }
   to { opacity: 1; transform: translate3d(0,0,0) rotate(0); }
 }
-.hero-enter { animation: about-enter .92s cubic-bezier(.2,.75,.25,1) both; }
+.hero-enter { animation: about-enter .72s cubic-bezier(.2,.75,.25,1) both; }
 .hero-delay-1 { animation-delay: .16s; }
 .hero-delay-2 { animation-delay: .32s; }
 .hero-delay-3 { animation-delay: .48s; }
-.hero-founder-left { animation: founder-enter-left .9s .18s cubic-bezier(.2,.75,.25,1) both; }
-.hero-founder-right { animation: founder-enter-right .9s .32s cubic-bezier(.2,.75,.25,1) both; }
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity .82s ease, transform .88s cubic-bezier(.2,.75,.25,1); }
+.hero-founder-left { animation: founder-enter-left .76s .18s cubic-bezier(.2,.75,.25,1) both; }
+.hero-founder-right { animation: founder-enter-right .76s .32s cubic-bezier(.2,.75,.25,1) both; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .64s ease, transform .70s cubic-bezier(.2,.75,.25,1); }
 .reveal.is-visible { opacity: 1; transform: none; }
-.reveal-child { opacity: 0; transform: translateY(18px); transition: opacity .82s ease, transform .88s cubic-bezier(.2,.75,.25,1); }
+.reveal-child { opacity: 0; transform: translateY(18px); transition: opacity .64s ease, transform .70s cubic-bezier(.2,.75,.25,1); }
 .reveal.is-visible .reveal-child { opacity: 1; transform: none; }
-.reveal.is-visible .reveal-child:nth-child(2) { transition-delay: .14s; }
-.reveal.is-visible .reveal-child:nth-child(3) { transition-delay: .28s; }
-.reveal.is-visible .reveal-child:nth-child(4) { transition-delay: .42s; }
+.reveal.is-visible .reveal-child:nth-child(2) { transition-delay: .10s; }
+.reveal.is-visible .reveal-child:nth-child(3) { transition-delay: .20s; }
+.reveal.is-visible .reveal-child:nth-child(4) { transition-delay: .30s; }
 .about-hero .hero-founder-left img, .about-hero .hero-founder-right img { transform-origin: bottom center; transition: transform .45s ease, filter .45s ease; }
 .about-hero .hero-founder-left:hover img, .about-hero .hero-founder-right:hover img { transform: translateY(-7px) scale(1.025); filter: drop-shadow(0 22px 20px rgba(18,48,122,.22)); }
 @media (prefers-reduced-motion: reduce) {
@@ -470,12 +470,12 @@ body { overflow-x: hidden; }
 
 .motion-reveal {
   opacity: 0;
-  transform: translate3d(0, 28px, 0) scale(.994);
-  filter: blur(4px);
+  transform: translate3d(0, 18px, 0) scale(.996);
+  filter: blur(2.5px);
   transition:
-    opacity .84s cubic-bezier(.2,.75,.25,1),
-    transform .94s cubic-bezier(.2,.75,.25,1),
-    filter .84s ease;
+    opacity .66s cubic-bezier(.2,.75,.25,1),
+    transform .72s cubic-bezier(.2,.75,.25,1),
+    filter .48s ease;
   transition-delay: var(--motion-stagger, 0ms);
   will-change: opacity, transform, filter;
 }
@@ -532,12 +532,12 @@ body { overflow-x: hidden; }
 }
 
 .motion-scroll-media {
-  transition: filter .14s linear, transform .18s ease-out;
+  transition: filter .10s linear, transform .14s ease-out;
   backface-visibility: hidden;
 }
 #site-main.motion-scrolling .motion-scroll-media {
-  filter: blur(.55px);
-  transform: translate3d(0,-1px,0) scale(1.006);
+  filter: blur(.35px);
+  transform: translate3d(0,-.5px,0) scale(1.003);
 }
 
 /* Cinematic route transition: a soft-focus cross-dissolve, never a sliding wipe. */
@@ -547,16 +547,16 @@ body { overflow-x: hidden; }
 }
 #site-main.route-transition.phase-exit {
   opacity: 0;
-  filter: blur(9px) saturate(.9);
-  transform: scale(.992);
+  filter: blur(6px) saturate(.94);
+  transform: scale(.994);
   transition:
-    opacity .23s ease,
-    filter .23s ease,
-    transform .28s cubic-bezier(.2,.7,.2,1);
+    opacity .17s ease,
+    filter .17s ease,
+    transform .20s cubic-bezier(.2,.7,.2,1);
   pointer-events: none;
 }
 #site-main.route-transition.phase-enter {
-  animation: route-focus-in .68s cubic-bezier(.2,.72,.22,1) both;
+  animation: route-focus-in .48s cubic-bezier(.2,.72,.22,1) both;
 }
 #site-main.route-transition.phase-enter::after {
   content: "";
@@ -565,17 +565,17 @@ body { overflow-x: hidden; }
   z-index: 35;
   pointer-events: none;
   background: radial-gradient(ellipse at 50% 44%, rgba(255,255,255,.34), rgba(255,255,255,.10) 34%, transparent 72%);
-  animation: route-soft-bloom .62s ease-out both;
+  animation: route-soft-bloom .42s ease-out both;
 }
 @keyframes route-focus-in {
   0% {
     opacity: 0;
-    filter: blur(11px) saturate(1.06);
+    filter: blur(7px) saturate(1.04);
     transform: scale(1.012);
   }
   58% {
     opacity: 1;
-    filter: blur(1.2px) saturate(1.015);
+    filter: blur(.6px) saturate(1.01);
     transform: scale(1.002);
   }
   100% {
