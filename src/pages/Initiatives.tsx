@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AIcon } from "../icons";
 import BlurOutUp from "../components/smoothui/blur-out-up";
-import BottomUpLetters from "../components/smoothui/bottom-up-letters";
+import BottomUpLetters from "../components/smoothui/bottom-up-letters";\nimport CountUpValue from "../components/CountUpValue";
 
 type Sec = {
   id: string;
@@ -160,7 +160,7 @@ function Block({ s, onPick }: { s: Sec; onPick: (key: string) => void }) {
         </span>
         <span className="leading-tight">
           <b className="block font-display font-extrabold text-[22px]" style={{ color: s.color }}>
-            {s.n}
+            <CountUpValue value={s.n} />
           </b>
           <span className="text-[12px] font-semibold text-slate-600">{s.l}</span>
         </span>
