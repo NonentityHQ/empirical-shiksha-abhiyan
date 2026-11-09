@@ -8,7 +8,7 @@ type ParsedMetric = {
 };
 
 function parseMetric(value: string): ParsedMetric | null {
-  const match = value.trim().match(/^([^0-9]*)([0-9][0-9,]*(?:\\.[0-9]+)?)(.*)$/);
+  const match = value.trim().match(/^([^0-9]*)([0-9][0-9,]*(?:\.[0-9]+)?)(.*)$/);
   if (!match) return null;
   const numeric = Number(match[2].replace(/,/g, ""));
   if (!Number.isFinite(numeric)) return null;
@@ -36,7 +36,7 @@ export default function CountUpValue({
     if (!node) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion || !( "IntersectionObserver" in window)) {
+    if (reducedMotion || !("IntersectionObserver" in window)) {
       setCurrent(parsed.target);
       return;
     }
