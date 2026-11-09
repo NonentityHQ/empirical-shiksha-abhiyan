@@ -200,7 +200,7 @@ export default function Contact() {
                 Khandwa, Madhya Pradesh India
               </div>
               <a
-                href="https://maps.app.goo.gl/GWqKwhFPErHwgBfy7?g_st=aw"
+                href="https://maps.app.goo.gl/NKqS8qGaMQnBrhys9"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-full bg-[#e8f0fe] text-[#1f5fd1] font-bold text-[13px] hover:bg-[#1f5fd1] hover:text-white transition"
