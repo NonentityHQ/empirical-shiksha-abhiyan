@@ -1,7 +1,8 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { AREAS } from "../shared";
 import { AIcon } from "../icons";
-import HeroVisual from "./HeroVisual";\nimport CountUpValue from "../components/CountUpValue";
+import HeroVisual from "./HeroVisual";\
+import CountUpValue from "../components/CountUpValue";
 
 type FocusItem = { icon: string; title: string; text: string };
 type StatItem = { value: string; label: string; icon: string };
