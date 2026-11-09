@@ -18,7 +18,7 @@ export function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       io.disconnect();
-      const start = performance.now(), dur = 1600;
+      const start = performance.now(), dur = 1100;
       const tick = (t: number) => {
         const p = Math.min(1, (t - start) / dur);
         setV(Math.round(to * (1 - Math.pow(1 - p, 3))));
