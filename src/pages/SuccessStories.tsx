@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AIcon } from "../icons";
 import BottomUpLetters from "../components/smoothui/bottom-up-letters";
-import BlurOutUp from "../components/smoothui/blur-out-up";
+import BlurOutUp from "../components/smoothui/blur-out-up";\nimport CountUpValue from "../components/CountUpValue";
 
 const REEL = [
   { tag: "Shiksha", img: "images/shiksha.jpg", icon: "book" },
@@ -156,7 +156,7 @@ export default function SuccessStories({ go }: { go: (p: "contact") => void }) {
       <section className="mx-auto max-w-[1320px] px-4 sm:px-7">
         <div className="grid grid-cols-2 gap-y-3 rounded-[22px] border border-white bg-white p-4 shadow-[0_15px_36px_-18px_rgba(18,48,122,.35)] sm:grid-cols-4">
           {[["500+", "Students Benefited", "book"], ["50+", "Volunteers Inspired", "users"], ["25+", "Community Stories", "leaf"], ["4", "Focus Initiatives", "heart"]].map(([v, l, ic], i) => (
-            <div key={l} className={`flex items-center justify-center gap-3 px-3 ${i ? "sm:border-l sm:border-slate-200" : ""}`}><span className="text-[#1769dc]"><AIcon n={ic} s={34} /></span><span><b className="block font-display text-2xl font-extrabold text-[#0d2f7a]">{v}</b><span className="text-xs font-semibold text-slate-600">{l}</span></span></div>
+            <div key={l} className={`flex items-center justify-center gap-3 px-3 ${i ? "sm:border-l sm:border-slate-200" : ""}`}><span className="text-[#1769dc]"><AIcon n={ic} s={34} /></span><span><b className="block font-display text-2xl font-extrabold text-[#0d2f7a]"><CountUpValue value={v} /></b><span className="text-xs font-semibold text-slate-600">{l}</span></span></div>
           ))}
         </div>
       </section>
