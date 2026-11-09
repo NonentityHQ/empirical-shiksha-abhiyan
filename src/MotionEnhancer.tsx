@@ -23,7 +23,7 @@ export default function MotionEnhancer({ routeKey }: { routeKey: string }) {
 
     sectionNodes.forEach((node, index) => {
       node.classList.add("motion-reveal");
-      if (cardNodes.includes(node)) node.style.setProperty("--motion-stagger", `${Math.min(index % 5, 4) * 72}ms`);
+      if (cardNodes.includes(node)) node.style.setProperty("--motion-stagger", `${Math.min(index % 4, 3) * 44}ms`);
       if (node.classList.contains("card-pop")) node.classList.add("motion-tilt");
     });
 
@@ -51,7 +51,7 @@ export default function MotionEnhancer({ routeKey }: { routeKey: string }) {
             observer?.unobserve(node);
           });
         },
-        { threshold: 0.12, rootMargin: "0px 0px -7% 0px" },
+        { threshold: 0.06, rootMargin: "0px 0px 8% 0px" },
       );
       sectionNodes.forEach((node) => observer?.observe(node));
     }
