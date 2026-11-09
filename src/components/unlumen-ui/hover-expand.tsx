@@ -33,11 +33,11 @@ export function HoverExpand({
 }: HoverExpandProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const reduceMotion = useReducedMotion();
-  const imageSources = items.map((item) => item.image).join("\\n");
+  const imageSources = items.map((item) => item.image).join("|");
 
   // Warm the four initiative photos before hover so the reveal never waits on network.
   useEffect(() => {
-    imageSources.split("\\n").filter(Boolean).forEach((src) => {
+    imageSources.split("|").filter(Boolean).forEach((src) => {
       const image = new Image();
       image.decoding = "async";
       image.fetchPriority = "low";
@@ -87,7 +87,9 @@ export function HoverExpand({
               src={item.image}
               alt=""
               aria-hidden="true"
-              loading="eager"\n              decoding="async"\n              fetchPriority="low"
+              loading="eager"
+              decoding="async"
+              fetchPriority="low"
               className="pointer-events-none absolute inset-0 h-full w-full object-cover"
               animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 1.055 }}
               transition={reduceMotion ? { duration: 0 } : { opacity: { duration: 0.22 }, scale: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
