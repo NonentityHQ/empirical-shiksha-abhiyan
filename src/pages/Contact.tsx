@@ -213,7 +213,7 @@ export default function Contact() {
                 title="Khandwa map"
                 className="absolute inset-0 w-full h-full"
                 loading="lazy"
-                src="https://www.bing.com/maps/search?name=Empirical+Institute+%E0%A4%87%E0%A4%82%E0%A4%AA%E0%A5%80%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A4%B2%E0%A5%8D+%E0%A4%87%E0%A4%82%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%BF%E0%A4%9F%E0%A5%8D%E0%A4%AF%E0%A5%82%E0%A4%9F&mepi=0%7E%7EEmbedded%7ELargeMapLink&FORM=MPSRPL&style=r&ss=id.ypid%3AYND210C9502DA8E703&q=Empirical+Institute+%E0%A4%87%E0%A4%82%E0%A4%AA%E0%A5%80%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A4%B2%E0%A5%8D+%E0%A4%87%E0%A4%82%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%BF%E0%A4%9F%E0%A5%8D%E0%A4%AF%E0%A5%82%E0%A4%9F&ppois=21.829051971435547_76.3494873046875_Empirical+Institute+%E0%A4%87%E0%A4%82%E0%A4%AA%E0%A5%80%E0%A4%B0%E0%A4%BF%E0%A4%95%E0%A4%B2%E0%A5%8D+%E0%A4%87%E0%A4%82%E0%A4%B8%E0%A5%8D%E0%A4%9F%E0%A4%BF%E0%A4%9F%E0%A5%8D%E0%A4%AF%E0%A5%82%E0%A4%9F&cp=21.829052%7E76.349487&lvl=15"
+                src="https://maps.app.goo.gl/GWqKwhFPErHwgBfy7?g_st=aw"
               />
             </div>
           </div>
