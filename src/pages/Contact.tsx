@@ -200,7 +200,7 @@ export default function Contact() {
                 Khandwa, Madhya Pradesh India
               </div>
               <a
-                href="https://maps.google.com/?q=Khandwa,Madhya+Pradesh"
+                href="https://maps.app.goo.gl/GWqKwhFPErHwgBfy7?g_st=aw"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center gap-2 h-10 px-4 rounded-full bg-[#e8f0fe] text-[#1f5fd1] font-bold text-[13px] hover:bg-[#1f5fd1] hover:text-white transition"
@@ -213,7 +213,7 @@ export default function Contact() {
                 title="Khandwa map"
                 className="absolute inset-0 w-full h-full"
                 loading="lazy"
-                src="https://maps.app.goo.gl/GWqKwhFPErHwgBfy7?g_st=aw"
+                src="https://maps.google.com/maps?q=Khandwa,%20Madhya%20Pradesh&z=13&output=embed"
               />
             </div>
           </div>
