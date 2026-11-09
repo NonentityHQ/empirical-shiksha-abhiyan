@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface HoverExpandItem {
   label: string;
@@ -33,10 +33,21 @@ export function HoverExpand({
 }: HoverExpandProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const reduceMotion = useReducedMotion();
+  const imageSources = items.map((item) => item.image).join("\\n");
+
+  // Warm the four initiative photos before hover so the reveal never waits on network.
+  useEffect(() => {
+    imageSources.split("\\n").filter(Boolean).forEach((src) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.fetchPriority = "low";
+      image.src = src;
+    });
+  }, [imageSources]);
 
   const rowSpring = reduceMotion
     ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 245, damping: 30, mass: 0.9 };
+    : { type: "spring" as const, stiffness: 350, damping: 28, mass: 0.62 };
 
   return (
     <div
@@ -76,16 +87,16 @@ export function HoverExpand({
               src={item.image}
               alt=""
               aria-hidden="true"
-              loading="lazy"
+              loading="eager"\n              decoding="async"\n              fetchPriority="low"
               className="pointer-events-none absolute inset-0 h-full w-full object-cover"
               animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 1.055 }}
-              transition={reduceMotion ? { duration: 0 } : { opacity: { duration: 0.42 }, scale: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }}
+              transition={reduceMotion ? { duration: 0 } : { opacity: { duration: 0.22 }, scale: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } }}
             />
             <motion.div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0"
               animate={{ opacity: isActive ? 1 : 0 }}
-              transition={reduceMotion ? { duration: 0 } : { duration: 0.32 }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.20 }}
               style={{ background: "linear-gradient(100deg, rgba(7,24,58,.9) 0%, rgba(7,24,58,.62) 50%, rgba(7,24,58,.18) 100%)" }}
             />
 
@@ -122,7 +133,7 @@ export function HoverExpand({
                   <motion.span
                     initial={false}
                     animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 7, maxHeight: isActive ? 64 : 0 }}
-                    transition={reduceMotion ? { duration: 0 } : { duration: 0.36, delay: isActive ? 0.06 : 0, ease: [0.22, 1, 0.36, 1] }}
+                    transition={reduceMotion ? { duration: 0 } : { duration: 0.25, delay: isActive ? 0.03 : 0, ease: [0.22, 1, 0.36, 1] }}
                     className="mt-2 block max-w-2xl overflow-hidden text-[12px] leading-[1.65] text-white/90 sm:text-[13px]"
                   >
                     {item.description}
