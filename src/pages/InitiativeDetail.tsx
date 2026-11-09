@@ -1,7 +1,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { AREAS } from "../shared";
 import { AIcon } from "../icons";
-import HeroVisual from "./HeroVisual";
+import HeroVisual from "./HeroVisual";\nimport CountUpValue from "../components/CountUpValue";
 
 type FocusItem = { icon: string; title: string; text: string };
 type StatItem = { value: string; label: string; icon: string };
@@ -268,7 +268,7 @@ function Stat({ item, color }: { item: StatItem; color: string }) {
     <div className="flex min-w-0 items-center justify-center gap-3 px-3 py-2">
       <span className="shrink-0" style={{ color }}><AIcon n={item.icon} s={34} /></span>
       <span className="min-w-0 leading-tight">
-        <b className="block font-display text-xl sm:text-2xl font-extrabold text-[#102b66]">{item.value}</b>
+        <b className="block font-display text-xl sm:text-2xl font-extrabold text-[#102b66]"><CountUpValue value={item.value} /></b>
         <span className="block text-[11px] sm:text-xs font-semibold text-slate-700">{item.label}</span>
       </span>
     </div>
