@@ -379,7 +379,7 @@ export default function InitiativeDetail({ id, goBack }: { id: string; goBack: (
             <span><b className="block font-display text-xl font-extrabold text-[var(--initiative-deep)]">{page.impactLead}</b><span className="mt-1 block text-xs text-slate-600">Small actions, meaningful change in our community.</span></span>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]" style={{ "--cols": page.impactCols ?? 4 } as CSSProperties}>
-            {page.impact.map((item) => <div key={item.label} className="border-l border-[var(--initiative)]/20 px-2 text-center"><span className="inline-flex text-[var(--initiative)]"><AIcon n={item.icon} s={27} /></span><b className="mt-1 block font-display text-xl font-extrabold leading-none text-[var(--initiative-deep)]">{item.value}</b><span className="mt-1 block text-[11px] font-semibold text-slate-600">{item.label}</span></div>)}
+            {page.impact.map((item) => <div key={item.label} className="border-l border-[var(--initiative)]/20 px-2 text-center"><span className="inline-flex text-[var(--initiative)]"><AIcon n={item.icon} s={27} /></span><b className="mt-1 block font-display text-xl font-extrabold leading-none text-[var(--initiative-deep)]"><CountUpValue value={item.value} /></b><span className="mt-1 block text-[11px] font-semibold text-slate-600">{item.label}</span></div>)}
           </div>
         </div>
       </section>
