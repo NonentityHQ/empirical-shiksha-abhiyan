@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { AIcon } from "../icons";
 import BlurOutUp from "../components/smoothui/blur-out-up";
-import BottomUpLetters from "../components/smoothui/bottom-up-letters";\nimport CountUpValue from "../components/CountUpValue";
+import BottomUpLetters from "../components/smoothui/bottom-up-letters";\
+import CountUpValue from "../components/CountUpValue";
 
 type Sec = {
   id: string;
