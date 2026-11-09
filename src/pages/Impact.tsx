@@ -1,4 +1,5 @@
-import CountUpValue from "../components/CountUpValue";\nimport { useState } from "react";
+import CountUpValue from "../components/CountUpValue";
+import { useState } from "react";
 import { PageHero } from "../shared";
 
 /* ---- small inline icons used only on this page ---- */
