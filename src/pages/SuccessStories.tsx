@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AIcon } from "../icons";
 import BottomUpLetters from "../components/smoothui/bottom-up-letters";
-import BlurOutUp from "../components/smoothui/blur-out-up";\nimport CountUpValue from "../components/CountUpValue";
+import BlurOutUp from "../components/smoothui/blur-out-up";\
+import CountUpValue from "../components/CountUpValue";
 
 const REEL = [
   { tag: "Shiksha", img: "images/shiksha.jpg", icon: "book" },
