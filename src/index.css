@@ -619,3 +619,10 @@ body { overflow-x: hidden; }
   #site-main.route-transition.phase-enter { animation: none !important; transition: none !important; opacity: 1 !important; filter: none !important; transform: none !important; }
   #site-main.route-transition.phase-enter::after { display: none !important; }
 }
+
+/* Mobile initiative pages: reserve a clear lane below the fixed navbar + focus subnav. */
+@media (max-width: 767px) {
+  .initiative-page .initiative-hero-copy {
+    padding-top: 100px !important;
+  }
+}
