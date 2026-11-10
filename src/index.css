@@ -626,3 +626,15 @@ body { overflow-x: hidden; }
     padding-top: 100px !important;
   }
 }
+
+/* Keep the fixed focus subnav clear of hero copy on every mobile route. */
+@media (max-width: 767px) {
+  #site-main.hero-under > :first-child:not(.initiative-page) {
+    padding-top: 192px !important;
+  }
+
+  /* Contact is the one route without the shared hero-under offset. */
+  #site-main:not(.hero-under) > :first-child {
+    padding-top: 76px !important;
+  }
+}
