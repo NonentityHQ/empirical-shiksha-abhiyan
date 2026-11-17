@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/.next/
+**/target/
+**/data/
+**/logs/
+**/*.log
+.DS_Store
+package.json.before-security-upgrade
+package-lock.json.before-security-upgrade
+package-lock.json.before-clean-install
