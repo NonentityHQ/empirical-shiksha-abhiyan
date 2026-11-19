@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AIcon } from "../icons";
 import type { Page } from "../shared";
 import { CountUp } from "../ui";
+import { Bi } from "../lang";
 import { MILESTONES, STARS, hoursOf, pctOf, ranked, type Cat, type Star } from "../stars-data";
 
 const TEAL = "#1A7F78";
@@ -12,7 +13,7 @@ const INK = "#1F2A44";
 export const Script = ({ children, className = "", line = true }: { children: string; className?: string; line?: boolean }) => (
   <span className={`relative inline-block -rotate-2 font-hand font-bold ${className}`} style={{ color: CHILLI }}>
     {children}
-    {line && <svg viewBox="0 0 200 12" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-2.5 w-full" aria-hidden><path d="M2 8C50 2 130 2 198 7" stroke={CHILLI} strokeWidth="4" fill="none" strokeLinecap="round" /></svg>}
+    
   </span>
 );
 
@@ -26,10 +27,17 @@ export function Avatar({ s, size = 64, ring = false }: { s: Star; size?: number;
 
 export function Ring({ pct, size = 84, stroke = 10, color = "#3A7D44", children }: { pct: number; size?: number; stroke?: number; color?: string; children?: React.ReactNode }) {
   const [on, setOn] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setOn(true), 150); return () => clearTimeout(t); }, []);
+  const holder = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = holder.current;
+    if (!el || typeof IntersectionObserver === "undefined") { setOn(true); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   const r = (size - stroke) / 2, c = 2 * Math.PI * r;
   return (
-    <span className="relative inline-grid shrink-0 place-items-center" style={{ width: size, height: size }}>
+    <span ref={holder} className="relative inline-grid shrink-0 place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90" aria-hidden>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#E9DCC0" strokeWidth={stroke} />
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={on ? c * (1 - pct / 100) : c} style={{ transition: "stroke-dashoffset 1.3s cubic-bezier(.2,.8,.2,1)" }} />
@@ -57,7 +65,7 @@ export function Leaderboard({ list, openStar, current, title = "Leaderboard", su
                 <b className="block truncate font-display text-[15.5px] font-extrabold leading-tight" style={{ color: INK }}>{s.name}</b>
                 {bars && <span className="mt-1 block h-2 overflow-hidden rounded-full border border-[#1F2A44]/60 bg-[#F6EAD3]"><span className="fill-grow block h-full rounded-full bg-[#3A7D44]" style={{ width: pctOf(s) + "%" }} /></span>}
               </span>
-              <span className="text-right text-[14px] font-bold" style={{ color: INK }}>{hoursOf(s)} hrs{bars && <span className="block text-[12.5px] font-semibold text-slate-500">{pctOf(s)}%</span>}</span>
+              <span className="text-right text-[14px] font-bold" style={{ color: INK }}><CountUp value={String(hoursOf(s))} /> hrs{bars && <span className="block text-[12.5px] font-semibold text-slate-500"><CountUp value={pctOf(s) + "%"} /></span>}</span>
             </button>
           </li>
         ))}
@@ -128,7 +136,7 @@ export default function Stars({ go, openStar }: { go: (p: Page) => void; openSta
         <div className={`${wrap} grid items-center gap-8 pb-28 pt-4 lg:grid-cols-[1fr_1.05fr]`}>
           <div className="relative z-10">
             <span className="hero-in hero-in-1 inline-flex items-center gap-2 rounded-md border-2 border-[#1F2A44] bg-[#FFFDF7] px-4 py-1.5 text-[15px] font-bold" style={{ color: CHILLI }}><AIcon n="star" s={18} />Our Stars</span>
-            <h1 className="hero-in hero-in-2 mt-5 font-display text-[48px] font-extrabold leading-[1.02] tracking-tight sm:text-[58px]" style={{ color: DEEP }}>The<br />Changemakers<br />of <Script line={false} className="text-[58px] sm:text-[70px]">Khandwa</Script></h1>
+            <h1 className="hero-in hero-in-2 mt-5 font-display text-[48px] font-extrabold leading-[1.02] tracking-tight sm:text-[58px]" style={{ color: DEEP }}><Bi en={<>The<br />Changemakers<br />of <Script line={false} className="text-[58px] sm:text-[70px]">Khandwa</Script></>} hi={<><Script line={false} className="text-[58px] sm:text-[70px]">खंडवा</Script> के<br />बदलाव लाने वाले</>} /></h1>
             <p className="hero-in hero-in-3 mt-7 max-w-[430px] text-[18px] leading-[1.55]" style={{ color: INK }}>Students, volunteers and community members who turn ideas into real impact on the ground.</p>
             <div className="hero-in hero-in-4 mt-7 flex flex-wrap gap-3">
               <button onClick={() => go("contact")} className="press inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-bold text-white shadow-lg" style={{ background: DEEP }}><AIcon n="users" s={20} />Join as a Volunteer <AIcon n="arrow" s={18} /></button>
@@ -136,10 +144,10 @@ export default function Stars({ go, openStar }: { go: (p: Page) => void; openSta
             </div>
           </div>
           <div className="relative mx-auto h-[330px] w-full max-w-[620px] sm:h-[400px]">
-            <img src="images/about-khandwa-bg.webp" alt="Khandwa riverside at sunrise" data-depth="16" className="float-slow absolute left-[2%] top-[14%] h-[52%] w-[34%] -rotate-[9deg] rounded-2xl border-[5px] border-white object-cover shadow-xl" />
-            <img src="images/real-group.webp" alt="Volunteers with the Empirical Shiksha Abhiyan banner" data-depth="28" className="absolute left-[33%] top-[2%] h-[56%] w-[34%] rotate-[3deg] rounded-2xl border-[5px] border-white object-cover shadow-xl" />
-            <img src="images/swachhata.webp" alt="Kund cleanup" data-depth="20" className="float-med absolute right-0 top-[8%] h-[50%] w-[34%] rotate-[8deg] rounded-2xl border-[5px] border-white object-cover shadow-xl" />
-            <img src="images/volunteers.webp" alt="Our volunteers" data-depth="10" className="absolute bottom-0 left-[8%] h-[46%] w-[84%] rounded-[26px] border-[5px] border-white object-cover object-[center_30%] shadow-2xl" />
+            <img src="images/about-khandwa-bg.webp" alt="Khandwa riverside at sunrise" data-depth="16" className="float-slow absolute left-0 top-[6%] h-[41%] w-[31%] -rotate-[6deg] rounded-2xl border-[5px] border-white object-cover shadow-xl" />
+            <img src="images/real-group.webp" alt="Volunteers with the Empirical Shiksha Abhiyan banner" data-depth="28" className="absolute left-[34%] top-0 h-[43%] w-[32%] rotate-[2deg] rounded-2xl border-[5px] border-white object-cover shadow-xl" />
+            <img src="images/swachhata.webp" alt="Kund cleanup" data-depth="20" className="float-med absolute right-0 top-[6%] h-[41%] w-[31%] rotate-[6deg] rounded-2xl border-[5px] border-white object-cover shadow-xl" />
+            <img src="images/volunteers.webp" alt="Our volunteers" data-depth="10" className="absolute bottom-0 left-[3%] h-[48%] w-[94%] rounded-[26px] border-[5px] border-white object-cover object-[center_30%] shadow-2xl" />
           </div>
         </div>
         <div className={`${wrap} relative z-10 -mt-20`}>
@@ -157,23 +165,23 @@ export default function Stars({ go, openStar }: { go: (p: Page) => void; openSta
       {/* ===== Featured + leaderboard ===== */}
       <section className={`${wrap} mt-10 grid items-stretch gap-6 lg:grid-cols-[1.35fr_1fr]`}>
         <article onClick={() => openStar(top.slug)} className="card-print group relative grid cursor-pointer overflow-hidden sm:grid-cols-[250px_1fr]" role="link" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && openStar(top.slug)} aria-label={`Open ${top.name}'s profile`}>
-          <div className="relative min-h-[260px] overflow-hidden" style={{ background: top.tint }}>
+          <div className="relative min-h-[320px] overflow-hidden sm:min-h-[420px]" style={{ background: top.tint }}>
             <svg viewBox="0 0 300 300" className="absolute -left-6 bottom-0 h-[280px] w-[280px]" aria-hidden><path d="M60 250C20 190 40 90 120 50c60-30 130-10 140 50-40-10-80 10-90 50 20 20 10 70-40 90-40 14-60 14-70 10z" fill={top.color} opacity=".85" /></svg>
             <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-md border-2 border-[#1F2A44] bg-[#D8501F] px-3 py-1 text-[13px] font-bold text-white"><AIcon n="star" s={15} />Top Contributor</span>
-            {top.photo ? <img src={top.photo} alt={top.name} className="absolute bottom-0 left-1/2 z-[1] h-[92%] -translate-x-1/2 object-contain object-bottom transition duration-500 group-hover:scale-105" /> : <span className="absolute inset-0 grid place-items-center"><Avatar s={top} size={150} /></span>}
+            {top.photo ? <img src={top.photo} alt={top.name} className="absolute inset-x-0 bottom-0 z-[1] h-full w-full object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.02]" /> : <span className="absolute inset-0 grid place-items-center"><Avatar s={top} size={150} /></span>}
           </div>
           <div className="p-5 sm:p-6">
             <div className="flex items-start justify-between gap-2"><h2 className="font-display text-[34px] font-extrabold leading-none" style={{ color: INK }}>{top.name}</h2><span className="text-[#EE9B13]"><AIcon n="crown" s={34} duo /></span></div>
             <div className="mt-2 flex items-center gap-2 text-[16px] font-bold" style={{ color: top.color }}><AIcon n={top.roleIcon} s={20} />{top.role}</div>
             <p className="mt-3 flex gap-2 text-[16.5px] leading-[1.5]" style={{ color: INK }}><span className="font-display text-4xl font-extrabold leading-none" style={{ color: CHILLI }}>“</span>{top.quote}”</p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <div className="card-soft px-3 py-2 text-[13.5px] font-semibold text-slate-600"><span className="mr-1.5 inline-block align-middle text-[#EE9B13]"><AIcon n="clock" s={18} /></span><b className="text-[18px]" style={{ color: INK }}>{hoursOf(top)} hrs</b> Contributed</div>
-              <div className="card-soft px-3 py-2 text-[13.5px] font-semibold text-slate-600"><span className="mr-1.5 inline-block align-middle text-[#EE9B13]"><AIcon n="target" s={18} /></span><b className="text-[18px]" style={{ color: INK }}>{top.target} hrs</b> Yearly Target</div>
-              <Ring pct={pctOf(top)} size={74} stroke={9}><b className="font-display text-[17px] leading-none" style={{ color: INK }}>{pctOf(top)}%<span className="block text-[10px] font-semibold text-slate-500">Completed</span></b></Ring>
+              <div className="card-soft px-3 py-2 text-[13.5px] font-semibold text-slate-600"><span className="mr-1.5 inline-block align-middle text-[#EE9B13]"><AIcon n="clock" s={18} /></span><b className="text-[18px]" style={{ color: INK }}><CountUp value={String(hoursOf(top))} /> hrs</b> Contributed</div>
+              <div className="card-soft px-3 py-2 text-[13.5px] font-semibold text-slate-600"><span className="mr-1.5 inline-block align-middle text-[#EE9B13]"><AIcon n="target" s={18} /></span><b className="text-[18px]" style={{ color: INK }}><CountUp value={String(top.target)} /> hrs</b> Yearly Target</div>
+              <Ring pct={pctOf(top)} size={74} stroke={9}><b className="font-display text-[17px] leading-none" style={{ color: INK }}><CountUp value={pctOf(top) + "%"} /><span className="block text-[10px] font-semibold text-slate-500">Completed</span></b></Ring>
             </div>
             <div className="mt-3 flex flex-wrap gap-2 text-[13.5px] font-bold">
-              <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-[#1F2A44] bg-[#FBE6C8] px-3 py-1.5"><span className="text-[#D8501F]"><AIcon n="flame" s={17} duo /></span>{top.streak} Month Streak</span>
-              <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-[#1F2A44] bg-[#FFF1C9] px-3 py-1.5"><span className="text-[#EE9B13]"><AIcon n="trophy" s={17} /></span>Longest Streak {top.longest} Months</span>
+              <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-[#1F2A44] bg-[#FBE6C8] px-3 py-1.5"><span className="text-[#D8501F]"><AIcon n="flame" s={17} duo /></span><CountUp value={String(top.streak)} /> Month Streak</span>
+              <span className="inline-flex items-center gap-1.5 rounded-md border-2 border-[#1F2A44] bg-[#FFF1C9] px-3 py-1.5"><span className="text-[#EE9B13]"><AIcon n="trophy" s={17} /></span>Longest Streak <CountUp value={String(top.longest)} /> Months</span>
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t-2 border-dashed border-[#E9DCC0] pt-3 text-[13.5px] font-bold" style={{ color: INK }}>
               <span className="mr-1 text-slate-600">Key Achievements</span>
@@ -212,9 +220,9 @@ export default function Stars({ go, openStar }: { go: (p: Page) => void; openSta
                 <div className="p-4">
                   <h3 className="text-center font-display text-[21px] font-extrabold leading-tight" style={{ color: INK }}>{s.name}</h3>
                   <p className="mt-1 flex items-center justify-center gap-1.5 text-[14px] font-bold" style={{ color: s.color }}><AIcon n={s.roleIcon} s={17} />{s.role}</p>
-                  <div className="mt-3 flex items-center justify-between text-[13px] font-semibold text-slate-600"><span><b className="text-[15px]" style={{ color: INK }}>{hoursOf(s)} hrs</b> Completed</span><span><b className="text-[15px]" style={{ color: INK }}>{s.target} hrs</b> Target</span></div>
-                  <div className="mt-2 flex items-center gap-2"><span className="h-2.5 flex-1 overflow-hidden rounded-full border-[1.5px] border-[#1F2A44] bg-[#F6EAD3]"><span className="fill-grow block h-full bg-[#3A7D44]" style={{ width: pctOf(s) + "%" }} /></span><b className="text-[13.5px]" style={{ color: INK }}>{pctOf(s)}%</b></div>
-                  <div className="mt-3 flex justify-center"><span className="inline-flex items-center gap-1.5 rounded-md bg-[#FBE6C8] px-3 py-1 text-[13.5px] font-bold" style={{ color: INK }}><span className="text-[#D8501F]"><AIcon n="flame" s={16} duo /></span>{s.streak} Month Streak</span></div>
+                  <div className="mt-3 flex items-center justify-between text-[13px] font-semibold text-slate-600"><span><b className="text-[15px]" style={{ color: INK }}><CountUp value={String(hoursOf(s))} /> hrs</b> Completed</span><span><b className="text-[15px]" style={{ color: INK }}><CountUp value={String(s.target)} /> hrs</b> Target</span></div>
+                  <div className="mt-2 flex items-center gap-2"><span className="h-2.5 flex-1 overflow-hidden rounded-full border-[1.5px] border-[#1F2A44] bg-[#F6EAD3]"><span className="fill-grow block h-full bg-[#3A7D44]" style={{ width: pctOf(s) + "%" }} /></span><b className="text-[13.5px]" style={{ color: INK }}><CountUp value={pctOf(s) + "%"} /></b></div>
+                  <div className="mt-3 flex justify-center"><span className="inline-flex items-center gap-1.5 rounded-md bg-[#FBE6C8] px-3 py-1 text-[13.5px] font-bold" style={{ color: INK }}><span className="text-[#D8501F]"><AIcon n="flame" s={16} duo /></span><CountUp value={String(s.streak)} /> Month Streak</span></div>
                   <div className="mt-3 flex items-center justify-between border-t-2 border-dashed border-[#E9DCC0] pt-3">
                     <span className="flex gap-1.5">{s.achievements.map((a) => <span key={a.name} title={a.name} className="grid h-8 w-8 place-items-center rounded-md bg-[#F6EAD3]" style={{ color: s.color }}><AIcon n={a.icon} s={17} /></span>)}</span>
                     <span className="grid h-9 w-9 place-items-center rounded-md border-2 border-[#1F2A44] bg-[#FFFDF7] transition group-hover:bg-[#EE9B13]" style={{ color: INK }}><AIcon n="arrow" s={16} /></span>

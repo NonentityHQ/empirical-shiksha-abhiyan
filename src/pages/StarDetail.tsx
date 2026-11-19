@@ -68,7 +68,7 @@ export default function StarDetail({ id, go, openStar }: { id: string; go: (p: P
 
         <div className="card-print mx-auto w-full max-w-[600px] p-5 lg:mx-0 lg:justify-self-end">
           <div className="grid items-center gap-4 sm:grid-cols-[auto_1fr_1fr]">
-            <Ring pct={pct} size={128} stroke={13} color="#3A7D44"><b className="font-display text-[30px] font-extrabold leading-none" style={{ color: INK }}>{pct}%<span className="block text-[13px] font-semibold text-slate-600">Completed</span></b></Ring>
+            <Ring pct={pct} size={128} stroke={13} color="#3A7D44"><b className="font-display text-[30px] font-extrabold leading-none" style={{ color: INK }}><CountUp value={pct + "%"} /><span className="block text-[13px] font-semibold text-slate-600">Completed</span></b></Ring>
             <div className="flex items-center gap-2.5"><span className="text-[#3A7D44]"><AIcon n="clock" s={34} /></span><span><b className="block font-display text-[26px] font-extrabold leading-none" style={{ color: INK }}><CountUp value={hours + " hrs"} /></b><span className="text-[14px] font-semibold text-slate-600">Contributed</span></span></div>
             <div className="flex items-center gap-2.5 sm:border-l-2 sm:border-dashed sm:border-[#E9DCC0] sm:pl-4"><span className="text-[#EE9B13]"><AIcon n="target" s={34} /></span><span><b className="block font-display text-[26px] font-extrabold leading-none" style={{ color: INK }}><CountUp value={s.target + " hrs"} /></b><span className="text-[14px] font-semibold text-slate-600">Yearly Target</span></span></div>
           </div>
@@ -101,7 +101,7 @@ export default function StarDetail({ id, go, openStar }: { id: string; go: (p: P
                     <h3 className="flex items-center gap-2 font-display text-[20px] font-extrabold" style={{ color: INK }}><span className="text-[#3A7D44]"><AIcon n="trophy" s={24} duo /></span>At a Glance</h3>
                     <ul className={`mt-3 ${twoUp ? "space-y-3" : "grid grid-cols-2 gap-4 sm:grid-cols-4"}`}>
                       {([["trophy", "#EE9B13", `#${rank}`, "on Leaderboard"], ["bolt", "#EE9B13", `${s.streak} Months`, "Current Streak"], ["crown", "#EE9B13", `${s.longest} Months`, "Longest Streak"], ["calendar", "#3A7D44", `${hours} hrs`, "Total Contribution"]] as const).map(([ic, c, v, l]) => (
-                        <li key={l} className="flex items-center gap-3"><span style={{ color: c }}><AIcon n={ic} s={32} duo /></span><span><b className="block font-display text-[18px] font-extrabold leading-tight" style={{ color: INK }}>{v}</b><span className="text-[13.5px] font-semibold text-slate-600">{l}</span></span></li>
+                        <li key={l} className="flex items-center gap-3"><span style={{ color: c }}><AIcon n={ic} s={32} duo /></span><span><b className="block font-display text-[18px] font-extrabold leading-tight" style={{ color: INK }}><CountUp value={v} /></b><span className="text-[13.5px] font-semibold text-slate-600">{l}</span></span></li>
                       ))}
                     </ul>
                   </section>
@@ -112,7 +112,7 @@ export default function StarDetail({ id, go, openStar }: { id: string; go: (p: P
                     <div className={`mt-3 flex items-end gap-1.5 ${twoUp ? "h-[190px]" : "h-[240px] sm:gap-3"}`} role="img" aria-label={`Monthly hours for ${s.name}`}>
                       {s.monthly.map((v, i) => (
                         <div key={i} className="flex h-full flex-1 flex-col justify-end text-center">
-                          <span className="text-[11.5px] font-bold" style={{ color: INK }}>{v}h</span>
+                          <span className="text-[11.5px] font-bold" style={{ color: INK }}><CountUp value={v + "h"} /></span>
                           <span className="bar-grow mt-1 block rounded-t-md border-2 border-b-0 border-[#1F2A44]" style={{ height: `${(v / max) * 78}%`, background: i === s.monthly.length - 1 ? "#3A7D44" : "#9CC98A", animationDelay: i * 70 + "ms" }} />
                         </div>
                       ))}

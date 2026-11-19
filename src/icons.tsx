@@ -19,5 +19,5 @@ export const AREA_ICON: Record<string, string> = { shiksha: "book", swachhata: "
 
 export const AIcon = ({ n, s = 22, duo = false }: { n: string; s?: number; duo?: boolean }) => {
   const Cmp = ICONS[n] ?? Star;
-  return <Cmp size={s} strokeWidth={duo ? 1.8 : 2} fill={duo ? "currentColor" : "none"} fillOpacity={duo ? 0.17 : undefined} aria-hidden />;
+  return <Cmp size={s} strokeWidth={duo ? 1.6 : 2} fill="none" aria-hidden />;
 };

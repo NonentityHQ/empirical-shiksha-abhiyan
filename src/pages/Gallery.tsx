@@ -289,11 +289,7 @@ export default function Gallery() {
         <PageHero
           eyebrow="Gallery"
           title={
-            <>
-              <span className="notranslate" translate="no">{sec.titleHi}</span>
-              {" — "}
-              <span className="text-flame">{sec.titleEn}</span>
-            </>
+            <span className="text-flame"><Bi en={sec.titleEn} hi={sec.titleHi} /></span>
           }
           sub={sec.tagline}
           img={sec.collage[0]}

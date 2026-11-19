@@ -1,0 +1,4 @@
+Empirical Shiksha updates
+- Replaced the old logo subtitle “शिक्षा से सेवा” with “समिति” in header and footer text.
+- Enlarged and raised the featured Our Stars portrait so the subject fills the portrait panel better.
+- The newly supplied standalone logo image was not present in the mounted source assets; replace public/logo.png with the confirmed final logo file before deployment.

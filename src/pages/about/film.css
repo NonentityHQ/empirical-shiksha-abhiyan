@@ -251,16 +251,18 @@
 .film .begin-grid { display: grid; gap: 3rem; max-width: 1280px; margin: 0 auto; padding: 0 var(--pad); }
 .film .year { display: block; font: 800 clamp(5rem, 22vw, 9.5rem)/.9 var(--font-display); color: transparent; -webkit-text-stroke: 2px var(--flame); }
 .film .begin-body { position: relative; padding-left: 2rem; display: grid; gap: 2.6rem; }
-.film .tline { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--flame); transform-origin: top; }
+.film .tline { position: absolute; left: 0; top: 0; bottom: var(--tl-end, 1.2rem); width: 2px; background: var(--flame); transform-origin: top; } /* --tl-end is set from About.tsx so the line stops exactly at the last point */
 .film .big { font-size: clamp(2rem, 4.6vw, 3.8rem); max-width: 12em; }
 .film .mid { font-size: clamp(1.3rem, 2.4vw, 2rem); max-width: 24em; line-height: 1.3; }
 .film .begin-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .film .bp { aspect-ratio: 4 / 5; overflow: hidden; }
 .film .bp:nth-child(2) { margin-top: 3rem; }
 .film .bp img { width: 100%; height: 118%; object-fit: cover; }
-.film .tl-item { position: relative; display: flex; align-items: baseline; flex-wrap: wrap; gap: .3rem .9rem; }
-.film .tl-item i { position: absolute; left: -2.55rem; top: .55rem; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 3px solid var(--flame); }
-.film .tl-item b { font-size: 1.5rem; font-weight: 600; }
+.film .tl-item { position: relative; display: flex; align-items: baseline; flex-wrap: wrap; gap: .1rem .9rem; }
+/* point: 16px ring centred exactly on the 2px line (line centre = 1px; item starts 2rem right of the line) and on the first text line (b line-height 2.4rem → centre 1.2rem) */
+.film .tl-item i { position: absolute; left: calc(-2rem - 7px); top: calc(1.2rem - 8px); box-sizing: border-box; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); border: 3px solid var(--flame); }
+.film .tl-item b { font-size: 1.5rem; font-weight: 600; line-height: 1.6; }
+.film .tl-item span { line-height: 1.6; }
 .film .tl-item span { opacity: .7; }
 @media (min-width: 900px) {
   .film .begin-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 5vw; }
@@ -495,3 +497,12 @@
 .film.is-desk .fd-h { font-size: calc(var(--u) * 2.9); line-height: 1.28; }
 .film.is-desk .fd-r .fd-h { font-size: calc(var(--u) * 2.5); }
 .film .fd-h .hl { background: linear-gradient(transparent 52%, #FFC83D 52%, #FFC83D 94%, transparent 94%); color: #B83A0B; }
+
+/* v28 — no yellow marker under the red words; bigger Jayram headline, bio and skill rows */
+.film .fd-h .hl { background: none; }
+.film.is-desk .fd-r .fd-h { font-size: calc(var(--u) * 2.95); }
+.film.is-desk .fd-r .fd-intro { font-size: calc(var(--u) * 1.4); }
+.film.is-desk .fd-r .fd-skill { font-size: calc(var(--u) * 1.5); }
+.film.is-desk .fd-r .fd-skill em { font-size: .78em; }
+.film.is-desk .fd-r .fd-panel h3 { font-size: calc(var(--u) * 1.5); }
+.film.is-desk .fd-r .fd-panel h3 { font-size: calc(var(--u) * 1.3); flex-wrap: nowrap; }

@@ -55,12 +55,12 @@ export default function Contact() {
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-10">
             <div className="relative">
               <div className="flex items-center gap-2 text-[15px] font-extrabold text-[#E8730C]">
-                <span className="h-[3px] w-7 rounded-full bg-[#E8730C]" />Contact Us<span className="h-[3px] w-7 rounded-full bg-[#E8730C]" />
+                Contact Us
               </div>
               <h1 className="mt-3 font-display text-[40px] font-extrabold leading-[1.05] tracking-tight text-[#14213D] sm:text-[52px] lg:text-[60px]">
                 Get in Touch<br />
                 <span className="relative inline-block text-[#17773A]">With Us
-                  <svg viewBox="0 0 220 12" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-3 w-full" aria-hidden><path d="M2 8C50 2 130 2 218 7" stroke="#17773A" strokeWidth="4" fill="none" strokeLinecap="round" /></svg>
+                  
                 </span>
               </h1>
               <p className="mt-6 max-w-md text-[17px] leading-relaxed text-[#25324F]">
@@ -113,9 +113,9 @@ export default function Contact() {
       {/* ============ FOUNDERS + MISSION ============ */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-5 md:py-10">
         <div className="mb-6 flex items-center justify-center gap-4">
-          <span className="h-[3px] w-10 rounded-full bg-[#F5A524]" />
+          
           <h2 className="font-display text-[26px] font-extrabold text-[#14213D] sm:text-[30px]"><Bi en="Our Founders" hi="हमारे संस्थापक" /></h2>
-          <span className="h-[3px] w-10 rounded-full bg-[#F5A524]" />
+          
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1.05fr]">

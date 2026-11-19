@@ -1,8 +1,33 @@
-import { Bi } from "./lang";
-import { useEffect, useState, type ReactNode } from "react";
-import { LeafBranch, RayDashes } from "./decor";
+import { Bi, readLang, useLang } from "./lang";
+import { LANGUAGES } from "./locales";
+import { setTranslationLanguage, startTranslationObserver } from "./translation";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import {
+  ArrowUpRight,
+  BarChart3,
+  BookOpen,
+  CalendarDays,
+  Check,
+  Cookie,
+  FileText,
+  HeartPulse,
+  House,
+  Images,
+  Info,
+  Layers,
+  Leaf,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  ShieldCheck,
+  Star,
+  Users,
+  UsersRound,
+  type LucideIcon,
+} from "lucide-react";
 
-export type Page = "home" | "about" | "initiatives" | "initiative-detail" | "impact" | "gallery" | "success" | "stars" | "star-detail" | "contact";
+export type Page = "home" | "about" | "initiatives" | "initiative-detail" | "impact" | "gallery" | "success" | "stars" | "star-detail" | "contact" | "reports";
 export const NAV: { id: Page; label: string }[] = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
@@ -13,6 +38,7 @@ export const NAV: { id: Page; label: string }[] = [
   { id: "success", label: "Success Stories" },
   { id: "contact", label: "Contact Us" },
 ];
+const NAV_HI: Record<string, string> = { home: "मुख्य पृष्ठ", about: "हमारे बारे में", initiatives: "हमारी पहलें", impact: "हमारा प्रभाव", stars: "हमारे सितारे", gallery: "गैलरी", success: "सफलता की कहानियाँ", contact: "संपर्क करें" };
 
 export const PHONE = "7400845669";
 export const EMAIL = "empiricalshikshaabhiyan@gmail.com";
@@ -24,45 +50,27 @@ export const AREAS = [
   { key: "swasthya", hi: "मानसिक स्वास्थ्य", name: "Mansik Swasthya", en: "Mental Health", color: "#2B459E", tint: "#FBF3E4", img: "images/init-rally.webp" },
 ] as const;
 
-/* -------- Logo: uses official file at /logo.png, falls back to a stand-in emblem -------- */
+/* -------- Official symbol mark; the organisation name is rendered as live text beside it. -------- */
 export function Emblem({ size = 56 }: { size?: number }) {
+  return <img src="images/empirical-mark.png" alt="" aria-hidden="true" width={Math.round(size * 1.62)} height={size} className="block object-contain" style={{ width: Math.round(size * 1.62), height: size }} loading="eager" />;
+}
+
+export function Logo({ size = 56 }: { size?: number; light?: boolean }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden>
-      {Array.from({ length: 9 }).map((_, i) => {
-        const a = Math.PI + (i * Math.PI) / 8;
-        const x = 50 + Math.cos(a) * 40, y = 46 + Math.sin(a) * 40;
-        const x2 = 50 + Math.cos(a) * 47, y2 = 46 + Math.sin(a) * 47;
-        return <line key={i} x1={x} y1={y} x2={x2} y2={y2} stroke="#EE9B13" strokeWidth="4" strokeLinecap="round" />;
-      })}
-      <path d="M14 44 A36 36 0 0 1 86 44" fill="none" stroke="#EE9B13" strokeWidth="3" />
-      <ellipse cx="34" cy="34" rx="7" ry="4" transform="rotate(-35 34 34)" fill="#3A7D44" />
-      <ellipse cx="66" cy="34" rx="7" ry="4" transform="rotate(35 66 34)" fill="#3A7D44" />
-      <ellipse cx="50" cy="24" rx="4" ry="7" fill="#3A7D44" />
-      <circle cx="50" cy="42" r="6" fill="#EE9B13" />
-      <path d="M32 46 Q50 56 68 46 L52 74 L48 74 Z" fill="#D8501F" />
-      <path d="M18 72 Q34 64 50 74 Q66 64 82 72 L82 78 Q66 72 50 80 Q34 72 18 78 Z" fill="#fff" stroke="#2B459E" strokeWidth="2.5" />
-      <path d="M20 88 Q50 98 80 88" fill="none" stroke="#D8501F" strokeWidth="3" strokeLinecap="round" />
-    </svg>
+    <div className="flex shrink-0 items-center">
+      <span className="grid shrink-0 place-items-center rounded-xl bg-white px-1 shadow-sm ring-1 ring-black/10" style={{ height: size, width: Math.round(size * 1.62) }}>
+        <Emblem size={size - 6} />
+      </span>
+    </div>
   );
 }
 
-export function Logo({ size = 56, light = false }: { size?: number; light?: boolean }) {
-  const [ok, setOk] = useState(true);
+function BrandName({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="rounded-full bg-white shadow-sm ring-1 ring-black/5 grid place-items-center overflow-hidden" style={{ width: size, height: size }}>
-        {ok ? (
-          <img src="logo.png" alt="Empirical Shiksha Abhiyan logo" className="w-full h-full object-contain" onError={() => setOk(false)} />
-        ) : (
-          <Emblem size={size - 6} />
-        )}
-      </div>
-      <div className="leading-none notranslate" translate="no">
-        <div className={`font-display font-extrabold text-[21px] tracking-tight ${light ? "text-white" : "text-royal"}`}>इंपीरिकल</div>
-        <div className="font-display font-bold text-[14px] text-flame -mt-1">शिक्षा अभियान</div>
-        <div className={`text-[11px] font-semibold ${light ? "text-sky-200" : "text-sky"}`}>शिक्षा से सेवा</div>
-      </div>
-    </div>
+    <span className={`min-w-0 text-left leading-tight ${compact ? "max-w-[145px]" : "max-w-[220px]"}`}>
+      <span className={`notranslate block font-extrabold tracking-tight text-[#24458E] ${compact ? "text-[13px] sm:text-[15px]" : "text-[15px] sm:text-[18px]"}`} translate="no">इंपीरिकल शिक्षा</span>
+      <span className="notranslate mt-0.5 block font-bold text-[#E87912] text-[11px] sm:text-[12px]" translate="no">अभियान समिति</span>
+    </span>
   );
 }
 
@@ -82,12 +90,8 @@ export function SunArc({ className = "", color = "#EE9B13" }: { className?: stri
   );
 }
 
-export function Swoosh({ className = "", color = "#D8501F" }: { className?: string; color?: string }) {
-  return (
-    <svg viewBox="0 0 300 20" className={className} preserveAspectRatio="none" aria-hidden>
-      <path d="M2 4 Q150 26 298 4 Q150 16 2 4Z" fill={color} />
-    </svg>
-  );
+export function Swoosh(_props: { className?: string; color?: string }) {
+  return null; // decorative underline removed site-wide
 }
 
 export function Eyebrow({ children, color = "#D8501F" }: { children: ReactNode; color?: string }) {
@@ -99,7 +103,7 @@ export function Eyebrow({ children, color = "#D8501F" }: { children: ReactNode; 
   );
 }
 
-export function SectionHead({ eyebrow, title, sub, center = false, light = false }: { eyebrow: string; title: ReactNode; sub?: string; center?: boolean; light?: boolean }) {
+export function SectionHead({ eyebrow, title, sub, center = false, light = false }: { eyebrow: ReactNode; title: ReactNode; sub?: ReactNode; center?: boolean; light?: boolean }) {
   return (
     <div className={center ? "text-center mx-auto max-w-2xl" : "max-w-2xl"}>
       <Eyebrow color={light ? "#F5C77A" : "#D8501F"}>{eyebrow}</Eyebrow>
@@ -162,71 +166,34 @@ export function ArchImage({ src, alt, className = "", ring = "#EE9B13" }: { src:
   );
 }
 
-const LANGS: { code: string; label: string; en: string }[] = [
-  { code: "en", label: "English", en: "English" },
-  { code: "hi", label: "हिन्दी", en: "Hindi" },
-  { code: "gu", label: "ગુજરાતી", en: "Gujarati" },
-  { code: "mr", label: "मराठी", en: "Marathi" },
-  { code: "bn", label: "বাংলা", en: "Bengali" },
-  { code: "te", label: "తెలుగు", en: "Telugu" },
-  { code: "kn", label: "ಕನ್ನಡ", en: "Kannada" },
-  { code: "ta", label: "தமிழ்", en: "Tamil" },
-  { code: "pa", label: "ਪੰਜਾਬੀ", en: "Punjabi" },
-  { code: "or", label: "ଓଡ଼ିଆ", en: "Odia" },
-  { code: "ml", label: "മലയാളം", en: "Malayalam" },
-  { code: "ur", label: "اردو", en: "Urdu" },
-];
-
-function currentLang(): string {
-  const m = document.cookie.match(/(?:^|;\s*)googtrans=\/[^/]+\/([^;]+)/);
-  return m ? decodeURIComponent(m[1]) : "en";
-}
+const LANGS = LANGUAGES;
 
 function setLanguage(code: string) {
-  const host = window.location.hostname;
-  const domains = ["", host, "." + host, "." + host.split(".").slice(-2).join(".")];
-  const expire = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  domains.forEach((d) => {
-    const dom = d ? `;domain=${d}` : "";
-    document.cookie = `googtrans=;path=/${dom};${expire}`;
-    if (code !== "en") document.cookie = `googtrans=/en/${code};path=/${dom}`;
-  });
-  // Prefer switching live via the Google widget; fall back to reload.
-  const sel = document.querySelector<HTMLSelectElement>("select.goog-te-combo");
-  if (sel && code !== "en") {
-    sel.value = code;
-    sel.dispatchEvent(new Event("change"));
-  } else {
-    window.location.reload();
-  }
+  try { window.localStorage.setItem("empirical-language", code); } catch { /* storage may be blocked */ }
+  document.documentElement.lang = code;
+  setTranslationLanguage(code);
   window.dispatchEvent(new Event("langchange"));
-}
-
-let gtLoaded = false;
-function loadGoogleTranslate() {
-  if (gtLoaded || typeof window === "undefined") return;
-  gtLoaded = true;
-  (window as unknown as { googleTranslateElementInit: () => void }).googleTranslateElementInit = () => {
-    const g = (window as unknown as { google?: { translate?: { TranslateElement: new (o: object, id: string) => unknown } } }).google;
-    if (g?.translate) {
-      new g.translate.TranslateElement(
-        { pageLanguage: "en", includedLanguages: LANGS.map((l) => l.code).join(","), autoDisplay: false },
-        "google_translate_element"
-      );
-    }
-  };
-  const sc = document.createElement("script");
-  sc.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  sc.async = true;
-  document.body.appendChild(sc);
 }
 
 export function Navbar({ page, go, onPickArea, flat = false, activeColor, scrolled: _s = true, visible = true }: { page: Page; go: (p: Page) => void; onPickArea?: (key: string) => void; flat?: boolean; activeColor?: string; scrolled?: boolean; visible?: boolean }) {
   const [sub, setSub] = useState(false);
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState(false);
-  const [lang, setLang] = useState<string>(() => (typeof document !== "undefined" ? currentLang() : "en"));
-  useEffect(() => { loadGoogleTranslate(); }, []);
+  const [lang, setLang] = useState<string>(() => readLang());
+  useEffect(() => {
+    const initial = readLang();
+    document.documentElement.lang = initial;
+    startTranslationObserver(initial);
+    const syncLanguage = () => {
+      const next = readLang();
+      setLang(next);
+      setTranslationLanguage(next);
+    };
+    window.addEventListener("langchange", syncLanguage);
+    return () => {
+      window.removeEventListener("langchange", syncLanguage);
+    };
+  }, []);
   useEffect(() => {
     if (!open) return;
     const close = (e: MouseEvent) => { if (!(e.target as HTMLElement).closest("[data-lang-menu]")) setOpen(false); };
@@ -238,15 +205,15 @@ export function Navbar({ page, go, onPickArea, flat = false, activeColor, scroll
   return (
     <header aria-hidden={!visible} className={`fixed inset-x-0 top-0 z-[70] ${flat ? "px-0 pt-0 bg-white shadow-[0_6px_20px_-12px_rgba(31,42,68,.4)]" : "px-3 sm:px-5 pt-2 bg-transparent"} pb-0 backdrop-blur-none transition-all duration-300 ease-out ${visible ? "translate-y-0 opacity-100" : "-translate-y-[115%] opacity-0 pointer-events-none"}`}>
       <div className={`${flat ? "max-w-[1320px] px-4 sm:px-7 lg:px-[4.5%] h-[68px]" : "max-w-7xl bg-white rounded-[22px] shadow-[0_10px_30px_-14px_rgba(31,42,68,.35)] ring-1 ring-[#F6EAD3] pl-3 sm:pl-4 pr-2 h-[68px]"} mx-auto flex items-center justify-between gap-3`}>
-        <button onClick={() => go("home")} className="shrink-0"><Logo size={flat ? 58 : 52} /></button>
-        <nav className="hidden lg:flex items-center gap-1.5">
+        <button onClick={() => go("home")} aria-label="Empirical Shiksha Abhiyan Samiti – Home" className="flex shrink-0 items-center gap-2.5 sm:gap-3"><Logo size={flat ? 54 : 48} /><BrandName compact /></button>
+        <nav className="hidden xl:flex items-center gap-1">
           {links.map((n) => {
             const on = page === n.id || (n.id === "initiatives" && page === "initiative-detail") || (n.id === "stars" && page === "star-detail");
-            const cls = `press px-4 h-10 rounded-full ${flat ? "text-[15px]" : "text-[14px]"} font-semibold whitespace-nowrap transition ${on ? "text-white shadow-md " + (flat && activeColor ? "" : "bg-azure shadow-blue-200") : flat ? "text-navy hover:bg-[#FBF3E4]" : "bg-[#FBF3E4] text-navy ring-1 ring-[#F6EAD3] hover:ring-azure/40"}`;
-            if (n.id !== "initiatives" || !onPickArea) return <button key={n.id} onClick={() => go(n.id)} className={cls} style={on && flat && activeColor ? { background: activeColor } : undefined}>{n.label}</button>;
+            const cls = `press px-3 h-10 rounded-full ${flat ? "text-[15px]" : "text-[14px]"} font-semibold whitespace-nowrap transition ${on ? "text-white shadow-md " + (flat && activeColor ? "" : "bg-azure shadow-blue-200") : flat ? "text-navy hover:bg-[#FBF3E4]" : "bg-[#FBF3E4] text-navy ring-1 ring-[#F6EAD3] hover:ring-azure/40"}`;
+            if (n.id !== "initiatives" || !onPickArea) return <button key={n.id} onClick={() => go(n.id)} className={cls} style={on && flat && activeColor ? { background: activeColor } : undefined}><Bi en={n.label} hi={NAV_HI[n.id] || n.label} /></button>;
             return (
               <div key={n.id} className="relative" onMouseEnter={() => setSub(true)} onMouseLeave={() => setSub(false)}>
-                <button onClick={() => { setSub(false); go(n.id); }} className={cls} style={on && flat && activeColor ? { background: activeColor } : undefined} aria-haspopup="true" aria-expanded={sub}>{n.label} <span className="text-[10px] opacity-80">▾</span></button>
+                <button onClick={() => { setSub(false); go(n.id); }} className={cls} style={on && flat && activeColor ? { background: activeColor } : undefined} aria-haspopup="true" aria-expanded={sub}><Bi en={n.label} hi={NAV_HI[n.id] || n.label} /> <span className="text-[10px] opacity-80">▾</span></button>
                 {sub && (
                   <div className="absolute left-0 top-full z-50 pt-2"><div className="w-56 rounded-2xl bg-white p-2 shadow-xl ring-1 ring-black/5">
                     {AREAS.map((a) => <button key={a.key} onClick={() => { setSub(false); onPickArea(a.key); }} className="block w-full rounded-xl px-3 py-2 text-left text-sm font-semibold text-navy hover:bg-[#FBF3E4]"><Bi en={a.en} hi={a.hi} /></button>)}
@@ -257,8 +224,7 @@ export function Navbar({ page, go, onPickArea, flat = false, activeColor, scroll
           })}
         </nav>
         <div className="flex items-center gap-2">
-          <div id="google_translate_element" className="hidden" aria-hidden />
-          <div className="relative notranslate" data-lang-menu translate="no">
+          <div className="relative" data-lang-menu>
             <button onClick={() => setOpen(!open)} aria-label="Change language" className="flex items-center gap-1.5 px-3 h-10 rounded-full bg-[#FBF3E4] ring-1 ring-[#F6EAD3] text-azure font-semibold text-sm hover:ring-azure/40 hover:bg-white transition">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></svg>
               <span className="hidden sm:inline">{active.label}</span>
@@ -266,17 +232,17 @@ export function Navbar({ page, go, onPickArea, flat = false, activeColor, scroll
             </button>
             {open && (
               <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl ring-1 ring-black/5 p-2 z-50">
-                <div className="px-3 pt-1 pb-2 text-[11px] font-bold uppercase tracking-[.18em] text-slate-400">Choose language</div>
+                <div className="px-3 pt-1 pb-2 text-[11px] font-bold uppercase tracking-[.18em] text-slate-400"><Bi en="Choose language" hi="भाषा चुनें" /></div>
                 <div className="grid grid-cols-2 gap-1">
                   {LANGS.map((l) => (
                     <button key={l.code} onClick={() => { setLang(l.code); setOpen(false); setLanguage(l.code); }}
                       className={`text-left px-3 py-2 rounded-xl text-sm leading-tight ${l.code === lang ? "bg-blue-50 text-azure font-bold" : "text-navy hover:bg-slate-50"}`}>
-                      <span className="block">{l.label}</span>
-                      <span className="block text-[10px] text-slate-400 font-normal">{l.en}</span>
+                      <span className="notranslate block" translate="no">{l.label}</span>
+                      <span className="notranslate block text-[10px] text-slate-400 font-normal" translate="no">{l.en}</span>
                     </button>
                   ))}
                 </div>
-                <div className="px-3 pt-2 pb-1 text-[10px] text-slate-400">Automatic translation by Google</div>
+                
               </div>
             )}
           </div>
@@ -285,9 +251,9 @@ export function Navbar({ page, go, onPickArea, flat = false, activeColor, scroll
             <span className="w-8 h-8 rounded-full bg-white/20 grid place-items-center">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z" /></svg>
             </span>
-            Contact Us
+            <Bi en="Contact Us" hi="संपर्क करें" />
           </button>
-          <button className="press lg:hidden w-10 h-10 grid place-items-center rounded-full bg-[#FBF3E4] ring-1 ring-[#F6EAD3] text-navy" onClick={() => setMenu(!menu)} aria-label="Menu">☰</button>
+          <button className="press xl:hidden w-10 h-10 grid place-items-center rounded-full bg-[#FBF3E4] ring-1 ring-[#F6EAD3] text-navy" onClick={() => setMenu(!menu)} aria-label="Menu">☰</button>
         </div>
       </div>
       {menu && (
@@ -295,7 +261,7 @@ export function Navbar({ page, go, onPickArea, flat = false, activeColor, scroll
           {NAV.map((n) => (
             <button key={n.id} onClick={() => { go(n.id); setMenu(false); }}
               className={`text-left px-4 h-11 rounded-full font-semibold ${page === n.id ? "bg-azure text-white" : n.id === "contact" ? "bg-orange-50 text-flame" : "bg-[#FBF3E4] text-navy"}`}>
-              {n.label}
+              <Bi en={n.label} hi={NAV_HI[n.id] || n.label} />
             </button>
           ))}
         </div>
@@ -323,126 +289,260 @@ export function Socials({ className = "mt-6" }: { className?: string }) {
   );
 }
 
-export function Footer({ go, variant }: { go: (p: Page) => void; variant?: string }) {
-  const green = variant === "swachhata" || variant === "paryavaran";
-  const bg = green ? "#17605C" : "#1F2A44";
-  const missionName = variant === "shiksha" ? "Support Education" : variant === "swachhata" || variant === "swachhata-blue" ? "Support Cleanliness" : variant === "paryavaran" ? "Support Environment" : "";
-  const mission = missionName ? ["Volunteer", missionName, "Partner With Us"] : null;
-  return (
-    <footer className="relative text-white mt-0 overflow-hidden" style={{ background: bg }}>
-      {/* Wavy top edge */}
-      <div className="absolute top-0 left-0 right-0 -translate-y-[99%] leading-none pointer-events-none" aria-hidden>
-        <svg viewBox="0 0 1440 80" className="w-full h-12 md:h-16 block" preserveAspectRatio="none">
-          <path d="M0 80 C240 20 480 0 720 30 C960 60 1200 10 1440 40 L1440 80 Z" fill={bg} />
-        </svg>
-      </div>
+const FOOTER_LINK_ICONS: Record<string, LucideIcon> = {
+  home: House,
+  about: Info,
+  initiatives: Layers,
+  impact: BarChart3,
+  stars: Users,
+  gallery: Images,
+  success: Star,
+  contact: Mail,
+};
 
-<svg className="absolute bottom-10 left-0 w-44 sm:w-56 text-[#2B459E] opacity-40 pointer-events-none" viewBox="0 0 200 90" fill="currentColor" aria-hidden><path d="M0 90V72h28V60h12V48h10V34h8l6-18 6 18h8v14h10v12h12v12h28v20z" /><path d="M64 16V4l12 4z" /></svg>
-      <svg className="absolute bottom-10 right-0 w-44 sm:w-56 text-[#2B459E] opacity-40 pointer-events-none -scale-x-100" viewBox="0 0 200 90" fill="currentColor" aria-hidden><path d="M0 90V72h28V60h12V48h10V34h8l6-18 6 18h8v14h10v12h12v12h28v20z" /><path d="M64 16V4l12 4z" /></svg>
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-5 pt-12 sm:pt-16 pb-8 sm:pb-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
-          {/* Brand column */}
-          <div className="sm:col-span-2 lg:col-span-4">
-            <div className="flex items-start gap-3">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white grid place-items-center shadow-md shrink-0 overflow-hidden">
-                <Emblem size={44} />
-              </div>
-              <div className="leading-tight pt-0.5">
-                <div className="font-display font-extrabold text-[15px] sm:text-[17px] text-white tracking-tight">इंपीरिकल शिक्षा अभियान समिति</div>
-                <div className="mt-1 flex items-center gap-2 text-[11px] sm:text-[12px] text-[#F4B93E] font-semibold">
-                  <span className="w-5 sm:w-6 h-px bg-[#F4B93E]/70" />
-                  शिक्षा से सेवा
-                  <span className="w-5 sm:w-6 h-px bg-[#F4B93E]/70" />
+const FOOTER_INITIATIVES: { hi: string; en: string; sub: string; Icon: LucideIcon; tone: string }[] = [
+  { hi: "शिक्षा", en: "Education", sub: "Learning for all", Icon: BookOpen, tone: "blue" },
+  { hi: "स्वास्थ्य", en: "Health", sub: "Well-being", Icon: HeartPulse, tone: "rose" },
+  { hi: "पर्यावरण", en: "Environment", sub: "A greener Khandwa", Icon: Leaf, tone: "green" },
+  { hi: "सामाजिक जागरूकता", en: "Social Awareness", sub: "Stronger communities", Icon: UsersRound, tone: "violet" },
+];
+
+function FooterLandscape() {
+  return (
+    <svg className="emp-footer-landscape" viewBox="0 0 2048 190" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="footerHill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3B9A63" />
+          <stop offset="1" stopColor="#14563F" />
+        </linearGradient>
+        <linearGradient id="footerCream" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFF7E8" />
+          <stop offset="1" stopColor="#F8EBD5" />
+        </linearGradient>
+        <linearGradient id="footerGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#E6B84F" />
+          <stop offset=".5" stopColor="#FFF0BA" />
+          <stop offset="1" stopColor="#DDA641" />
+        </linearGradient>
+      </defs>
+      {/* distant landscape silhouettes */}
+      <g fill="#174B6D" opacity=".78">
+        <path d="M0 155V139h34v-15h15v-16h18v-25h8l8-22 8 22h8v25h18v16h18v15h34v16z" />
+        <path d="M80 63v-19l10-7 10 7v19M72 63V47h36v16" />
+        <path d="M372 153c18-14 36-15 54-1 13-18 34-19 50-3 17-16 39-15 54 4h28v15H340v-15z" />
+        <path d="M405 151v-30l20-18 20 18v30h-11v-19h-18v19zM488 151v-27l18-14 18 14v27h-10v-17h-16v17z" />
+        <path d="M1743 150c14-20 33-22 47-2 13-14 32-13 44 2h28v15h-136v-15z" />
+      </g>
+      {/* left tree */}
+      <g fill="#0B5874" opacity=".8">
+        <path d="M93 143c-3-24 0-39 5-55-16 4-27-4-28-19 14 1 23 7 29 18-2-19 4-35 17-48 12 19 15 34 10 51 9-12 21-17 34-15-4 17-15 26-33 26 7 15 9 29 8 42z" />
+        <path d="M121 111h8v48h-8z" />
+      </g>
+      {/* right moon and people */}
+      <circle cx="1836" cy="65" r="29" fill="#FFE2A0" opacity=".95" />
+      <g fill="#082D49" stroke="#082D49" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="1705" cy="95" r="5" /><path d="M1704 102l-3 20 10 10m-8-30-9 14m11 6-3 17m7-17 8 16" fill="none" />
+        <circle cx="1740" cy="88" r="5" /><path d="M1740 95l-2 20 11 10m-9-30-8 14m8 6-2 17m7-17 8 15" fill="none" />
+        <circle cx="1775" cy="80" r="5" /><path d="M1775 87l-2 20 11 10m-9-30-8 14m8 6-2 17m7-17 8 15" fill="none" />
+      </g>
+      {/* right tree */}
+      <g fill="#07546A" opacity=".88">
+        <path d="M1930 141c-5-19-2-35 7-49-17 1-28-8-27-23 17 1 27 7 33 20 1-18 10-32 25-42 9 18 9 34 1 49 13-10 26-12 39-6-8 16-21 23-39 20 4 12 5 23 3 34z" />
+        <path d="M1959 106h8v53h-8z" />
+      </g>
+      {/* layered green hills */}
+      <path d="M0 118C138 105 176 147 312 137c136-10 184-49 331-32 128 15 194 42 328 27 141-16 207-49 359-34 150 15 221 36 344 16 141-22 238-40 374-15v91H0z" fill="#0A314C" opacity=".95" />
+      <path d="M0 127C155 94 246 146 369 133c122-13 183-29 289-17 128 15 196 47 339 29 145-18 200-49 350-32 126 14 223 38 346 21 133-18 239-52 355-20v76H0z" fill="url(#footerHill)" />
+      <path d="M0 127C155 94 246 146 369 133c122-13 183-29 289-17 128 15 196 47 339 29 145-18 200-49 350-32 126 14 223 38 346 21 133-18 239-52 355-20" fill="none" stroke="url(#footerGold)" strokeWidth="5" />
+      {/* cream cut edge: two independent smooth layers create the sliding paper edge */}
+      <path d="M0 145C128 133 204 171 330 159c132-13 182-36 307-23 126 13 194 45 325 29 131-16 206-26 318-13 131 15 218 27 338 9 145-21 269-25 430 5v24H0z" fill="#FFEECF" />
+      <path d="M0 153C145 145 207 179 346 169c126-9 203-29 316-17 134 15 208 38 333 26 135-13 205-21 324-9 155 16 239 27 365 5 146-26 256-20 364 1v15H0z" fill="url(#footerCream)" />
+      <path d="M0 145C128 133 204 171 330 159c132-13 182-36 307-23 126 13 194 45 325 29 131-16 206-26 318-13 131 15 218 27 338 9 145-21 269-25 430 5" fill="none" stroke="#E8C77D" strokeWidth="3" />
+    </svg>
+  );
+}
+
+const FOOTER_EMAIL_PLACEHOLDER: Record<string, string> = {
+  en: "Enter your email address",
+  hi: "अपना ईमेल दर्ज करें",
+  gu: "તમારું ઇમેઇલ દાખલ કરો",
+  mr: "तुमचा ईमेल पत्ता टाका",
+  bn: "আপনার ইমেল ঠিকানা লিখুন",
+  te: "మీ ఇమెయిల్ చిరునామాను నమోదు చేయండి",
+  kn: "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ",
+  ta: "உங்கள் மின்னஞ்சல் முகவரியை உள்ளிடவும்",
+  pa: "ਆਪਣਾ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ",
+  or: "ଆପଣଙ୍କ ଇମେଲ୍ ଠିକଣା ଦିଅନ୍ତୁ",
+  ml: "നിങ്ങളുടെ ഇമെയിൽ വിലാസം നൽകുക",
+  ur: "اپنا ای میل پتہ درج کریں",
+};
+
+const FOOTER_HI_NAV: Partial<Record<Page, string>> = {
+  home: "मुखपृष्ठ",
+  about: "परिचय",
+  initiatives: "हमारी पहलें",
+  impact: "प्रभाव",
+  stars: "हमारे सितारे",
+  gallery: "चित्र दीर्घा",
+  success: "सफलता की कहानियाँ",
+  contact: "संपर्क करें",
+};
+
+export function Footer({ go }: { go: (p: Page) => void; variant?: string }) {
+  const [emailInput, setEmailInput] = useState("");
+  const language = useLang();
+  const isHindi = language === "hi";
+  const handleUpdatesSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const email = emailInput.trim();
+    if (!email) return;
+    const subject = encodeURIComponent("Email updates subscription request");
+    const body = encodeURIComponent(`Please contact me with Empirical Shiksha Abhiyan updates.\nMy email address: ${email}`);
+    window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
+    setEmailInput("");
+  };
+  const policyMail = (topic: string) => `mailto:${EMAIL}?subject=${encodeURIComponent(`${topic} request`)}`;
+
+  return (
+    <footer className="emp-footer relative mt-0 overflow-hidden text-white">
+      <div className="emp-footer-top relative">
+        <div className="emp-footer-ocean" aria-hidden="true" />
+        <div className="emp-footer-wave emp-footer-wave-one" aria-hidden="true">
+          <svg viewBox="0 0 2048 150" preserveAspectRatio="none"><path d="M0 0H2048V34C1890 75 1790 14 1625 28c-164 14-213 62-395 47C1048 62 1000-5 830 8 670 20 620 70 440 48 260 26 180 74 0 37Z" fill="#087C95" fillOpacity=".42"/><path d="M0 0H2048V12c-190 53-292 1-440 20-151 20-211 69-376 54C1055 70 1004 10 840 20 681 30 611 76 451 62 286 47 156 77 0 52Z" fill="#0B5874" fillOpacity=".7"/></svg>
+        </div>
+        <div className="emp-footer-wave emp-footer-wave-two" aria-hidden="true">
+          <svg viewBox="0 0 2048 150" preserveAspectRatio="none"><path d="M0 0H2048V8c-171 46-285 12-422 34-157 24-228 74-395 58-170-16-222-88-385-75-152 12-220 66-380 50C300 59 170 77 0 46Z" fill="#10A4B5" fillOpacity=".18"/></svg>
+        </div>
+
+        <div className="emp-footer-content relative z-10 mx-auto w-[92%] max-w-[1880px]">
+          <div className="emp-footer-grid grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-[1.42fr_.78fr_1.08fr_1fr_1.08fr] lg:gap-0">
+            {/* Brand */}
+            <section className="emp-footer-brand min-w-0 lg:pr-8">
+              <div className="emp-footer-brand-lockup flex items-center gap-4">
+                <div className="emp-footer-mark shrink-0">
+                  <img src="images/empirical-mark.png" alt="Empirical Shiksha Abhiyan logo" />
+                </div>
+                <div className="emp-footer-brand-copy min-w-0">
+                  <h3 className="emp-footer-brand-title notranslate font-display font-extrabold leading-[1.12] text-white" translate="no">इंपीरिकल शिक्षा</h3>
+                  <div className="emp-footer-brand-tagline notranslate mt-1 font-bold text-[#FFAD25]" translate="no">अभियान समिति</div>
                 </div>
               </div>
-            </div>
+              <p className="emp-footer-description mt-5 max-w-[500px] text-white/85">
+                <Bi en="Working with rural and underserved communities through education, health, environment and social awareness." hi="शिक्षा, स्वास्थ्य, पर्यावरण और सामाजिक जागरूकता के माध्यम से ग्रामीण एवं वंचित समुदायों के साथ सकारात्मक बदलाव की पहल।" />
+              </p>
+              <Socials className="footer-socials mt-7" />
+            </section>
 
-            {/* Social icons */}
-            <Socials />
-          </div>
-
-          {/* Quick Links */}
-          <div className="lg:col-span-2">
-            <h4 className="font-bold text-[#F4B93E] text-[17px] font-display">Quick Links</h4>
-            <div className="mt-1.5 w-8 h-0.5 bg-[#F4B93E] rounded-full" />
-            <ul className="mt-4 space-y-2.5 text-[14px] text-white/80">
-              {NAV.map((n) => (
-                <li key={n.id}>
-                  <button onClick={() => go(n.id)} className="hover:text-[#F4B93E] transition inline-flex items-center gap-1.5">
-                    {n.label} <span className="text-[#F4B93E]/80">→</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div className="lg:col-span-3">
-            <h4 className="font-bold text-[#F4B93E] text-[17px] font-display">Contact</h4>
-            <div className="mt-1.5 w-8 h-0.5 bg-[#F4B93E] rounded-full" />
-            <ul className="mt-4 space-y-3.5 text-[14px] text-white/85">
-              <li className="flex items-start gap-2.5">
-                <span className="mt-0.5 w-5 h-5 rounded-full border border-[#F4B93E]/60 grid place-items-center shrink-0">
-                  <svg viewBox="0 0 24 24" className="w-3 h-3 text-[#F4B93E]" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.2 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z"/></svg>
-                </span>
-                <a href={`tel:${PHONE}`} className="hover:text-white">+91 {PHONE}</a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="mt-0.5 w-5 h-5 rounded-full border border-[#F4B93E]/60 grid place-items-center shrink-0">
-                  <svg viewBox="0 0 24 24" className="w-3 h-3 text-[#F4B93E]" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                </span>
-                <a href={`mailto:${EMAIL}`} className="hover:text-white break-all">{EMAIL}</a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="mt-0.5 w-5 h-5 rounded-full border border-[#F4B93E]/60 grid place-items-center shrink-0">
-                  <svg viewBox="0 0 24 24" className="w-3 h-3 text-[#F4B93E]" fill="currentColor"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
-                </span>
-                <span>Khandwa, Madhya Pradesh,<br />India</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Founders */}
-          {mission && (
-            <div className="lg:col-span-3">
-              <h4 className="font-bold text-[#F4B93E] text-[17px] font-display">Join Our Mission</h4>
-              <div className="mt-1.5 w-8 h-0.5 bg-[#F4B93E] rounded-full" />
-              <ul className="mt-4 space-y-2.5 text-[14px] text-white/90">
-                {mission.map((m) => <li key={m}><button onClick={() => go("contact")} className="hover:text-[#F4B93E] transition inline-flex items-center gap-1.5">{m} <span className="text-[#F4B93E]/80">→</span></button></li>)}
+            {/* Quick links */}
+            <section className="emp-footer-column min-w-0 lg:border-l lg:border-white/15 lg:px-7">
+              <h4 className="emp-footer-heading font-display font-extrabold text-white"><Bi en="Quick Links" hi="त्वरित लिंक" /></h4>
+              <span className="emp-footer-underline mt-2.5 block" />
+              <ul className="emp-footer-quick-list mt-3 space-y-1.5">
+                {NAV.map((item) => {
+                  const Icon = FOOTER_LINK_ICONS[item.id] || ArrowUpRight;
+                  return (
+                    <li key={item.id}>
+                      <button onClick={() => go(item.id)} className="emp-footer-quicklink group flex w-full items-center gap-3 text-left text-white/90 transition hover:text-[#FFB52E]">
+                        <span className="emp-footer-quickicon grid shrink-0 place-items-center"><Icon size={18} strokeWidth={2.1} /></span>
+                        <span className="min-w-0 flex-1"><Bi en={item.label} hi={FOOTER_HI_NAV[item.id] || item.label} /></span>
+                        <ArrowUpRight size={16} className="shrink-0 text-[#FFAC22] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
-            </div>
-          )}
-          {!mission && <div className="lg:col-span-3">
-            <h4 className="font-bold text-[#F4B93E] text-[17px] font-display">Founders</h4>
-            <div className="mt-1.5 w-8 h-0.5 bg-[#F4B93E] rounded-full" />
-            <ul className="mt-4 space-y-2.5 text-[14px] text-white/90">
-              {["Rahul Geete", "Jayram Malakar"].map((f) => (
-                <li key={f}>
-                  <button onClick={() => go("about")} className="hover:text-[#F4B93E] transition">
-                    {f}
+            </section>
+
+            {/* Initiatives */}
+            <section className="emp-footer-column min-w-0 lg:border-l lg:border-white/15 lg:px-7">
+              <h4 className="emp-footer-heading font-display font-extrabold text-white"><Bi en="Our Initiatives" hi="हमारी पहलें" /></h4>
+              <span className="emp-footer-underline mt-2.5 block" />
+              <div className="emp-footer-initiative-grid mt-4 grid grid-cols-2 gap-2.5">
+                {FOOTER_INITIATIVES.map(({ hi, en, sub, Icon, tone }) => (
+                  <button key={en} onClick={() => go("initiatives")} className={`emp-footer-initiative emp-footer-initiative-${tone} group flex min-w-0 flex-col items-center justify-center text-center`} aria-label={`${en} initiatives`}>
+                    <span className="emp-footer-initiative-icon grid place-items-center transition-transform group-hover:-translate-y-1"><Icon size={32} strokeWidth={2.2} /></span>
+                    <span className="mt-2 text-[17px] font-extrabold leading-tight text-white"><Bi en={en} hi={hi} /></span>
+                    <span className="mt-0.5 text-[12px] leading-tight text-white/75"><Bi en={sub} hi={tone === "blue" ? "सभी के लिए शिक्षा" : tone === "rose" ? "स्वस्थ जीवन" : tone === "green" ? "हरित पर्यावरण" : "सशक्त समुदाय"} /></span>
                   </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Contact */}
+            <section className="emp-footer-column min-w-0 lg:border-l lg:border-white/15 lg:px-7">
+              <h4 className="emp-footer-heading font-display font-extrabold text-white"><Bi en="Contact Us" hi="संपर्क करें" /></h4>
+              <span className="emp-footer-underline mt-2.5 block" />
+              <ul className="emp-footer-contact mt-4 space-y-2.5">
+                <li className="flex min-w-0 items-center gap-3.5">
+                  <span className="emp-footer-contact-icon"><Phone size={22} /></span>
+                  <a href={`tel:+91${PHONE}`} className="min-w-0 break-words text-white/95 hover:text-[#FFB52E]">+91 {PHONE}</a>
                 </li>
-              ))}
-            </ul>
-            <div className="mt-5 flex items-center gap-2 text-[13px] text-[#F4B93E]">
-              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden>
-                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
-              </svg>
-              Registered 13 July 2026
-            </div>
-          </div>}
+                <li className="flex min-w-0 items-center gap-3.5">
+                  <span className="emp-footer-contact-icon"><Mail size={22} /></span>
+                  <a href={`mailto:${EMAIL}`} className="min-w-0 break-all text-white/95 hover:text-[#FFB52E]">{EMAIL}</a>
+                </li>
+                <li className="flex min-w-0 items-start gap-3.5">
+                  <span className="emp-footer-contact-icon mt-0.5"><MapPin size={23} /></span>
+                  <span className="min-w-0 text-white/95"><Bi en={<>Khandwa, Madhya Pradesh,<br />India</>} hi={<>खंडवा, मध्य प्रदेश,<br />भारत</>} /></span>
+                </li>
+              </ul>
+              <div className="emp-footer-contact-divider my-4" />
+              <div className="flex items-center gap-3.5 text-[#FFB52E]">
+                <span className="emp-footer-contact-icon"><CalendarDays size={22} /></span>
+                <span className="text-[14px] font-bold leading-snug"><Bi en="Registered 13 July 2026" hi="पंजीकरण: 13 जुलाई 2026" /></span>
+              </div>
+            </section>
+
+            {/* Stay connected */}
+            <section className="emp-footer-column min-w-0 lg:border-l lg:border-white/15 lg:pl-7">
+              <h4 className="emp-footer-heading font-display font-extrabold text-white"><Bi en="Stay Connected" hi="जुड़े रहें" /></h4>
+              <span className="emp-footer-underline mt-2.5 block" />
+              <p className="emp-footer-connect-copy mt-4 text-white/85"><Bi en="Get updates on our work, programmes and upcoming activities." hi="हमारे कार्यों, कार्यक्रमों और आगामी गतिविधियों की जानकारी पाएं।" /></p>
+              <form className="emp-footer-subscribe mt-4 flex items-center" onSubmit={handleUpdatesSubmit}>
+                <label className="sr-only" htmlFor="footer-updates-email">Your email address</label>
+                <Mail size={22} className="ml-4 shrink-0 text-[#526174]" />
+                <input id="footer-updates-email" type="email" required value={emailInput} onChange={(event) => setEmailInput(event.target.value)} placeholder={FOOTER_EMAIL_PLACEHOLDER[language] ?? FOOTER_EMAIL_PLACEHOLDER.en} className="min-w-0 flex-1 bg-transparent px-3 text-[15px] text-[#1F2A44] outline-none placeholder:text-[#657286]" />
+                <button type="submit" aria-label={isHindi ? "ईमेल अपडेट अनुरोध भेजें" : "Send email update request"} className="emp-footer-send grid h-[54px] w-[62px] shrink-0 place-items-center"><Send size={23} /></button>
+              </form>
+              <div className="emp-footer-update-points mt-3 flex flex-wrap gap-x-3 gap-y-1.5 text-[12px] text-white/80">
+                {[
+                  { en: "Programme updates", hi: "कार्यक्रम अपडेट" },
+                  { en: "New initiatives", hi: "नई पहलें" },
+                  { en: "Success stories", hi: "सफलता की कहानियाँ" },
+                ].map((label) => (
+                  <span key={label.en} className="inline-flex items-center gap-1.5"><Check size={14} className="shrink-0 text-[#18BD83]" strokeWidth={3} /><Bi en={label.en} hi={label.hi} /></span>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <FooterLandscape />
+        <div className="emp-footer-signature" aria-label="Empirical Shiksha Abhiyan Samiti">
+          <svg viewBox="0 0 110 52" className="emp-footer-signature-book" aria-hidden="true">
+            <path d="M55 40c-12-11-28-12-45-7V8c17-5 33-2 45 9 12-11 28-14 45-9v25c-17-5-33-4-45 7Z" fill="#FFF1C7" stroke="#D99520" strokeWidth="3" strokeLinejoin="round" />
+            <path d="M55 17v23M14 15c14-3 27 0 36 8M96 15c-14-3-27 0-36 8" fill="none" stroke="#284A83" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M10 6l7 2M100 6l-7 2" stroke="#FFB32C" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+          <div className="emp-footer-signature-pill">
+            <span className="emp-footer-leaf" aria-hidden="true">❧</span>
+            <span className="notranslate" translate="no">इंपीरिकल शिक्षा अभियान समिति</span>
+            <span className="emp-footer-leaf emp-footer-leaf-right" aria-hidden="true">❧</span>
+          </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="relative border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-5 py-5 text-center">
-          <div className="flex items-center justify-center gap-3 text-[#F4B93E] font-display text-[15px] font-semibold">
-            <span className="w-12 h-px bg-[#F4B93E]/50" />
-            शिक्षा से सेवा
-            <span className="w-12 h-px bg-[#F4B93E]/50" />
-          </div>
-          <p className="mt-2 text-[13px] text-white/50">© 2026 Empirical Shiksha Abhiyan Samiti</p>
+      {/* warm paper legal strip below the layered landscape cut */}
+      <div className="emp-footer-legal relative z-20">
+        <div className="mx-auto flex w-[92%] max-w-[1880px] flex-col items-center justify-between gap-3 py-3 sm:flex-row">
+          <p className="text-center text-[14px] font-semibold text-[#172D4E] sm:text-left"><Bi en="© 2026 Empirical Shiksha Abhiyan Samiti. All rights reserved." hi="© 2026 इंपीरिकल शिक्षा अभियान समिति। सर्वाधिकार सुरक्षित।" /></p>
+          <nav aria-label="Legal links" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[14px] font-semibold text-[#172D4E] sm:gap-x-6">
+            <a className="emp-footer-legal-link" href={policyMail("Privacy Policy")}><ShieldCheck size={19} /><Bi en="Privacy Policy" hi="गोपनीयता नीति" /></a>
+            <span className="hidden h-6 w-px bg-[#8B8A80] sm:block" aria-hidden="true" />
+            <a className="emp-footer-legal-link" href={policyMail("Terms and Conditions")}><FileText size={19} /><Bi en="Terms &amp; Conditions" hi="नियम एवं शर्तें" /></a>
+            <span className="hidden h-6 w-px bg-[#8B8A80] sm:block" aria-hidden="true" />
+            <a className="emp-footer-legal-link" href={policyMail("Cookie Policy")}><Cookie size={19} /><Bi en="Cookie Policy" hi="कुकी नीति" /></a>
+          </nav>
         </div>
       </div>
     </footer>
@@ -473,12 +573,15 @@ export function PageHero({
   sub,
   img,
   bg = "images/group-banner.webp",
+  actions,
 }: {
   eyebrow: string;
   title: ReactNode;
   sub: string;
   img?: string;
   bg?: string;
+  /** Optional button row under the description (used by Impact). */
+  actions?: ReactNode;
 }) {
   const [bgIdx, setBgIdx] = useState(0);
   const [boxIdx, setBoxIdx] = useState(0);
@@ -522,6 +625,7 @@ export function PageHero({
           <h1 className="mt-4 font-display font-extrabold text-ink text-[36px] sm:text-[46px] lg:text-[52px] leading-[1.08] tracking-tight hero-text-h">{title}</h1>
           <Swoosh className="h-3 w-40 mt-3" />
           <p className="mt-6 text-[16px] sm:text-lg text-slate-800 max-w-lg leading-relaxed hero-text-p">{sub}</p>
+          {actions ? <div className="mt-7 flex flex-wrap items-center gap-3">{actions}</div> : null}
         </div>
 
         {/* About-style rounded box with auto-swapping photos */}

@@ -132,7 +132,7 @@ export default function SuccessStories({ go }: { go: (p: "contact") => void }) {
       {/* Hero */}
       <section data-parallax className="relative mx-auto grid max-w-[1320px] items-center gap-8 px-5 pb-6 pt-8 sm:px-8 lg:grid-cols-[1fr_1.1fr]">
         <div>
-          <div className="hero-in hero-in-1 inline-flex items-center gap-2 text-[14px] font-extrabold tracking-[.14em] text-[#1F2A44]">OUR SUCCESS STORIES <span className="h-[3px] w-6 rounded bg-[#EE9B13]" /></div>
+          <div className="hero-in hero-in-1 inline-flex items-center gap-2 text-[14px] font-extrabold tracking-[.14em] text-[#1F2A44]">OUR SUCCESS STORIES </div>
           <h1 className="hero-in hero-in-2 mt-4 font-display text-[54px] font-extrabold leading-[1.02] tracking-tight text-[#1F2A44] sm:text-[68px] xl:text-[76px]">Real People,<br />Real <span className="relative inline-block -rotate-2 font-hand font-bold text-[#D8501F]">Change</span></h1>
           <p className="mt-6 max-w-[470px] text-[18px] leading-[1.6] text-slate-700">Inspiring stories of students, volunteers, and communities whose efforts are creating a positive change around us.</p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -174,13 +174,13 @@ export default function SuccessStories({ go }: { go: (p: "contact") => void }) {
           <p className="mt-3 max-w-md text-[16px] leading-[1.6] text-slate-700">Through our Eklavya Batch, I not only improved my studies but also learned discipline and belief in myself.</p>
           <p className="mt-2 text-sm font-extrabold text-[#1F2A44]">— Aman Verma <span className="block text-xs font-semibold text-slate-500">Eklavya Batch Student</span></p>
         </div>
-        <blockquote className="border-slate-200 lg:border-l lg:pl-8"><span className="font-display text-7xl font-extrabold leading-none text-[#2B459E]">“</span><p className="-mt-4 font-display text-[28px] font-bold italic leading-snug text-[#1F2A44]">This initiative changed the way I look at learning and my future.</p><svg viewBox="0 0 160 10" className="mt-2 w-40" aria-hidden><path d="M2 7C40 1 90 1 158 5" stroke="#2B459E" strokeWidth="3" fill="none" strokeLinecap="round" /></svg></blockquote>
+        <blockquote className="border-slate-200 lg:border-l lg:pl-8"><span className="font-display text-7xl font-extrabold leading-none text-[#2B459E]">“</span><p className="-mt-4 font-display text-[28px] font-bold italic leading-snug text-[#1F2A44]">This initiative changed the way I look at learning and my future.</p></blockquote>
       </section>
 
       {/* Reviews with flip cards */}
       <section className="mx-auto mt-12 max-w-[1320px] px-5 sm:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="font-display text-[34px] font-extrabold text-[#1F2A44]">What Our Students & Volunteers Say<span className="mt-1 block h-[3px] w-14 rounded bg-[#EE9B13]" /></h2>
+          <h2 className="font-display text-[34px] font-extrabold text-[#1F2A44]">What Our Students & Volunteers Say</h2>
           <div className="flex gap-2">{["All Reviews", "Students", "Volunteers"].map((f) => <button key={f} onClick={() => { setFilter(f); setStart(0); }} className={`press rounded-full px-4 py-2 text-xs font-extrabold ring-1 ${filter === f ? "bg-[#1F2A44] text-white ring-transparent" : "bg-white text-[#1F2A44] ring-slate-200"}`}>{f}</button>)}</div>
         </div>
         <div className="relative mt-6">
@@ -195,7 +195,7 @@ export default function SuccessStories({ go }: { go: (p: "contact") => void }) {
 
       {/* More stories */}
       <section className="mx-auto mt-12 max-w-[1320px] px-5 sm:px-8">
-        <div className="flex items-end justify-between"><h2 className="font-display text-[34px] font-extrabold text-[#1F2A44]">More Stories from Our Community<span className="mt-1 block h-[3px] w-14 rounded bg-[#EE9B13]" /></h2><button onClick={() => (window.location.hash = "#/gallery")} className="press hidden rounded-full bg-white px-4 py-2 text-xs font-extrabold text-[#1F2A44] shadow ring-1 ring-slate-200 sm:inline-flex">View All Stories →</button></div>
+        <div className="flex items-end justify-between"><h2 className="font-display text-[34px] font-extrabold text-[#1F2A44]">More Stories from Our Community</h2><button onClick={() => (window.location.hash = "#/gallery")} className="press hidden rounded-full bg-white px-4 py-2 text-xs font-extrabold text-[#1F2A44] shadow ring-1 ring-slate-200 sm:inline-flex">View All Stories →</button></div>
         <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {MORE.map((m) => (
             <article key={m.title} className="overflow-hidden rounded-2xl bg-white shadow-[0_12px_26px_-18px_rgba(31,42,68,.5)] ring-1 ring-slate-200/70">

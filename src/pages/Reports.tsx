@@ -1,3 +1,4 @@
+import { Bi } from "../lang";
 import { useState } from "react";
 import { Eyebrow, PageHero, SunArc } from "../shared";
 
@@ -99,7 +100,7 @@ export default function Reports() {
                 <div className="mt-8 rounded-2xl border-2 border-dashed border-slate-200 p-6 text-center">
                   <div className="text-4xl">📄</div>
                   <div className="mt-2 font-bold text-ink">No document published yet</div>
-                  <p className="text-sm text-slate-500 mt-1">This is a layout preview. The official document will be shown here once the organisation publishes it.</p>
+                  <p className="text-sm text-slate-500 mt-1"><Bi en="Our reports will be available here soon." hi="हमारी रिपोर्ट जल्द ही यहाँ उपलब्ध होंगी।" /></p>
                 </div>
               </div>
             </div>

@@ -1,3 +1,4 @@
+import { CountUp } from "../ui";
 import { Bi } from "../lang";
 import { useState, useEffect } from "react";
 import { AIcon } from "../icons";
@@ -93,7 +94,7 @@ const SECS: Sec[] = [
     img: "images/init-environment.webp",
     pos: "center 55%",
     text: "Our kunds are old water bodies and shared heritage. Keeping them clean protects water, wildlife and the places where Khandwa gathers.",
-    n: "हरित",
+    n: "Green",
     l: "Khandwa Drive",
     sIcon: "leaf",
     cards: [
@@ -159,7 +160,7 @@ function Block({ s, onPick }: { s: Sec; onPick: (key: string) => void }) {
         </span>
         <span className="leading-tight">
           <b className="block font-display font-extrabold text-[22px]" style={{ color: s.color }}>
-            {s.n}
+            <CountUp value={s.n} />
           </b>
           <span className="text-[12px] font-semibold text-slate-600">{s.l}</span>
         </span>
@@ -356,9 +357,7 @@ export default function Initiatives({ onPick }: { onPick: (key: string) => void 
           <p className="mt-4 text-[15px] sm:text-[17px] text-[#1F2A44] max-w-md hero-text-p">
             On-ground work that creates real, lasting change in Khandwa.
           </p>
-          <svg className="mt-3 w-44 h-3" viewBox="0 0 176 12" fill="none" aria-hidden>
-            <path d="M2 8C40 2 100 2 174 6" stroke="#D8501F" strokeWidth="3" strokeLinecap="round" />
-          </svg>
+          
         </div>
 
         <svg

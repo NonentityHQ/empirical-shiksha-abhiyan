@@ -1,0 +1,26 @@
+{
+  "name": "empirical-shiksha-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc --noEmit",
+    "seed": "node --env-file=.env scripts/seed-singletons.mjs",
+    "upload:images": "node --env-file=.env scripts/upload-existing-images.mjs"
+  },
+  "dependencies": {
+    "@sanity/icons": "latest",
+    "@sanity/ui": "latest",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sanity": "latest",
+    "@sanity/client": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "typescript": "^5.9.0"
+  }
+}

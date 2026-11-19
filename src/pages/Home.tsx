@@ -2,6 +2,7 @@ import { Bi } from "../lang";
 import { AIcon } from "../icons";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AREAS, AreaIcon, Eyebrow, SectionHead, SunArc, Swoosh, type Page } from "../shared";
+import { CountUp } from "../ui";
 import { MEDIA, INSTAGRAM_REELS, YOUTUBE_VIDEOS, YT_CHANNEL, IG_PROFILE, IG_HANDLE } from "../data";
 import { AboutHills, Books, CardWave, CellDoodle, CloudDoodle, Diya, HeartShape, HeroHills, Leaf, LeafBranch, Pin, RayDashes, Skyline, SoftClouds, Sprout } from "../decor";
 
@@ -52,10 +53,10 @@ function SwapPhoto({ images, alt, className = "" }: { images: string[]; alt: str
 }
 
 export const STATS = [
-  { to: 1000, suffix: "+", label: "Students Consulted", note: "on phone addiction & mental well-being", color: "#2B459E", k: "swasthya" },
-  { to: 80, suffix: "+", label: "Eklavya Batch Students", note: "from middle-class & low-income families", color: "#D8501F", k: "shiksha" },
-  { to: 60, suffix: "+", label: "Volunteers", note: "giving their time every week", color: "#3A7D44", k: "paryavaran" },
-  { to: 25, suffix: "+", label: "Cleanup Visits & Drives", note: "across kunds, stadium & fair grounds", color: "#D8501F", k: "swachhata" },
+  { to: 1000, suffix: "+", label: "Students Consulted", hiLabel: "परामर्श प्राप्त विद्यार्थी", note: "on phone addiction & mental well-being", hiNote: "मोबाइल की लत और मानसिक स्वास्थ्य पर मार्गदर्शन", color: "#2B459E", k: "swasthya" },
+  { to: 80, suffix: "+", label: "Eklavya Batch Students", hiLabel: "एकलव्य बैच के विद्यार्थी", note: "from middle-class & low-income families", hiNote: "मध्यम और कम आय वाले परिवारों के विद्यार्थी", color: "#D8501F", k: "shiksha" },
+  { to: 60, suffix: "+", label: "Volunteers", hiLabel: "स्वयंसेवक", note: "giving their time every week", hiNote: "हर सप्ताह अपना समय देने वाले", color: "#3A7D44", k: "paryavaran" },
+  { to: 25, suffix: "+", label: "Cleanup Visits & Drives", hiLabel: "सफाई दौरे और अभियान", note: "across kunds, stadium & fair grounds", hiNote: "कुंडों, स्टेडियम और मेला स्थलों पर", color: "#D8501F", k: "swachhata" },
 ];
 
 const AREA_COPY: Record<string, string> = {
@@ -78,12 +79,12 @@ const HERO_AREAS = [
 ];
 
 const WORK_SLIDES = [
-  { label: "Cleanliness Drive", icon: "broom", color: "#2E9E45", img: "images/clean-group-1.webp" },
-  { label: "Education Activity", icon: "cap", color: "#2B459E", img: "images/group-banner.webp" },
-  { label: "Plantation Drive", icon: "sprout", color: "#2E9E45", img: "images/real-plant.webp" },
-  { label: "Community Outreach", icon: "users", color: "#2B459E", img: "images/init-rally.webp" },
-  { label: "Awareness Rally", icon: "heart", color: "#2E9E45", img: "images/real-group.webp" },
-  { label: "Kund Cleanup", icon: "recycle", color: "#F5A524", img: "images/real-kund.webp" },
+  { label: "Cleanliness Drive", hi: "स्वच्छता अभियान", icon: "broom", color: "#2E9E45", img: "images/clean-group-1.webp" },
+  { label: "Education Activity", hi: "शैक्षणिक गतिविधि", icon: "cap", color: "#2B459E", img: "images/group-banner.webp" },
+  { label: "Plantation Drive", hi: "पौधारोपण अभियान", icon: "sprout", color: "#2E9E45", img: "images/real-plant.webp" },
+  { label: "Community Outreach", hi: "समुदाय से जुड़ाव", icon: "users", color: "#2B459E", img: "images/init-rally.webp" },
+  { label: "Awareness Rally", hi: "जागरूकता रैली", icon: "heart", color: "#2E9E45", img: "images/real-group.webp" },
+  { label: "Kund Cleanup", hi: "कुंड की सफाई", icon: "recycle", color: "#F5A524", img: "images/real-kund.webp" },
 ] as const;
 
 /* 3D cover-flow: the centre photo is big and flat, the neighbours tilt and shrink away. */
@@ -113,9 +114,9 @@ function PhotoStrip({ go }: { go: (p: Page) => void }) {
           <span className="text-[#2E9E45]"><AIcon n="images" s={46} /></span>
           <div>
             <h2 className="font-display text-[30px] font-extrabold leading-none text-[#14213D] sm:text-[38px]">
-              Our <span className="text-[#2E9E45]">Work</span> in Action
+              <Bi en={<>Our <span className="text-[#2E9E45]">Work</span> in Action</>} hi={<>हमारे <span className="text-[#2E9E45]">काम</span> की झलक</>} />
             </h2>
-            <svg viewBox="0 0 220 10" preserveAspectRatio="none" className="mt-1 h-2.5 w-[200px]" aria-hidden><path d="M2 7C50 1 130 1 218 6" stroke="#F26A1B" strokeWidth="3.5" fill="none" strokeLinecap="round" /></svg>
+            
           </div>
           <p className="hidden border-l-2 border-slate-300 pl-5 text-[15px] text-[#25324F] md:block"><Bi en="Real moments from our initiatives, drives and community activities." hi="हमारी पहलों, अभियानों और सामुदायिक गतिविधियों के असली पल।" /></p>
           <div className="ml-auto flex gap-3">
@@ -142,7 +143,7 @@ function PhotoStrip({ go }: { go: (p: Page) => void }) {
                   zIndex: 10 - a, opacity: vis ? 1 : 0, pointerEvents: vis ? "auto" : "none",
                 }}>
                 <img src={s.img} alt={s.label} loading="lazy" draggable={false} />
-                <span className="cf-label"><span style={{ color: s.color }}><AIcon n={s.icon} s={18} /></span>{s.label}</span>
+                <span className="cf-label"><span style={{ color: s.color }}><AIcon n={s.icon} s={18} /></span><Bi en={s.label} hi={s.hi} /></span>
               </button>
             );
           })}
@@ -246,15 +247,14 @@ function SocialImpact() {
         <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EE9B13] text-white text-[11px] font-bold uppercase tracking-[0.16em] shadow-sm">
             <span className="w-4 h-px bg-white/70" />
-            Our Social Impact
+            <Bi en="Our Social Impact" hi="समाज पर हमारा प्रभाव" />
             <span className="w-4 h-px bg-white/70" />
           </div>
           <h2 className="mt-3 md:mt-4 font-display font-extrabold text-[28px] sm:text-[34px] md:text-[42px] leading-[1.1] tracking-tight text-ink">
-            Follow Our Journey{" "}
-            <span className="text-royal">Online</span>
+            <Bi en={<>Follow Our Journey <span className="text-royal">Online</span></>} hi={<>ऑनलाइन <span className="text-royal">हमारे सफ़र से जुड़ें</span></>} />
           </h2>
           <p className="mt-2.5 md:mt-3 text-[15px] md:text-[17px] text-slate-600 leading-relaxed max-w-2xl mx-auto">
-            Real stories, ground activities, and impact from our work — watch, follow, and be a part of the change.
+            <Bi en="Real stories, ground activities, and impact from our work — watch, follow, and be a part of the change." hi="हमारे काम की सच्ची कहानियाँ, ज़मीनी गतिविधियाँ और उनका असर देखें। हमसे जुड़ें और बदलाव का हिस्सा बनें।" />
           </p>
         </div>
 
@@ -271,13 +271,11 @@ function SocialImpact() {
                 </div>
                 <div className="font-display font-extrabold text-[22px] sm:text-[26px] leading-tight tracking-tight">
                   Instagram{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#7A4A8E]">
-                    Reels
-                  </span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#7A4A8E]"><Bi en="Reels" hi="रील्स" /></span>
                 </div>
               </div>
               <p className="text-[14px] sm:text-[15px] text-white/80 leading-relaxed">
-                Short stories, field updates and real moments from our initiatives.
+                <Bi en="Short stories, field updates and real moments from our initiatives." hi="हमारी पहलों की छोटी कहानियाँ, गतिविधियों की जानकारी और ज़मीनी अनुभव।" />
               </p>
               <div>
                 <a
@@ -286,7 +284,7 @@ function SocialImpact() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-5 h-11 rounded-full bg-gradient-to-r from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white text-[14px] font-bold shadow-md hover:opacity-95 transition"
                 >
-                  Follow Us on Instagram
+                  <Bi en="Follow Us on Instagram" hi="इंस्टाग्राम पर हमसे जुड़ें" />
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
                     <path d="M7 17L17 7M17 7H9M17 7v8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -322,9 +320,9 @@ function SocialImpact() {
                         </div>
                         <div className="absolute bottom-0 inset-x-0 p-2.5">
                           <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold text-white mb-1.5" style={{ background: reel.badgeColor }}>
-                            {reel.tag}
+                            <Bi en={reel.tag} hi={({ "Eklavya Batch": "एकलव्य बैच", "Swachhta Drive": "स्वच्छता अभियान", "Mental Health": "मानसिक स्वास्थ्य", "Environment": "पर्यावरण", "Awareness Session": "जागरूकता सत्र" } as Record<string, string>)[reel.tag] || reel.tag} />
                           </span>
-                          <div className="text-white text-[12px] sm:text-[13px] font-bold leading-tight drop-shadow">{reel.title}</div>
+                          <div className="text-white text-[12px] sm:text-[13px] font-bold leading-tight drop-shadow"><Bi en={reel.title} hi={({ "Learning With Joy": "खुशी के साथ सीखना", "A Cleaner Khandwa": "स्वच्छ खंडवा", "Happy & Confident Minds": "खुशहाल और आत्मविश्वासी मन", "More Green Spaces": "अधिक हरित क्षेत्र", "Mental Health for Students": "विद्यार्थियों का मानसिक स्वास्थ्य" } as Record<string, string>)[reel.title] || reel.title} /></div>
                         </div>
                       </div>
                     </a>
@@ -364,11 +362,11 @@ function SocialImpact() {
                   </svg>
                 </div>
                 <div className="font-display font-extrabold text-[22px] sm:text-[26px] leading-tight tracking-tight text-ink">
-                  YouTube <span className="text-[#ff0000]">Videos</span>
+                  YouTube <span className="text-[#ff0000]"><Bi en="Videos" hi="वीडियो" /></span>
                 </div>
               </div>
               <p className="text-[14px] sm:text-[15px] text-slate-600 leading-relaxed">
-                Detailed stories, event highlights, awareness sessions and the larger impact of our work.
+                <Bi en="Detailed stories, event highlights, awareness sessions and the larger impact of our work." hi="विस्तृत कहानियाँ, कार्यक्रमों की झलकियाँ, जागरूकता सत्र और हमारे काम का व्यापक प्रभाव।" />
               </p>
               <div>
                 <a
@@ -377,7 +375,7 @@ function SocialImpact() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-5 h-11 rounded-full bg-[#ff0000] text-white text-[14px] font-bold shadow-md hover:bg-[#D8501F] transition"
                 >
-                  Subscribe on YouTube
+                  <Bi en="Subscribe on YouTube" hi="यूट्यूब चैनल की सदस्यता लें" />
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
                     <path d="M7 17L17 7M17 7H9M17 7v8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -425,10 +423,10 @@ function SocialImpact() {
                       </div>
                       <div className="p-3 sm:p-3.5">
                         <div className="text-[13px] sm:text-[14px] font-bold text-ink leading-snug line-clamp-2 group-hover:text-royal transition">
-                          {v.title}
+                          <Bi en={v.title} hi={({ yt1: "एकलव्य बैच | वंचित विद्यार्थियों के लिए निःशुल्क शिक्षा सहायता", yt2: "स्वच्छता अभियान | खंडवा में सामुदायिक सफाई मुहिम", yt3: "मानसिक स्वास्थ्य जागरूकता सत्र | आत्मविश्वासी और खुशहाल मन" } as Record<string, string>)[v.id] || v.title} />
                         </div>
                         <div className="mt-1.5 text-[11px] sm:text-[12px] text-slate-500">
-                          Empirical Shiksha Abhiyan · {v.views} views · {v.age}
+                          Empirical Shiksha Abhiyan · {v.views} <Bi en="views" hi="बार देखा गया" /> · <Bi en={v.age} hi={({ "2 weeks ago": "2 सप्ताह पहले", "3 weeks ago": "3 सप्ताह पहले", "1 month ago": "1 माह पहले" } as Record<string, string>)[v.age] || v.age} />
                         </div>
                       </div>
                     </a>
@@ -465,7 +463,7 @@ function SocialImpact() {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full border-2 border-[#ff0000] text-[#D8501F] font-bold text-sm hover:bg-[#FBE6C8] transition"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5v-7l6.3 3.5-6.3 3.5z" /></svg>
-            View All Videos on YouTube
+            <Bi en="View All Videos on YouTube" hi="यूट्यूब पर सभी वीडियो देखें" />
             <span className="opacity-70">↗</span>
           </a>
           <a
@@ -475,7 +473,7 @@ function SocialImpact() {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full border-2 border-[#7A4A8E] text-[#7A4A8E] font-bold text-sm hover:bg-[#EFE3F0] transition"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-3.3-.1-4.8-1.7-4.9-4.9-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c.1-3.2 1.7-4.8 4.9-4.9 1.3-.1 1.7-.1 4.9-.1zM12 0C8.7 0 8.3 0 7 .1 2.7.3.3 2.7.1 7 0 8.3 0 8.7 0 12s0 3.7.1 5c.2 4.3 2.6 6.7 6.9 6.9 1.3.1 1.7.1 5 .1s3.7 0 5-.1c4.3-.2 6.7-2.6 6.9-6.9.1-1.3.1-1.7.1-5s0-3.7-.1-5C23.7 2.7 21.3.3 17 .1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-10.5a1.4 1.4 0 1 1-2.9 0 1.4 1.4 0 0 1 2.9 0z" /></svg>
-            View All Reels on Instagram
+            <Bi en="View All Reels on Instagram" hi="इंस्टाग्राम पर सभी रील्स देखें" />
             <span className="opacity-70">↗</span>
           </a>
         </div>
@@ -486,31 +484,31 @@ function SocialImpact() {
 
 /* ---------- Our Journey: 3 milestone cards on one rising path + impact strip ---------- */
 const JOURNEY = [
-  { when: "2021", color: "#2E9E45", from: "#2E9E45", to: "#F5A524", pct: 20, ring: "Initiation", title: "Education work begins", img: "images/shiksha.webp", lift: "md:mt-24",
+  { when: "2021", color: "#2E9E45", from: "#2E9E45", to: "#F5A524", pct: 20, ring: "Initiation", ringHi: "शुरुआत", title: "Education work begins", titleHi: "शिक्षा की पहल शुरू", img: "images/shiksha.webp", lift: "md:mt-24",
     bg: "linear-gradient(180deg,#FFFFFF 0%,#F1F9E8 100%)", ys: 90, ye: 32,
-    text: "After the lockdown, our founders began teaching a small group of students in Khandwa, laying the foundation of the Eklavya Batch.",
-    stats: [["users", "10", "Students"], ["book", "1", "Learning Group"]] },
-  { when: "2 Oct 2024", color: "#F5A524", from: "#F5A524", to: "#2E9E45", pct: 60, ring: "Expansion", title: "Education + Cleanliness", img: "images/swachhata.webp", lift: "md:mt-10",
+    text: "After the lockdown, our founders began teaching a small group of students in Khandwa, laying the foundation of the Eklavya Batch.", textHi: "लॉकडाउन के बाद हमारे संस्थापकों ने खंडवा में कुछ विद्यार्थियों को पढ़ाना शुरू किया। इसी प्रयास से एकलव्य बैच की नींव रखी गई।",
+    stats: [["users", "10", "Students", "विद्यार्थी"], ["book", "1", "Learning Group", "अध्ययन समूह"]] },
+  { when: "2 Oct 2024", color: "#F5A524", from: "#F5A524", to: "#2E9E45", pct: 60, ring: "Expansion", ringHi: "विस्तार", title: "Education + Cleanliness", titleHi: "शिक्षा के साथ स्वच्छता", img: "images/swachhata.webp", lift: "md:mt-10",
     bg: "linear-gradient(180deg,#FFFFFF 0%,#FFEFD2 100%)", ys: 88, ye: 40,
-    text: "On Gandhi Jayanti, we expanded our mission by combining education with cleanliness drives across Khandwa, starting at Rameshwar Kund.",
-    stats: [["recycle", "12", "Drives"], ["users", "150+", "Volunteers"], ["trash", "420 kg", "Waste Collected"]] },
-  { when: "13 Jul 2026", color: "#1F9D3A", from: "#2E9E45", to: "#12852F", pct: 100, ring: "Formalized", title: "Official registration", img: "images/real-group.webp", lift: "md:mt-0",
+    text: "On Gandhi Jayanti, we expanded our mission by combining education with cleanliness drives across Khandwa, starting at Rameshwar Kund.", textHi: "गांधी जयंती पर हमने शिक्षा के साथ स्वच्छता अभियानों को जोड़कर अपने काम का विस्तार किया। इसकी शुरुआत खंडवा के रामेश्वर कुंड से हुई।",
+    stats: [["recycle", "12", "Drives", "अभियान"], ["users", "150+", "Volunteers", "स्वयंसेवक"], ["trash", "420 kg", "Waste Collected", "कचरा एकत्र किया"]] },
+  { when: "13 Jul 2026", color: "#1F9D3A", from: "#2E9E45", to: "#12852F", pct: 100, ring: "Formalized", ringHi: "औपचारिक पंजीकरण", title: "Official registration", titleHi: "संस्था का आधिकारिक पंजीकरण", img: "images/real-group.webp", lift: "md:mt-0",
     bg: "linear-gradient(180deg,#FFFFFF 0%,#DDF2D8 100%)", ys: 80, ye: 20,
-    text: "Empirical Shiksha Abhiyan Samiti was officially registered, giving our work a formal identity and strengthening our commitment to education and community.",
-    stats: [["shield", "Registered", "NGO"], ["users", "1,000+", "Students Reached"], ["sprout", "4", "Focus Areas"]] },
+    text: "Empirical Shiksha Abhiyan Samiti was officially registered, giving our work a formal identity and strengthening our commitment to education and community.", textHi: "इंपीरिकल शिक्षा अभियान समिति का आधिकारिक पंजीकरण हुआ। इससे हमारे सामाजिक कार्यों को औपचारिक पहचान मिली और शिक्षा व समुदाय के प्रति हमारी प्रतिबद्धता मजबूत हुई।",
+    stats: [["shield", "Registered", "NGO", "पंजीकृत संस्था"], ["users", "1,000+", "Students Reached", "विद्यार्थियों तक पहुँच"], ["sprout", "4", "Focus Areas", "प्रमुख क्षेत्र"]] },
 ] as const;
 
 const IMPACT_STRIP = [["cap", "1,000+", "Students Reached"], ["sprout", "120", "Trees Planted"], ["recycle", "420 kg", "Waste Collected"], ["users", "80+", "Active Volunteers"], ["calendar", "25+", "Drives & Events"]] as const;
 
 const PHOTO_H = 200; // px, photo height of every journey card
 
-function JourneyRing({ pct, color, label, style, className = "" }: { pct: number; color: string; label: string; style?: React.CSSProperties; className?: string }) {
+function JourneyRing({ pct, color, label, labelHi, style, className = "" }: { pct: number; color: string; label: string; labelHi: string; style?: React.CSSProperties; className?: string }) {
   return (
     <span className={`j-ring grid h-[92px] w-[92px] place-items-center rounded-full bg-white p-[6px] ${className}`} style={style}>
       <span className="grid h-full w-full place-items-center rounded-full" style={{ background: `conic-gradient(${color} ${pct}%, #E4EBD9 0)` }}>
         <span className="grid h-[70px] w-[70px] place-items-center rounded-full bg-white text-center leading-none">
-          <b className="font-display text-[24px] font-extrabold text-[#14213D]">{pct}%</b>
-          <span className="-mt-3 text-[11px] font-semibold text-[#3B4763]">{label}</span>
+          <b className="font-display text-[22px] font-extrabold leading-none text-[#14213D]"><CountUp value={pct + "%"} /></b>
+          <span className="mt-0.5 max-w-[60px] text-[10.5px] font-semibold leading-[1.2] text-[#3B4763]"><Bi en={label} hi={labelHi} /></span>
         </span>
       </span>
     </span>
@@ -587,33 +585,31 @@ function JourneySection() {
 
       <div className="relative mx-auto max-w-7xl px-5">
         <div className="text-center">
-          <span className="j-pill inline-flex items-center gap-2 border-2 border-[#2E9E45] bg-white px-5 py-1.5 font-display text-[17px] font-extrabold text-[#17603A]"><AIcon n="sprout" s={20} />Our Journey</span>
+          <span className="j-pill inline-flex items-center gap-2 border-2 border-[#2E9E45] bg-white px-5 py-1.5 font-display text-[17px] font-extrabold text-[#17603A]"><AIcon n="sprout" s={20} /><Bi en="Our Journey" hi="हमारा सफ़र" /></span>
           <h2 className="mt-4 font-display text-[34px] font-extrabold leading-tight text-[#14213D] sm:text-[46px] md:text-[56px]">
-            From one batch to <span className="relative inline-block -rotate-1 font-hand text-[#F26A1B]">a movement
-              <svg viewBox="0 0 200 12" preserveAspectRatio="none" className="absolute -bottom-1.5 left-0 h-3 w-full" aria-hidden><path d="M2 8C50 2 130 2 198 7" stroke="#F26A1B" strokeWidth="3.5" fill="none" strokeLinecap="round" /></svg>
-            </span>
+            <Bi en={<>From one batch to <span className="relative inline-block -rotate-1 font-hand text-[#F26A1B]">a movement</span></>} hi={<>एक बैच से शुरू होकर <span className="relative inline-block -rotate-1 font-hand text-[#F26A1B]">जन-आंदोलन तक</span></>} />
           </h2>
-          <p className="mt-3 text-[17px] text-[#25324F] md:text-[19px]">A short history — and the impact we’ve created so far.</p>
+          <p className="mt-3 text-[17px] text-[#25324F] md:text-[19px]"><Bi en="A short history — and the impact we’ve created so far." hi="हमारे सफ़र की संक्षिप्त कहानी और अब तक हुए बदलाव की झलक।" /></p>
         </div>
 
         <div ref={wrapRef} data-no-motion className="relative mt-14 grid items-start gap-12 md:grid-cols-3 md:gap-7">
           {JOURNEY.map((j, i) => (
             <article key={j.when} ref={(el) => { cardRefs.current[i] = el; }} className={`relative ${j.lift}`}>
               <span className="j-pill absolute -top-4 left-5 z-30 inline-flex items-center gap-2 border-2 bg-white px-4 py-1.5 font-display text-[19px] font-extrabold text-[#14213D]" style={{ borderColor: j.color }}>
-                <span style={{ color: j.color }}><AIcon n="calendar" s={20} /></span><span className="notranslate" translate="no">{j.when}</span>
+                <span style={{ color: j.color }}><AIcon n="calendar" s={20} /></span><span>{j.when}</span>
               </span>
 
               <div className="j-card" style={{ background: j.bg }}>
                 <div className="j-photo" style={{ height: PHOTO_H }}><img src={j.img} alt={j.title} className="h-full w-full object-cover" loading="lazy" /></div>
                 <div className="px-5 pb-5 pt-[56px]">
-                  <h3 className="font-display text-[25px] font-extrabold leading-tight text-[#14213D]">{j.title}</h3>
-                  <p className="mt-2 text-[15.5px] leading-relaxed text-[#2A3652]">{j.text}</p>
+                  <h3 className="font-display text-[25px] font-extrabold leading-tight text-[#14213D]"><Bi en={j.title} hi={j.titleHi} /></h3>
+                  <p className="mt-2 text-[15.5px] leading-relaxed text-[#2A3652]"><Bi en={j.text} hi={j.textHi} /></p>
                   <div className={`j-stats mt-4 grid gap-2 p-3 ${j.stats.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
-                    {j.stats.map(([ic, v, l]) => (
+                    {j.stats.map(([ic, v, l, lHi]) => (
                       <div key={l} className="flex flex-col items-center text-center">
                         <span style={{ color: j.color }}><AIcon n={ic} s={24} /></span>
-                        <b className="font-display text-[18px] font-extrabold leading-tight text-[#14213D]">{v}</b>
-                        <span className="text-[12px] font-semibold leading-tight text-[#3B4763]">{l}</span>
+                        <b className="font-display text-[18px] font-extrabold leading-tight text-[#14213D]"><CountUp value={v} /></b>
+                        <span className="text-[12px] font-semibold leading-tight text-[#3B4763]"><Bi en={l} hi={lHi} /></span>
                       </div>
                     ))}
                   </div>
@@ -621,7 +617,7 @@ function JourneySection() {
               </div>
 
               {/* mobile: ring sits on the photo edge inside the card */}
-              <JourneyRing pct={j.pct} color={j.color} label={j.ring} className="absolute left-1/2 z-20 -translate-x-1/2 md:hidden" style={{ top: PHOTO_H - 46 }} />
+              <JourneyRing pct={j.pct} color={j.color} label={j.ring} labelHi={j.ringHi} className="absolute left-1/2 z-20 -translate-x-1/2 md:hidden" style={{ top: PHOTO_H - 46 }} />
             </article>
           ))}
 
@@ -642,7 +638,7 @@ function JourneySection() {
                 </g>
               </svg>
               {JOURNEY.map((j, i) => (
-                <JourneyRing key={j.pct} pct={j.pct} color={j.color} label={j.ring} className="pop-icon absolute z-20" style={{ left: geo.pts[i].x, top: geo.pts[i].y, translate: "-50% -50%", animationDelay: `${0.5 + i * 0.5}s` }} />
+                <JourneyRing key={j.pct} pct={j.pct} color={j.color} label={j.ring} labelHi={j.ringHi} className="pop-icon absolute z-20" style={{ left: geo.pts[i].x, top: geo.pts[i].y, translate: "-50% -50%", animationDelay: `${0.5 + i * 0.5}s` }} />
               ))}
             </>
           )}
@@ -650,12 +646,12 @@ function JourneySection() {
 
         {/* impact strip */}
         <div className="j-strip relative mt-12 flex flex-col items-stretch gap-4 bg-white p-3 lg:flex-row lg:items-center">
-          <div className="j-btn inline-flex shrink-0 items-center justify-center gap-2 px-8 py-4 font-display text-[21px] font-extrabold text-white"><AIcon n="sprout" s={28} />Our Impact So Far</div>
+          <div className="j-btn inline-flex shrink-0 items-center justify-center gap-2 px-8 py-4 font-display text-[21px] font-extrabold text-white"><AIcon n="sprout" s={28} /><Bi en="Our Impact So Far" hi="अब तक का हमारा प्रभाव" /></div>
           <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
             {IMPACT_STRIP.map(([ic, v, l], i) => (
               <div key={l} className={`flex items-center justify-center gap-3 px-2 ${i ? "lg:border-l lg:border-slate-200" : ""}`}>
                 <span className={i === 3 ? "text-[#F5A524]" : "text-[#2E9E45]"}><AIcon n={ic} s={38} /></span>
-                <span><b className="block font-display text-[26px] font-extrabold leading-none text-[#14213D]">{v}</b><span className="mt-1 block text-[13.5px] font-semibold text-[#3B4763]">{l}</span></span>
+                <span><b className="block font-display text-[26px] font-extrabold leading-none text-[#14213D]"><CountUp value={v} /></b><span className="mt-1 block text-[13.5px] font-semibold text-[#3B4763]"><Bi en={l} hi={({ "Students Reached": "विद्यार्थियों तक पहुँच", "Trees Planted": "पौधे लगाए", "Waste Collected": "कचरा एकत्र किया", "Active Volunteers": "सक्रिय स्वयंसेवक", "Drives & Events": "अभियान और कार्यक्रम" } as Record<string, string>)[l] || l} /></span></span>
               </div>
             ))}
           </div>
@@ -700,13 +696,12 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             <div className="text-[15px] font-semibold text-navy/80"><Bi en="Education • Cleanliness • Environment • Mental Health" hi="शिक्षा • स्वच्छता • पर्यावरण • मानसिक स्वास्थ्य" /></div>
             <h1 className="relative mt-2 font-extrabold tracking-tight">
               <span
-                className="relative inline-block text-[54px] min-[640px]:text-[clamp(2rem,5.1vw,3.875rem)] lg:text-[62px] xl:text-[80px] leading-[0.95] text-navy notranslate rise"
-                translate="no"
+                className="relative inline-block text-[54px] min-[640px]:text-[clamp(2rem,5.1vw,3.875rem)] lg:text-[62px] xl:text-[80px] leading-[0.95] text-navy rise"
                 style={{ animationDelay: "0.15s" }}
               >
                 <Bi en="Empirical" hi="एम्पिरिकल" />
               </span>
-              <span className="inline-flex items-end gap-1 notranslate" translate="no">
+              <span className="inline-flex items-end gap-1">
                 <span className="text-[48px] min-[640px]:text-[clamp(1.8rem,4.5vw,3.5rem)] lg:text-[64px] xl:text-[72px] leading-[1.2] text-[#D8501F]"><Bi en={<span className="text-[0.8em]">Shiksha Abhiyan</span>} hi="शिक्षा अभियान" /></span>
                 <svg viewBox="0 0 48 48" className="w-10 min-[640px]:w-9 lg:w-12 xl:w-14 mb-3 lg:mb-4 shrink-0" aria-hidden>
                   <path d="M6 42 C 18 38, 30 28, 38 12" fill="none" stroke="#D8501F" strokeWidth="5" strokeLinecap="round" />
@@ -720,7 +715,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
               </svg>
             </h1>
             <p className="mt-4 text-[17px] sm:text-lg leading-relaxed text-navy/80 max-w-xl">
-              Our aim is to build a better society for every child, every family and every community in Khandwa — through education, cleanliness, environment and health awareness.
+              <Bi en="Our aim is to build a better society for every child, every family and every community in Khandwa — through education, cleanliness, environment and health awareness." hi="हमारा उद्देश्य शिक्षा, स्वच्छता, पर्यावरण संरक्षण और स्वास्थ्य-जागरूकता के माध्यम से खंडवा के हर बच्चे, परिवार और समुदाय के लिए बेहतर समाज बनाना है।" />
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3 max-w-xl">
               {HERO_AREAS.map((h) => (
@@ -730,7 +725,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   <svg viewBox="0 0 24 24" className="w-6 h-6 sm:w-7 sm:h-7 shrink-0" aria-hidden>{h.icon}</svg>
                   <span className="flex-1 text-left leading-tight min-w-0">
                     <span className="block font-display font-bold text-[16px] sm:text-[17px] text-navy"><Bi en={h.en} hi={h.hi} /></span>
-                    <span className="block text-[11px] text-slate-500 truncate"><Bi en={<span className="notranslate" translate="no">{h.hi}</span>} hi={h.en} /></span>
+                    <span className="block text-[11px] text-slate-500 truncate"><Bi en={h.en === "Education" ? "Learning support for every child" : h.en === "Cleanliness" ? "Cleaner shared spaces" : h.en === "Environment" ? "Protecting our surroundings" : "Healthier, confident minds"} hi={h.en === "Education" ? "हर बच्चे के लिए सीखने का अवसर" : h.en === "Cleanliness" ? "साफ़-सुथरे सार्वजनिक स्थल" : h.en === "Environment" ? "अपने पर्यावरण की रक्षा" : "स्वस्थ और आत्मविश्वासी मन"} /></span>
                   </span>
                   <span className="font-bold transition group-hover:translate-x-0.5" style={{ color: h.fg }}>→</span>
                   <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/4 bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 group-hover:opacity-100" style={{ animation: "sheen 1.1s ease-out" }} />
@@ -739,14 +734,14 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
               <button onClick={() => go("initiatives")} className="press group relative overflow-hidden h-12 px-6 inline-flex items-center gap-2 rounded-full bg-navy text-white font-bold shadow-lg shadow-blue-900/20 hover:bg-azure transition">
-                Explore Our Work <span className="transition group-hover:translate-x-1">→</span>
+                <Bi en="Explore Our Work" hi="हमारी पहलें देखें" /> <span className="transition group-hover:translate-x-1">→</span>
                 <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent" style={{ animation: "sheen 4.5s ease-in-out 0.8s infinite" }} />
               </button>
               <button onClick={() => go("impact")} className="press group inline-flex items-center gap-3 font-bold text-navy">
                 <span className="w-12 h-12 rounded-full bg-white ring-2 ring-navy grid place-items-center text-navy group-hover:bg-navy group-hover:text-white transition">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 transition group-hover:scale-125"><path d="M7 4.5v15l12-7.5z" /></svg>
                 </span>
-                See Our Impact
+                <Bi en="See Our Impact" hi="हमारे कार्यों का प्रभाव देखें" />
               </button>
             </div>
           </div>
@@ -813,9 +808,9 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                 </div>
                 <span className="shrink-0 mt-1"><AreaIcon k={s.k} size={32} /></span>
               </div>
-              <div className="mt-3 font-bold text-ink text-lg leading-tight">{s.label}</div>
-              <div className="text-sm leading-snug text-slate-500">{s.note}</div>
-              <div className="mt-4 h-1.5 w-14 rounded-full" style={{ background: s.color }} />
+              <div className="mt-3 font-bold text-ink text-lg leading-tight"><Bi en={s.label} hi={s.hiLabel} /></div>
+              <div className="text-sm leading-snug text-slate-500"><Bi en={s.note} hi={s.hiNote} /></div>
+              
             </div>
           ))}
         </div>
@@ -834,28 +829,28 @@ export default function Home({ go }: { go: (p: Page) => void }) {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-5 pt-16 pb-36 md:pt-20 md:pb-40 grid md:grid-cols-2 gap-10 md:gap-10 lg:gap-14 items-center">
           <div>
-            <Eyebrow>About Us</Eyebrow>
+            <Eyebrow><Bi en="About Us" hi="हमारे बारे में" /></Eyebrow>
             <h2 className="mt-3 text-[32px] md:text-[42px] leading-[1.1] tracking-tight font-extrabold text-ink">
-              Learning today, for a <span className="text-flame">stronger tomorrow.</span>
+              <Bi en={<>Learning today, for a <span className="text-flame">stronger tomorrow.</span></>} hi={<>आज की शिक्षा, <span className="text-flame">कल का बेहतर भविष्य।</span></>} />
             </h2>
             <Swoosh className="h-2.5 w-28 mt-2.5" />
             <p className="mt-4 text-[17px] leading-relaxed text-slate-600 max-w-xl">
-              We are a community-driven initiative in Khandwa working where education, cleanliness, environment and health meet. Founded by Rahul Geete and Jayram Malakar and powered by <span className="notranslate" translate="no"><Counter to={60} suffix="+" /></span> volunteers, we learn together and serve together.
+              <Bi en="We are a community-driven initiative in Khandwa working where education, cleanliness, environment and health meet. Founded by Rahul Geete and Jayram Malakar and powered by" hi="हम खंडवा में समुदाय के साथ मिलकर शिक्षा, स्वच्छता, पर्यावरण और स्वास्थ्य के क्षेत्र में काम करने वाली एक जन-पहल हैं। राहुल गीते और जयराम मलाकर द्वारा शुरू की गई इस पहल में" /> <span className="notranslate" translate="no"><Counter to={60} suffix="+" /></span> <Bi en="volunteers, we learn together and serve together." hi="से अधिक स्वयंसेवक जुड़े हैं। हम साथ सीखते हैं और मिलकर समाज की सेवा करते हैं।" />
             </p>
             <div className="relative mt-7 inline-block">
               <button onClick={() => go("about")} className="press inline-flex items-center gap-2 h-12 px-6 rounded-full bg-royal text-white font-bold hover:bg-flame transition">
-                Know More About Us <span>→</span>
+                <Bi en="Know More About Us" hi="हमारे बारे में और जानें" /> <span>→</span>
               </button>
               <HeartShape className="pointer-events-none absolute left-full top-1 ml-5 w-6" />
             </div>
             <div className="relative mt-8 grid gap-4 border-t border-orange-200/70 pt-6">
               <CloudDoodle className="pointer-events-none absolute right-4 -top-7 w-14" />
               {[
-                { t: "Our Vision", d: "An educated, healthy and clean Khandwa.", c: "#3A7D44", tint: "#E4EED8",
+                { t: "Our Vision", hiT: "हमारा दृष्टिकोण", d: "An educated, healthy and clean Khandwa.", hiD: "शिक्षित, स्वस्थ और स्वच्छ खंडवा का निर्माण।", c: "#3A7D44", tint: "#E4EED8",
                   ic: <><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /></> },
-                { t: "Our Mission", d: "Empower students, care for our environment, serve the community.", c: "#D8501F", tint: "#FBE6C8",
+                { t: "Our Mission", hiT: "हमारा मिशन", d: "Empower students, care for our environment, serve the community.", hiD: "विद्यार्थियों को सशक्त बनाना, पर्यावरण की देखभाल करना और समुदाय की सेवा करना।", c: "#D8501F", tint: "#FBE6C8",
                   ic: <path d="M2 12h4l2.5-6 3.5 12 2.5-6H22" stroke="currentColor" strokeWidth="1.9" fill="none" strokeLinecap="round" strokeLinejoin="round" /> },
-                { t: "Our Values", d: "Education. Service. Community. Integrity.", c: "#2B459E", tint: "#FBF3E4",
+                { t: "Our Values", hiT: "हमारे मूल्य", d: "Education. Service. Community. Integrity.", hiD: "शिक्षा, सेवा, समुदाय और ईमानदारी।", c: "#2B459E", tint: "#FBF3E4",
                   ic: <><circle cx="9" cy="9" r="3.2" stroke="currentColor" strokeWidth="1.8" /><circle cx="17" cy="10.5" r="2.4" stroke="currentColor" strokeWidth="1.8" /><path d="M3.5 19c.6-3 2.7-4.6 5.5-4.6S14 16 14.6 19M15 15c2.4 0 4 1.4 4.5 4" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" /></> },
               ].map((v) => (
                 <div key={v.t} className="flex items-start gap-3">
@@ -863,8 +858,8 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                     <svg viewBox="0 0 24 24" width="20" height="20">{v.ic}</svg>
                   </div>
                   <div>
-                    <div className="font-bold text-ink leading-tight">{v.t}</div>
-                    <p className="mt-0.5 text-sm leading-snug text-slate-500">{v.d}</p>
+                    <div className="font-bold text-ink leading-tight"><Bi en={v.t} hi={v.hiT} /></div>
+                    <p className="mt-0.5 text-sm leading-snug text-slate-500"><Bi en={v.d} hi={v.hiD} /></p>
                   </div>
                 </div>
               ))}
@@ -903,8 +898,8 @@ export default function Home({ go }: { go: (p: Page) => void }) {
       {/* INITIATIVES */}
       <section className="max-w-7xl mx-auto px-5 pt-16 pb-20">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <SectionHead eyebrow="Our Four Pillars" title={<>Four areas. <span className="text-flame">One community.</span></>} sub="Every activity we run belongs to one of four areas — each one grows out of the same idea: education that turns into service." />
-          <button onClick={() => go("initiatives")} className="text-royal font-bold hover:text-flame shrink-0">All initiatives →</button>
+          <SectionHead eyebrow={<Bi en="Our Four Pillars" hi="हमारे चार प्रमुख क्षेत्र" />} title={<Bi en={<>Four areas. <span className="text-flame">One community.</span></>} hi={<>चार क्षेत्र, <span className="text-flame">एक समुदाय।</span></>} />} sub={<Bi en="Every activity we run belongs to one of four areas — each one grows out of the same idea: education that turns into service." hi="हमारी हर गतिविधि इन चार क्षेत्रों में से किसी एक से जुड़ी है। इन सभी का उद्देश्य एक ही है—शिक्षा को सेवा में बदलना।" />} />
+          <button onClick={() => go("initiatives")} className="text-royal font-bold hover:text-flame shrink-0"><Bi en="All initiatives" hi="सभी पहलें" /> →</button>
         </div>
         <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {AREAS.map((a) => (
@@ -913,10 +908,9 @@ export default function Home({ go }: { go: (p: Page) => void }) {
               style={{ background: a.tint }}>
               <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full border-[14px] opacity-15" style={{ borderColor: a.color }} />
               <div className="w-16 h-16 rounded-t-full rounded-b-2xl bg-white grid place-items-center shadow-sm"><AreaIcon k={a.key} size={40} /></div>
-              <div className="mt-5 font-display text-[28px] leading-none font-extrabold" style={{ color: a.color }}>{a.hi}</div>
-              <div className="mt-1.5 font-bold text-ink">{a.name} · {a.en}</div>
-              <p className="mt-2.5 text-slate-600 text-[15px] leading-relaxed flex-1">{AREA_COPY[a.key]}</p>
-              <div className="mt-5 font-bold text-sm" style={{ color: a.color }}>Learn more <span className="inline-block transition group-hover:translate-x-1">→</span></div>
+              <div className="mt-5 font-display text-[28px] leading-none font-extrabold" style={{ color: a.color }}><Bi en={a.en} hi={a.hi} /></div>
+              <p className="mt-2.5 text-slate-600 text-[15px] leading-relaxed flex-1"><Bi en={AREA_COPY[a.key]} hi={({ shiksha: "एकलव्य बैच के माध्यम से ज़रूरतमंद विद्यार्थियों को नियमित और निःशुल्क पढ़ाई में सहायता दी जाती है।", swachhata: "रामेश्वर कुंड सहित खंडवा के सार्वजनिक स्थलों पर नियमित सफाई और जनभागीदारी के अभियान चलाए जाते हैं।", paryavaran: "कुंडों, हरित क्षेत्रों और सार्वजनिक स्थानों की देखभाल करना हम सबकी साझा ज़िम्मेदारी है।", swasthya: "विद्यार्थियों के लिए मोबाइल की लत, मानसिक स्वास्थ्य और भावनात्मक संतुलन पर जागरूकता सत्र आयोजित किए जाते हैं।" } as Record<string, string>)[a.key]} /></p>
+              <div className="mt-5 font-bold text-sm" style={{ color: a.color }}><Bi en="Learn more" hi="और जानें" /> <span className="inline-block transition group-hover:translate-x-1">→</span></div>
             </button>
           ))}
         </div>
@@ -943,21 +937,20 @@ export default function Home({ go }: { go: (p: Page) => void }) {
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EE9B13] text-white text-[11px] font-bold uppercase tracking-[0.14em] shadow-sm">
                 <span className="text-[13px] leading-none">✦</span>
-                Featured Gallery
+                <Bi en="Featured Gallery" hi="खास झलकियाँ" />
               </div>
               <h2 className="mt-3 md:mt-4 font-display font-extrabold text-[28px] sm:text-[32px] md:text-[42px] leading-[1.1] tracking-tight text-ink">
-                Moments from{" "}
-                <span className="text-flame">the ground</span>
+                <Bi en={<>Moments from <span className="text-flame">the ground</span></>} hi={<>ज़मीनी काम की <span className="text-flame">कुछ झलकियाँ</span></>} />
               </h2>
               <p className="mt-2 md:mt-3 text-[15px] md:text-[17px] text-slate-600 leading-relaxed">
-                Real people. Real impact. Stories from the field.
+                <Bi en="Real people. Real impact. Stories from the field." hi="असली लोग, वास्तविक बदलाव और हमारे कार्यक्षेत्र की सच्ची कहानियाँ।" />
               </p>
             </div>
             <button
               onClick={() => go("gallery")}
               className="shrink-0 self-start sm:mt-2 px-5 h-10 md:h-11 inline-flex items-center rounded-full bg-[#FBF3E4] text-royal font-bold text-sm hover:bg-royal hover:text-white transition shadow-sm border border-[#F6EAD3]"
             >
-              View All Gallery →
+              <Bi en="View All Gallery" hi="पूरी गैलरी देखें" /> →
             </button>
           </div>
 
@@ -979,7 +972,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-flame shrink-0" fill="currentColor" aria-hidden>
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                   </svg>
-                  Rameshwar Kund
+                  <Bi en="Rameshwar Kund" hi="रामेश्वर कुंड" />
                 </span>
               </div>
             </button>
@@ -1048,7 +1041,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                     style={{ background: item.bg, color: item.color }}
                   >
                     {item.icon}
-                    {item.label}
+                    <Bi en={item.label} hi={({ Education: "शिक्षा", Environment: "पर्यावरण", Awareness: "जागरूकता", "Clog Run": "क्लॉग रन अभियान" } as Record<string, string>)[item.label] || item.label} />
                   </div>
                 </button>
               ))}
@@ -1074,14 +1067,14 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                 <path d="M11 8.5c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5V11h1.5c.8 0 1.5.7 1.5 1.5S16.3 14 15.5 14H14v1.5c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V14H9.5c-.8 0-1.5-.7-1.5-1.5S8.7 11 9.5 11H11V8.5z" opacity=".3"/>
                 <path d="M7.5 11.5c-1.1 0-2 .9-2 2v1c0 1.1.9 2 2 2h.5v.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5V15h1c1.1 0 2-.9 2-2v-1c0-1.1-.9-2-2-2h-1.5V9.5c0-1.4-1.1-2.5-2.5-2.5S9.5 8.1 9.5 9.5v2H7.5zm9 0c-1.1 0-2 .9-2 2v1c0 1.1.9 2 2 2h.5v.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5V15h1c1.1 0 2-.9 2-2v-1c0-1.1-.9-2-2-2h-1.5V9.5c0-1.4-1.1-2.5-2.5-2.5S14.5 8.1 14.5 9.5v2H16.5z" />
               </svg>
-              Join Hands
+              <Bi en="Join Hands" hi="हमारे साथ जुड़ें" />
             </div>
 
             <h2 className="mt-4 sm:mt-5 font-display font-extrabold text-[24px] sm:text-[28px] md:text-[36px] leading-tight tracking-tight text-ink">
-              Have an idea for Khandwa?
+              <Bi en="Have an idea for Khandwa?" hi="खंडवा के लिए आपके पास कोई विचार है?" />
             </h2>
             <p className="mt-2.5 sm:mt-3 text-[14px] sm:text-[15px] md:text-[16px] text-slate-600 leading-relaxed max-w-lg mx-auto">
-              Students and community members can share ideas for education, cleanliness, environment or mental health — or simply join the next drive.
+              <Bi en="Students and community members can share ideas for education, cleanliness, environment or mental health — or simply join the next drive." hi="विद्यार्थी और समुदाय के सदस्य शिक्षा, स्वच्छता, पर्यावरण या मानसिक स्वास्थ्य से जुड़े सुझाव साझा कर सकते हैं—या हमारे अगले अभियान में सीधे भाग ले सकते हैं।" />
             </p>
 
             {/* Action buttons */}
@@ -1093,7 +1086,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                 <svg viewBox="0 0 24 24" className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
                   <path d="M9 18h6M10 21h4M12 3a5 5 0 0 1 3.5 8.5c-.7.7-1.1 1.5-1.3 2.5h-4.4c-.2-1-.6-1.8-1.3-2.5A5 5 0 0 1 12 3z" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                Share an Idea
+                <Bi en="Share an Idea" hi="अपना सुझाव दें" />
               </button>
               <button
                 onClick={() => go("contact")}
@@ -1106,7 +1099,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   <path d="M14 14.5c1.8 0 3.2 1 3.8 3" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
                   <path d="M17.2 5.5c1.2-.3 2.2.4 2 1.4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
                 </svg>
-                Volunteer With Us
+                <Bi en="Volunteer With Us" hi="हमारे साथ स्वयंसेवा करें" />
               </button>
             </div>
 
@@ -1132,7 +1125,7 @@ export default function Home({ go }: { go: (p: Page) => void }) {
                   style={{ background: a.bg, color: a.color }}
                 >
                   {a.icon}
-                  {a.label}
+                  <Bi en={a.label} hi={({ Education: "शिक्षा", Cleanliness: "स्वच्छता", Environment: "पर्यावरण", "Mental Health": "मानसिक स्वास्थ्य" } as Record<string, string>)[a.label] || a.label} />
                 </span>
               ))}
             </div>

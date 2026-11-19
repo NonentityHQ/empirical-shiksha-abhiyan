@@ -14,7 +14,7 @@ const TONES: Record<string, { bg: string; fg: string }> = {
 };
 
 type Scene = HTMLElement;
-const W = ".w>span"; // inner span of every revealed word
+const W = ":is(.w>span, .words-source)"; // animated words or whole translated phrases
 
 /** Scrubbed timeline. `pinned` scenes use a CSS-sticky stage; others scrub while passing through. */
 const mk = (scene: Scene, pinned: boolean) =>

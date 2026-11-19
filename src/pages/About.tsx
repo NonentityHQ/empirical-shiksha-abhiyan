@@ -1,4 +1,4 @@
-import { useRef, useState, type MouseEvent } from "react";
+import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { type Page } from "../shared";
 import { CountUp } from "../ui";
 import { useCinema } from "./about/useCinema";
@@ -12,37 +12,56 @@ export default function About({ go }: { go: (p: Page) => void }) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(0);
   useCinema(root);
+
+  /* 2021 timeline: stop the orange line exactly at the centre of the last point (works on every screen width / language). */
+  useLayoutEffect(() => {
+    const body = root.current?.querySelector<HTMLElement>(".begin-body");
+    if (!body) return;
+    const fit = () => {
+      const items = body.querySelectorAll<HTMLElement>(".tl-item");
+      const item = items[items.length - 1];
+      const dot = item?.querySelector<HTMLElement>("i");
+      if (!item || !dot) return;
+      const centre = item.offsetTop + dot.offsetTop + dot.offsetHeight / 2; // offset* ignores GSAP transforms
+      body.style.setProperty("--tl-end", `${Math.max(0, body.offsetHeight - centre)}px`);
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(body);
+    document.fonts?.ready.then(fit);
+    return () => ro.disconnect();
+  }, []);
   const link = (page: Page) => (e: MouseEvent) => { e.preventDefault(); go(page); };
 
   return (
-    <div ref={root} className="film notranslate" translate="no" data-no-motion>
+    <div ref={root} className="film" data-no-motion>
       {/* ───── 01 · THE QUESTION ───── */}
-      <section data-scene="open" data-tone="night" className="scene pin-all" style={vars({ "--h": "300vh", "--hm": "210svh" })} aria-label="अध्याय 1: सवाल">
+      <section data-scene="open" data-tone="night" className="scene pin-all" style={vars({ "--h": "300vh", "--hm": "210svh" })} aria-label="Chapter 1: The Question">
         <div className="stage s-open">
           <div className="bg" data-k="bg"><Img src={IMG.open} eager /></div>
           <div className="shade dark" data-k="dark" />
           <div className="shade warm" data-k="warm" />
           <div className="grain" aria-hidden />
           <div className="open-copy">
-            <h1 className="q display"><Words text="क्या हम कोई ऐसा समाज बना सकते हैं जो निजी स्वार्थ से ऊपर हो?" /></h1>
-            <p className="a display"><Words text="हमने इसका जवाब सिर्फ़ सोचा नहीं… इसे जीना शुरू किया।" /></p>
+            <h1 className="q display"><Words text="Can we build a society that puts collective good above personal interest?" /></h1>
+            <p className="a display"><Words text="We did not just think about the answer… we began living it." /></p>
           </div>
-          <div className="cue" aria-hidden><span />स्क्रॉल करें</div>
+          <div className="cue" aria-hidden><span />Scroll</div>
         </div>
       </section>
 
       {/* ───── 02 · THE PEOPLE BEHIND THE IDEA ───── */}
-      <section data-scene="people" data-tone="paper" className="scene pin" style={vars({ "--h": "330vh" })} aria-label="अध्याय 2: इस विचार के पीछे के लोग">
+      <section data-scene="people" data-tone="paper" className="scene pin" style={vars({ "--h": "330vh" })} aria-label="Chapter 2: The People Behind the Idea">
         <div className="stage s-people">
           <div className="pe-halo" aria-hidden />
-          <span className="pe-ghost pe-ghost-r" aria-hidden>राहुल</span>
-          <span className="pe-ghost pe-ghost-j" aria-hidden>जयराम</span>
-          <h2 className="pe-q display"><Words text="एक इंसान अपने ज्ञान और स्किल्स को सिर्फ़ अपने करियर तक सीमित क्यों रखे?" /></h2>
-          <figure className="pe-fig pe-r" data-slide="l"><Img src={IMG.rahul} alt="राहुल गीते, संस्थापक" />
-            <figcaption className="pe-cap pe-cap-r"><div><b className="display">राहुल गीते</b><span>संस्थापक</span><i /></div></figcaption></figure>
-          <figure className="pe-fig pe-j" data-slide="r"><Img src={IMG.jayram} alt="जयराम मालाकार, संस्थापक एवं संस्थान प्रमुख" />
-            <figcaption className="pe-cap pe-cap-j"><div><b className="display">जयराम मालाकार</b><span>संस्थापक एवं संस्थान प्रमुख</span><i /></div></figcaption></figure>
-          <p className="pe-tag display"><Words text="दो अलग रास्ते। एक साझा सवाल।" /></p>
+          <span className="pe-ghost pe-ghost-r" aria-hidden>Rahul</span>
+          <span className="pe-ghost pe-ghost-j" aria-hidden>Jayram</span>
+          <h2 className="pe-q display"><Words text="Why should someone limit their knowledge and skills to their own career?" /></h2>
+          <figure className="pe-fig pe-r" data-slide="l"><Img src={IMG.rahul} alt="Rahul Geete, Founder" />
+            <figcaption className="pe-cap pe-cap-r"><div><b className="display" >Rahul Geete</b><span>Founder</span><i /></div></figcaption></figure>
+          <figure className="pe-fig pe-j" data-slide="r"><Img src={IMG.jayram} alt="Jayram Malakar, Founder and Institute Director" />
+            <figcaption className="pe-cap pe-cap-j"><div><b className="display">Jayram Malakar</b><span>Founder &amp; Institute Director</span><i /></div></figcaption></figure>
+          <p className="pe-tag display"><Words text="Two different paths. One shared question." /></p>
         </div>
       </section>
 
@@ -53,8 +72,8 @@ export default function About({ go }: { go: (p: Page) => void }) {
           <Img className="ph ph-b" src={IMG.community} />
           <div className="ph-shade" aria-hidden />
           <div className="ph-copy">
-            <p className="ph-l1 display"><Words text="एक तरफ़ इंजीनियरिंग की गहरी समझ, तकनीकी विषयों का ज्ञान और पढ़ाने का अनुभव। दूसरी तरफ़ खंडवा के वे विद्यार्थी, जिन्हें सही मार्गदर्शन और शिक्षा सहयोग की ज़रूरत थी।" /></p>
-            <p className="ph-l2 display"><Words text="ज्ञान सिर्फ़ करियर बनाने का ज़रिया नहीं। सही जगह इस्तेमाल हो, तो किसी और की ज़िंदगी में भी बदलाव ला सकता है।" /></p>
+            <p className="ph-l1 display"><Words text="On one side was deep engineering knowledge, technical expertise and teaching experience. On the other were students in Khandwa who needed guidance and academic support." /></p>
+            <p className="ph-l2 display"><Words text="Knowledge is more than a way to build a career. Used well, it can also make a meaningful difference in someone else’s life." /></p>
           </div>
         </div>
       </Founder>
@@ -62,7 +81,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
       {/* ───── 04 · JAYRAM MALAKAR (photo right) ───── */}
       <Founder f={JAYRAM_F} go={go} h="620vh">
         <div className="j-strip-wrap">
-          <p className="j-line display"><Words text="योजना से ज़मीन तक।" /></p>
+          <p className="j-line display"><Words text="From planning to action." /></p>
           <div className="j-strip">
             <figure><Img src={IMG.buildPlant} /></figure>
             <figure><Img src={IMG.buildTarp} /></figure>
@@ -72,7 +91,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
       </Founder>
 
       {/* ───── 05 · WHY SOCIAL SERVICE? ───── */}
-      <section data-scene="turn" data-tone="night" className="scene pin-all" style={vars({ "--h": "380vh", "--hm": "250svh" })} aria-label="अध्याय 5: बड़ा सवाल">
+      <section data-scene="turn" data-tone="night" className="scene pin-all" style={vars({ "--h": "380vh", "--hm": "250svh" })} aria-label="Chapter 5: A Bigger Question">
         <div className="stage s-turn">
           <div className="t-photos" aria-hidden>
             <div className="t-photo t-p0"><Img src={IMG.turnC} /></div>
@@ -81,38 +100,38 @@ export default function About({ go }: { go: (p: Page) => void }) {
             <div className="t-photo t-p3"><Img src={IMG.turnC} /></div>
           </div>
           <div className="t-copy">
-            <h2 className="t-q display"><Words text="जब किसी इंसान के पास इतना ज्ञान, कौशल और अनुभव हो, तो वह अपना समय समाज सेवा में क्यों लगाता है?" /></h2>
-            <p className="t-a display"><Words text="शायद इसलिए कि असली सफलता सिर्फ़ इस बात में नहीं कि हमने अपने लिए क्या बनाया। बल्कि इसमें भी है कि हम अपने आस-पास के लोगों के लिए क्या बदल पाए।" /></p>
+            <h2 className="t-q display"><Words text="When someone has so much knowledge, skill and experience, why devote time to community service?" /></h2>
+            <p className="t-a display"><Words text="Perhaps because success is not only about what we build for ourselves. It is also about what we can change for the people around us." /></p>
           </div>
         </div>
       </section>
 
       {/* ───── 06 · THE BEGINNING: 2021 ───── */}
-      <section data-scene="begin" data-tone="paper" className="scene flow s-begin" aria-label="अध्याय 6: शुरुआत">
+      <section data-scene="begin" data-tone="paper" className="scene flow s-begin" aria-label="Chapter 6: The Beginning">
         <div className="begin-grid">
-          <div className="year-col"><span className="year display" data-k>2021</span><p className="chap">अध्याय 6 / 8</p></div>
+          <div className="year-col"><span className="year display" data-k>2021</span><p className="chap">Chapter 6 / 8</p></div>
           <div className="begin-body">
             <span className="tline" data-line aria-hidden />
-            <p className="big display" data-words><Words text="हर बड़े बदलाव की शुरुआत छोटी होती है।" /></p>
+            <p className="big display" data-words><Words text="Every meaningful change begins with a small step." /></p>
             <div className="begin-photos">
               <figure className="bp bp-a"><Img src={IMG.begin} data-speed="6" /></figure>
               <figure className="bp bp-b"><Img src={IMG.beginGroup} data-speed="10" /></figure>
             </div>
-            <div className="tl-item" data-k><i /><b className="display">2021</b><span>लॉकडाउन के बाद</span></div>
-            <p className="mid display" data-words><Words text="2021 के लॉकडाउन के बाद, खंडवा में कुछ विद्यार्थियों के साथ एक छोटी-सी शैक्षणिक पहल शुरू हुई। इसी से एकलव्य बैच की नींव पड़ी।" /></p>
-            <div className="tl-item" data-k><i /><b className="display">एकलव्य बैच</b><span>निःशुल्क, नियमित शैक्षणिक सहयोग</span></div>
+            <div className="tl-item" data-k><i /><b className="display">2021</b><span>After the lockdown</span></div>
+            <p className="mid display" data-words><Words text="After the 2021 lockdown, a small educational initiative began with a few students in Khandwa. This became the foundation of the Eklavya Batch." /></p>
+            <div className="tl-item" data-k><i /><b className="display">Eklavya Batch</b><span>Free, regular academic support</span></div>
           </div>
         </div>
       </section>
 
       {/* ───── 07 · FROM EDUCATION TO A MOVEMENT ───── */}
-      <section data-scene="move" data-tone="night" className="scene flow s-move" aria-label="अध्याय 7: शिक्षा से एक आंदोलन तक">
+      <section data-scene="move" data-tone="night" className="scene flow s-move" aria-label="Chapter 7: From Education to a Movement">
         <div className="move-grid">
           <div className="move-copy">
-            <p className="chap">अध्याय 7 / 8</p>
-            <p className="date display" data-k>2 अक्टूबर 2024</p>
-            <p className="date-sub" data-k>गांधी जयंती</p>
-            <p className="mid display" data-words><Words text="काम कक्षा से बाहर निकला। विद्यार्थी और स्वयंसेवक रामेश्वर कुंड की सफ़ाई के लिए जुटे — और बार-बार लौटते रहे।" /></p>
+            <p className="chap">Chapter 7 / 8</p>
+            <p className="date display" data-k>2 October 2024</p>
+            <p className="date-sub" data-k>Gandhi Jayanti</p>
+            <p className="mid display" data-words><Words text="The work moved beyond the classroom. Students and volunteers came together to clean Rameshwar Kund — and kept coming back." /></p>
           </div>
           <div className="move-photos">
             <figure className="mp mp-a"><Img src={IMG.kund} data-speed="7" /></figure>
@@ -121,7 +140,7 @@ export default function About({ go }: { go: (p: Page) => void }) {
         </div>
       </section>
 
-      <section data-scene="pillars" data-tone="night" className="scene pin" style={vars({ "--h": "520vh" })} aria-label="चार स्तंभ">
+      <section data-scene="pillars" data-tone="night" className="scene pin" style={vars({ "--h": "520vh" })} aria-label="The Four Pillars">
         <div className="stage s-pillars">
           {PILLARS.map((p) => (
             <div className="pillar" key={p.id}>
@@ -134,29 +153,29 @@ export default function About({ go }: { go: (p: Page) => void }) {
         </div>
       </section>
 
-      <section data-scene="reg" data-tone="night" className="scene flow s-reg" aria-label="पंजीकरण">
-        <p className="reg-label" data-k>औपचारिक पंजीकरण</p>
-        <p className="date display" data-k>13 जुलाई 2026</p>
-        <p className="date-sub" data-k>एम्पिरिकल शिक्षा अभियान समिति · खंडवा, मध्य प्रदेश</p>
-        <p className="mid display" data-words><Words text="एक छोटी-सी सोच धीरे-धीरे एक संगठित प्रयास में बदलने लगी।" /></p>
+      <section data-scene="reg" data-tone="night" className="scene flow s-reg" aria-label="Registration">
+        <p className="reg-label" data-k>Official registration</p>
+        <p className="date display" data-k>13 July 2026</p>
+        <p className="date-sub" data-k>Empirical Shiksha Abhiyan Samiti · Khandwa, Madhya Pradesh</p>
+        <p className="mid display" data-words><Words text="A small idea gradually grew into an organised community effort." /></p>
       </section>
 
       {/* ───── 08 · WHERE WE STAND TODAY ───── */}
-      <section data-scene="today" data-tone="paper" className="scene flow s-today" aria-label="अध्याय 8: आज हम कहाँ हैं">
+      <section data-scene="today" data-tone="paper" className="scene flow s-today" aria-label="Chapter 8: Where We Are Today">
         <div className="today-col today-l" aria-hidden><figure><Img src={IMG.todayB} data-speed="10" /></figure><figure><Img src={IMG.todayC} data-speed="16" /></figure></div>
         <div className="today-copy">
-          <p className="chap">अध्याय 8 / 8</p>
-          <h2 className="display today-h" data-words><Words text="आज, यह सफ़र यहाँ तक पहुँचा है।" /></h2>
-          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.students} /></b> विद्यार्थियों से हमने बात की — शिक्षा ही हमारी शुरुआत थी।</p>
-          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.volunteers} /></b> स्वयंसेवक आज इस काम को साथ मिलकर आगे बढ़ा रहे हैं।</p>
-          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.trees} /></b> पौधे लगे, और <b className="display"><CountUp value={TODAY.waste} /> किलो</b> कचरा कुंडों और सड़कों से हटाया गया।</p>
-          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.events} /></b> अभियान और कार्यक्रम — सफ़ाई से लेकर मानसिक स्वास्थ्य जागरूकता तक।</p>
+          <p className="chap">Chapter 8 / 8</p>
+          <h2 className="display today-h" data-words><Words text="This is how far the journey has brought us today." /></h2>
+          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.students} /></b> students reached — education was where we began.</p>
+          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.volunteers} /></b> volunteers are carrying this work forward together.</p>
+          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.trees} /></b> trees planted, and <b className="display"><CountUp value={TODAY.waste} /> kg of </b> waste removed from ponds and streets.</p>
+          <p className="today-s" data-k><b className="display"><CountUp value={TODAY.events} /></b> programmes and campaigns — from clean-up drives to mental health awareness.</p>
         </div>
         <div className="today-col today-r" aria-hidden><figure><Img src={IMG.todayD} data-speed="14" /></figure><figure><Img src={IMG.todayA} data-speed="8" /></figure></div>
       </section>
 
       {/* ───── FINAL · THE STORY IS STILL BEING WRITTEN ───── */}
-      <section data-scene="final" data-tone="night" className="scene pin-all" style={vars({ "--h": "400vh", "--hm": "270svh" })} aria-label="कहानी अभी लिखी जा रही है">
+      <section data-scene="final" data-tone="night" className="scene pin-all" style={vars({ "--h": "400vh", "--hm": "270svh" })} aria-label="The Story Is Still Being Written">
         <div className="stage s-final">
           <div className="f-photos" aria-hidden>
             <div className="f-drift">
@@ -167,13 +186,13 @@ export default function About({ go }: { go: (p: Page) => void }) {
           </div>
           <div className="f-shade" aria-hidden />
           <div className="f-copy">
-            <h2 className="f1 display"><Words text="यह कहानी अभी ख़त्म नहीं हुई।" /></h2>
-            <p className="f2 display"><Words text="हम एक ऐसा समाज बनाने की कोशिश कर रहे हैं जहाँ शिक्षा, ज़िम्मेदारी और सामूहिक प्रयास किसी एक व्यक्ति तक सीमित न रहें।" /></p>
+            <h2 className="f1 display"><Words text="This story is far from over." /></h2>
+            <p className="f2 display"><Words text="We are working towards a society where education, responsibility and collective action are not limited to one person." /></p>
             <div className="f3-wrap">
-              <h2 className="f3 display"><Words text="इस कहानी का अगला हिस्सा… क्या आप लिखेंगे?" /></h2>
+              <h2 className="f3 display"><Words text="The next chapter of this story… will you help write it?" /></h2>
               <div className="f-ctas">
-                <a className="cta cta-main f-cta" href="#/contact" onClick={link("contact")}>स्वयंसेवक बनें</a>
-                <a className="cta cta-ghost f-cta" href="#/initiatives" onClick={link("initiatives")}>हमारा काम देखें</a>
+                <a className="cta cta-main f-cta" href="#/contact" onClick={link("contact")}>Become a Volunteer</a>
+                <a className="cta cta-ghost f-cta" href="#/initiatives" onClick={link("initiatives")}>Explore Our Work</a>
               </div>
             </div>
           </div>
@@ -181,8 +200,8 @@ export default function About({ go }: { go: (p: Page) => void }) {
       </section>
 
       {/* ───── Questions (kept from the previous About page) ───── */}
-      <section data-scene="faq" data-tone="paper" className="scene flow s-faq" aria-label="लोग हमसे क्या पूछते हैं">
-        <h2 className="display faq-h">लोग हमसे क्या पूछते हैं</h2>
+      <section data-scene="faq" data-tone="paper" className="scene flow s-faq" aria-label="Frequently Asked Questions">
+        <h2 className="display faq-h">Frequently Asked Questions</h2>
         <div className="faq-list">
           {FAQ.map((item, i) => (
             <div className={`faq-item ${open === i ? "on" : ""}`} key={item.q}>

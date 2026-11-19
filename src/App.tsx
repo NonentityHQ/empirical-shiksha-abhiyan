@@ -9,11 +9,13 @@ import Contact from "./pages/Contact";
 import { DecorDefs } from "./decor";
 import InitFooter from "./pages/InitFooter";
 import { useMotion } from "./motion";
+import { refreshTranslations } from "./translation";
 import SubNav from "./subnav";
 import Stars from "./pages/Stars";
 import StarDetail from "./pages/StarDetail";
 import SuccessStories from "./pages/SuccessStories";
 import InitiativeDetail from "./pages/InitiativeDetail";
+import Reports from "./pages/Reports";
 
 type RouteState = { page: Page; initiativeId: string };
 
@@ -25,7 +27,7 @@ const readRoute = (): RouteState => {
     return { page: "initiative-detail", initiativeId: h.split("/")[1] || "" };
   }
   if (h.startsWith("stars/")) return { page: "star-detail", initiativeId: h.split("/")[1] || "" };
-  if (h === "reports") return { page: "home", initiativeId: "" };
+  if (h === "reports") return { page: "reports", initiativeId: "" };
   return { page: NAV.some((n) => n.id === h) ? (h as Page) : "home", initiativeId: "" };
 };
 
@@ -34,7 +36,18 @@ export default function App() {
   const { page, initiativeId } = route;
 
   useEffect(() => {
-    const syncRoute = () => setRoute(readRoute());
+    // The MutationObserver handles incremental DOM changes; this route-level
+    // scan guarantees that every newly mounted page is queued after React commits.
+    const timer = window.setTimeout(() => refreshTranslations(document.body), 0);
+    return () => window.clearTimeout(timer);
+  }, [page, initiativeId]);
+
+  useEffect(() => {
+    const syncRoute = () => {
+      // The translation observer watches newly-mounted page content, so SPA
+      // navigation does not need a full reload when a non-English locale is active.
+      setRoute(readRoute());
+    };
     window.addEventListener("hashchange", syncRoute);
     window.addEventListener("popstate", syncRoute);
     return () => {
@@ -105,17 +118,18 @@ export default function App() {
       <div className="shrink-0" style={{ height: page === "initiative-detail" ? 128 : page === "success" ? "calc(var(--stack-h, 150px) + 4px)" : 76 }} aria-hidden="true" />
       <Navbar page={page} go={go} onPickArea={goSection} flat={false} activeColor={page === "initiative-detail" && (initiativeId === "swachhata" || initiativeId === "paryavaran") ? "#1A7F78" : page === "initiative-detail" && initiativeId === "swasthya" ? "#2B459E" : "#2B459E"} scrolled={scrolled} visible={navVisible && !filmHidesBars} />
       <SubNav page={page} onPick={goSection} activeKey={initiativeId} navVisible={navVisible} hidden={filmHidesBars} />
-      <main className={`flex-1 page-fade ${page === "contact" || page === "initiative-detail" || page === "success" || page === "about" ? "" : "hero-under"}`} key={page === "gallery" || page === "initiative-detail" || page === "star-detail" ? `${page}:${initiativeId}` : page}>
+      <main className={`flex-1 page-fade ${page === "contact" || page === "initiative-detail" || page === "success" || page === "about" || page === "reports" ? "" : "hero-under"}`} key={page === "gallery" || page === "initiative-detail" || page === "star-detail" ? `${page}:${initiativeId}` : page}>
         {page === "home" && <Home go={go} />}
         {page === "about" && <About go={go} />}
         {page === "initiatives" && <Initiatives onPick={goSection} />}
         {page === "initiative-detail" && <InitiativeDetail id={initiativeId} goBack={() => go("initiatives")} />}
-        {page === "impact" && <Impact />}
+        {page === "impact" && <Impact go={go} />}
         {page === "gallery" && <Gallery />}
         {page === "success" && <SuccessStories go={go} />}
         {page === "stars" && <Stars go={go} openStar={openStar} />}
         {page === "star-detail" && <StarDetail id={initiativeId} go={go} openStar={openStar} />}
         {page === "contact" && <Contact />}
+        {page === "reports" && <Reports />}
       </main>
       {page === "initiative-detail" && initiativeId !== "swasthya" ? <InitFooter go={go} variant={initiativeId} /> : <Footer go={go} variant={page === "initiative-detail" ? initiativeId : undefined} />}
     </div>

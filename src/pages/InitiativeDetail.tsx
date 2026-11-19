@@ -1,5 +1,6 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { AIcon } from "../icons";
+import { Leaf, BookOpen, Brain } from "lucide-react";
 import { Bi } from "../lang";
 import HeroVisual from "./HeroVisual";
 import { CountUp } from "../ui";
@@ -165,7 +166,7 @@ const PAGES: Record<string, Pg> = {
     galleryTitle: "Activity Gallery",
     filters: [{ l: "All" }, { l: "Awareness" }, { l: "Workshops" }, { l: "Discussions" }, { l: "Activities" }],
     gallery: [
-      { t: "मानसिक स्वास्थ्य जागरूकता सत्र", img: "images/swasthya.webp", tags: ["Awareness", "Workshops"], pos: "center 40%" },
+      { t: "Mental Health Awareness Session", img: "images/swasthya.webp", tags: ["Awareness", "Workshops"], pos: "center 40%" },
       { t: "Group Discussion", img: "images/volunteers.webp", tags: ["Discussions"] },
       { t: "Awareness Through Action", img: "images/init-rally-photo.webp", tags: ["Activities", "Awareness"] },
       { t: "Mental Health Awareness Drive", img: "images/real-group.webp", tags: ["Awareness", "Activities"] },
@@ -184,7 +185,7 @@ const PAGES: Record<string, Pg> = {
 
 const toContact = () => { window.location.hash = "#/contact"; };
 const Play = ({ c }: { c: string }) => <span className="grid h-6 w-6 place-items-center rounded-full text-white" style={{ background: c }}><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z" /></svg></span>;
-const Leafy = ({ c, className, style }: { c: string; className?: string; style?: CSSProperties }) => <svg viewBox="0 0 30 36" className={className} style={style} aria-hidden><path d="M2 34C0 16 10 4 28 2c2 18-8 32-26 32z" fill={c} /><path d="M3 33C10 22 17 14 25 6" stroke="#fff" strokeOpacity=".5" fill="none" /></svg>;
+const Leafy = ({ c, className, style }: { c: string; className?: string; style?: CSSProperties }) => <Leaf className={className} style={{ ...style, color: c }} strokeWidth={1.4} fill="currentColor" fillOpacity={0.85} aria-hidden />;
 
 export default function InitiativeDetail({ id, goBack }: { id: string; goBack: () => void }) {
   const pg = PAGES[id] ?? PAGES.shiksha;
@@ -214,7 +215,7 @@ export default function InitiativeDetail({ id, goBack }: { id: string; goBack: (
           <Leafy c={pg.swoosh === ORANGE ? "#EBDCBC" : "#3A7D44"} className="absolute hidden float-slow lg:block" style={{ left: "38%", top: "66%", width: 40, height: 50, transform: "rotate(35deg)" }} />
           {pg.swoosh !== ORANGE && <Leafy c="#3A7D44" className="absolute hidden float-med lg:block" style={{ left: "36%", top: 26, width: 54, height: 66, transform: "rotate(18deg)" }} />}
         </>}
-        {pg.shape === "curve" && pg.swoosh === ORANGE && id === "shiksha" && <svg viewBox="0 0 90 60" className="absolute left-[40%] top-6 hidden w-32 -rotate-12 opacity-30 lg:block" fill="none" stroke={BLUE} strokeWidth="1.4" aria-hidden><path d="M45 12C36 4 18 4 6 10v38c12-6 30-6 39 2 9-8 27-8 39-2V10c-12-6-30-6-39 2zM45 12v38" /></svg>}
+        {pg.shape === "curve" && pg.swoosh === ORANGE && id === "shiksha" && <BookOpen className="absolute left-[40%] top-6 hidden h-28 w-28 -rotate-12 opacity-20 lg:block" strokeWidth={1.1} color={BLUE} aria-hidden />}
         
 
         <div className="px-4 sm:px-7 lg:pl-[var(--pl)] lg:pr-0">
@@ -225,7 +226,7 @@ export default function InitiativeDetail({ id, goBack }: { id: string; goBack: (
                   <AIcon n="home" s={15} /><span>›</span><button onClick={goBack} className="hover:underline">Initiatives</button><span>›</span><b className="text-[#1F2A44]"><Bi en="Mental Health" hi="मानसिक स्वास्थ्य" /></b>
                 </nav>
                 <div className="hero-in hero-in-1 mt-4 flex items-center gap-3 font-display font-extrabold text-[#1F2A44]" style={{ fontSize: "clamp(18px,1.7vw,24px)" }}><span className="text-[#1A7F78]"><AIcon n="brain" s={46} duo /></span><Bi en="Mental Health Campaign" hi="मानसिक स्वास्थ्य अभियान" /></div>
-                <h1 className="hero-in hero-in-2 mt-4 font-display font-extrabold leading-[1.08] tracking-tight text-[#1F2A44]" style={{ fontSize: "clamp(30px,3.1vw,56px)" }}>A Healthy Mind for<br />a <span style={{ color: ORANGE }}>Better Tomorrow</span></h1>
+                <h1 className="hero-in hero-in-2 mt-4 font-display font-extrabold leading-[1.08] tracking-tight text-[#1F2A44]" style={{ fontSize: "clamp(30px,3.1vw,56px)" }}><Bi en={<>A Healthy Mind for<br />a <span style={{ color: ORANGE }}>Better Tomorrow</span></>} hi={<>स्वस्थ मन,<br /><span style={{ color: ORANGE }}>बेहतर कल</span></>} /></h1>
                 <p className="hero-in hero-in-3 mt-4 max-w-[470px] leading-[1.65] text-slate-700" style={{ fontSize: "clamp(15px,1.2vw,18px)" }}>{pg.intro}</p>
                 <div className="hero-in hero-in-4 mt-6 flex flex-wrap gap-3">
                   <button onClick={() => document.getElementById("gallery-sec")?.scrollIntoView({ behavior: "smooth" })} className="press inline-flex items-center gap-2 rounded-full bg-[#EE9B13] btn-solid px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-orange-200">Our Activities →</button>
@@ -253,7 +254,7 @@ export default function InitiativeDetail({ id, goBack }: { id: string; goBack: (
           <HeroVisual id={id} kind={pg.shape} src={pg.heroImage} pos={pg.pos} main={pg.swoosh} accent={pg.swoosh2}>
             {false && (
               <>
-                <div className="absolute -top-3 -right-[6%] hidden w-[96px] text-[#1A7F78] sm:block" aria-hidden><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 58v-8c-4-2-6-5-6-9l-4-1 4-7c-1-9 5-19 17-19 12 0 19 8 19 18 0 6-3 10-7 12v14" /><path d="M26 24c0-4 4-6 8-5 4-1 8 2 8 6 3 1 3 6 0 7-1 4-6 5-9 3-4 1-8-1-8-5-3-2-2-5 1-6zM34 20v18M28 28h6M34 32h6" /></svg><Leafy c="#1A7F78" className="absolute -right-4 bottom-1 h-9 w-7" /></div>
+                <div className="absolute -top-3 -right-[6%] hidden w-[96px] text-[#1A7F78] sm:block" aria-hidden><Brain className="h-full w-full" strokeWidth={1.2} /><Leafy c="#1A7F78" className="absolute -right-4 bottom-1 h-9 w-7" /></div>
                 <div className="pill-card absolute -right-[6%] bottom-[14%] z-10 hidden w-[220px] bg-white px-4 py-3 shadow-xl ring-1 ring-slate-100 sm:block">
                   {[["users", ORANGE, "Awareness Sessions"], ["leaf", "#1A7F78", "Stress Management Workshops"], ["heart", "#2B459E", "Student Support & Guidance"]].map(([ic, c, t], i) => (
                     <div key={t} className={`flex items-center gap-2.5 py-2 text-[11.5px] font-bold leading-tight text-[#1F2A44] ${i ? "border-t border-slate-100" : ""}`}><span className="grid h-8 w-8 shrink-0 place-items-center rounded-full" style={{ background: c + "22", color: c }}><AIcon n={ic} s={17} /></span>{t}</div>
@@ -281,12 +282,12 @@ export default function InitiativeDetail({ id, goBack }: { id: string; goBack: (
       <section className={`${wrap} mt-12`}>
         {m ? (
           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-            <h2 className="font-display text-[34px] font-extrabold text-[#1F2A44]">{pg.focusTitle[0]}<span className="mt-1 block h-[3px] w-14 rounded bg-[#EE9B13]" /></h2>
+            <h2 className="font-display text-[34px] font-extrabold text-[#1F2A44]">{pg.focusTitle[0]}</h2>
             <p className="text-sm font-semibold text-slate-500">{pg.focusNote}</p>
           </div>
         ) : (
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 text-[12px] font-extrabold tracking-[.16em]" style={{ color: NAVY }}><span className="h-[3px] w-8 rounded" style={{ background: pg.focusHl }} />{pg.focusKicker}<span className="h-[3px] w-8 rounded" style={{ background: pg.focusHl }} /></div>
+            <div className="inline-flex items-center gap-3 text-[12px] font-extrabold tracking-[.16em]" style={{ color: NAVY }}>{pg.focusKicker}</div>
             <h2 className="mt-2 font-display text-[34px] font-extrabold text-[#1F2A44] sm:text-[38px]">{pg.focusTitle[0]}<span style={{ color: pg.focusHl }}>{pg.focusTitle[1]}</span></h2>
           </div>
         )}
@@ -307,8 +308,8 @@ export default function InitiativeDetail({ id, goBack }: { id: string; goBack: (
       <section id="gallery-sec" className={`${wrap} mt-14 scroll-mt-24`}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            {pg.galleryKicker && <div className="inline-flex items-center gap-3 text-[12px] font-extrabold tracking-[.12em]" style={{ color: NAVY }}><span className="h-[3px] w-8 rounded" style={{ background: pg.focusHl }} />{pg.galleryKicker}<span className="h-[3px] w-8 rounded" style={{ background: pg.focusHl }} /></div>}
-            <h2 className="font-display text-[28px] font-extrabold text-[#1F2A44] sm:text-[34px]">{pg.galleryTitle}{m && <span className="mt-1 block h-[3px] w-14 rounded bg-[#EE9B13]" />}</h2>
+            {pg.galleryKicker && <div className="inline-flex items-center gap-3 text-[12px] font-extrabold tracking-[.12em]" style={{ color: NAVY }}>{pg.galleryKicker}</div>}
+            <h2 className="font-display text-[28px] font-extrabold text-[#1F2A44] sm:text-[34px]">{pg.galleryTitle}</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             {pg.filters.map((f) => (

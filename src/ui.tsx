@@ -14,8 +14,8 @@ export function CountUp({ value }: { value: string }) {
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       io.disconnect();
-      const t0 = performance.now(), dur = 1300;
-      const step = (t: number) => { const k = Math.min(1, (t - t0) / dur); setN(Math.round(target * (1 - Math.pow(1 - k, 3)))); if (k < 1) raf = requestAnimationFrame(step); };
+      const t0 = performance.now(), dur = 1600;
+      const step = (t: number) => { const k = Math.min(1, (t - t0) / dur); setN(Math.round(target * (1 - Math.pow(1 - k, 3)))); if (k < 1) raf = requestAnimationFrame(step); else el.classList.add("count-done"); };
       raf = requestAnimationFrame(step);
     }, { threshold: 0.4 });
     io.observe(el);
